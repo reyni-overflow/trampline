@@ -14,26 +14,35 @@ export function validate(value: string, rules: ValidationRule[]): string | null 
 
 export const required: ValidationRule = {
     test: (v) => v.trim().length > 0,
-    get message() { return tGet('validation.required'); }
+    get message() {
+        return tGet('validation.required');
+    }
 };
 
 export const email: ValidationRule = {
     test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-    get message() { return tGet('validation.email'); }
+    get message() {
+        return tGet('validation.email');
+    }
 };
 
 export const minLength = (n: number): ValidationRule => ({
     test: (v) => v.length >= n,
-    get message() { return tGet('validation.minLength', { n }); }
+    get message() {
+        return tGet('validation.minLength', { n });
+    }
 });
 
 export const inn: ValidationRule = {
     test: (v) => /^\d{10}$|^\d{12}$/.test(v),
-    get message() { return tGet('validation.inn'); }
+    get message() {
+        return tGet('validation.inn');
+    }
 };
 
 export const url: ValidationRule = {
     test: (v) => !v || /^https?:\/\/.+/.test(v),
-    get message() { return tGet('validation.url'); }
+    get message() {
+        return tGet('validation.url');
+    }
 };
-

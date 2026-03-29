@@ -19,7 +19,9 @@
     import { t } from '$lib/i18n';
 
     let isAuth = $state(false);
-    const unsubAuth = isAuthenticated.subscribe((v) => { isAuth = v; });
+    const unsubAuth = isAuthenticated.subscribe((v) => {
+        isAuth = v;
+    });
     const unsubReady = authReady.subscribe((v) => {
         if (v && !isAuth && typeof window !== 'undefined') {
             goto('/');
@@ -37,7 +39,18 @@
     let hideResume = $state(false);
     let publicProfile = $state(true);
 
-    let sessions = $state<{ id: string; userAgent: string; osIcon: string; osName: string; browser: string; ip: string; lastUsed: string; current: boolean }[]>([]);
+    let sessions = $state<
+        {
+            id: string;
+            userAgent: string;
+            osIcon: string;
+            osName: string;
+            browser: string;
+            ip: string;
+            lastUsed: string;
+            current: boolean;
+        }[]
+    >([]);
     let sessionsLoading = $state(true);
     let totpEnabled = $state(false);
     let totpSetupSecret = $state('');
@@ -57,16 +70,31 @@
         });
         loadSessions();
     });
-    onDestroy(() => { unsubUser?.(); unsubAuth(); unsubReady(); });
+    onDestroy(() => {
+        unsubUser?.();
+        unsubAuth();
+        unsubReady();
+    });
 
-    const svgIcon = (d: string) => `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+    const svgIcon = (d: string) =>
+        `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
     const osIcons = {
-        monitor: svgIcon('<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'),
-        laptop: svgIcon('<path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/>'),
-        smartphone: svgIcon('<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'),
-        terminal: svgIcon('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
+        monitor: svgIcon(
+            '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'
+        ),
+        laptop: svgIcon(
+            '<path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/>'
+        ),
+        smartphone: svgIcon(
+            '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'
+        ),
+        terminal: svgIcon(
+            '<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'
+        ),
         zap: svgIcon('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
-        globe: svgIcon('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>')
+        globe: svgIcon(
+            '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'
+        )
     };
 
     function parseOS(ua: string): { os: string; icon: string; browser: string } {
@@ -75,14 +103,33 @@
         let icon = osIcons.globe;
         let browser = $t('settings.webBrowser');
 
-        if (s.includes('windows')) { os = 'Windows'; icon = osIcons.monitor; }
-        else if (s.includes('mac os') || s.includes('macintosh')) { os = 'macOS'; icon = osIcons.laptop; }
-        else if (s.includes('iphone') || s.includes('ipad')) { os = 'iOS'; icon = osIcons.smartphone; }
-        else if (s.includes('android')) { os = 'Android'; icon = osIcons.smartphone; }
-        else if (s.includes('linux')) { os = 'Linux'; icon = osIcons.terminal; }
-        else if (s.startsWith('curl/')) { os = 'API'; icon = osIcons.zap; browser = 'curl'; }
-        else if (s.includes('postman')) { os = 'API'; icon = osIcons.zap; browser = 'Postman'; }
-        else if (!s || s === 'unknown') { os = $t('settings.unknownOS'); icon = osIcons.globe; }
+        if (s.includes('windows')) {
+            os = 'Windows';
+            icon = osIcons.monitor;
+        } else if (s.includes('mac os') || s.includes('macintosh')) {
+            os = 'macOS';
+            icon = osIcons.laptop;
+        } else if (s.includes('iphone') || s.includes('ipad')) {
+            os = 'iOS';
+            icon = osIcons.smartphone;
+        } else if (s.includes('android')) {
+            os = 'Android';
+            icon = osIcons.smartphone;
+        } else if (s.includes('linux')) {
+            os = 'Linux';
+            icon = osIcons.terminal;
+        } else if (s.startsWith('curl/')) {
+            os = 'API';
+            icon = osIcons.zap;
+            browser = 'curl';
+        } else if (s.includes('postman')) {
+            os = 'API';
+            icon = osIcons.zap;
+            browser = 'Postman';
+        } else if (!s || s === 'unknown') {
+            os = $t('settings.unknownOS');
+            icon = osIcons.globe;
+        }
 
         if (browser === $t('settings.webBrowser')) {
             if (s.includes('firefox')) browser = 'Firefox';
@@ -105,8 +152,14 @@
                 const tb = b.lastUsedAt ? new Date(b.lastUsedAt).getTime() : 0;
                 return tb - ta;
             });
-            const browserSessions = sorted.filter(s => s.isActive && s.userAgent?.agent && !s.userAgent.agent.toLowerCase().startsWith('curl/') && !s.userAgent.agent.toLowerCase().includes('postman'));
-            const mostRecentId = (browserSessions[0] ?? sorted.find(s => s.isActive))?.id;
+            const browserSessions = sorted.filter(
+                (s) =>
+                    s.isActive &&
+                    s.userAgent?.agent &&
+                    !s.userAgent.agent.toLowerCase().startsWith('curl/') &&
+                    !s.userAgent.agent.toLowerCase().includes('postman')
+            );
+            const mostRecentId = (browserSessions[0] ?? sorted.find((s) => s.isActive))?.id;
             sessions = sorted.map((s: SessionResponse) => {
                 const rawAgent = s.userAgent?.agent || '';
                 const parsed = parseOS(rawAgent);
@@ -116,8 +169,15 @@
                     osIcon: parsed.icon,
                     osName: parsed.os,
                     browser: parsed.browser,
-                    ip: s.userAgent?.ip && s.userAgent.ip !== 'Unknown device' ? s.userAgent.ip : '',
-                    lastUsed: s.lastUsedAt ? new Date(s.lastUsedAt).toLocaleString('ru-RU') : s.createdAt ? new Date(s.createdAt).toLocaleString('ru-RU') : '—',
+                    ip:
+                        s.userAgent?.ip && s.userAgent.ip !== 'Unknown device'
+                            ? s.userAgent.ip
+                            : '',
+                    lastUsed: s.lastUsedAt
+                        ? new Date(s.lastUsedAt).toLocaleString('ru-RU')
+                        : s.createdAt
+                          ? new Date(s.createdAt).toLocaleString('ru-RU')
+                          : '—',
                     current: s.id === mostRecentId
                 };
             });
@@ -145,7 +205,11 @@
             newPasswordError = $t('settings.passwordTooShort');
             return;
         }
-        if (!/[A-ZА-ЯЁ]/.test(newPassword) || !/[a-zа-яё]/.test(newPassword) || !/\d/.test(newPassword)) {
+        if (
+            !/[A-ZА-ЯЁ]/.test(newPassword) ||
+            !/[a-zа-яё]/.test(newPassword) ||
+            !/\d/.test(newPassword)
+        ) {
             newPasswordError = $t('settings.passwordRequirements');
             return;
         }
@@ -223,7 +287,11 @@
         try {
             const data = await authApi.totpSetup();
             totpSetupSecret = data.secret;
-            totpQrDataUrl = await QRCode.toDataURL(data.uri, { width: 200, margin: 2, color: { dark: '#000000', light: '#ffffff' } });
+            totpQrDataUrl = await QRCode.toDataURL(data.uri, {
+                width: 200,
+                margin: 2,
+                color: { dark: '#000000', light: '#ffffff' }
+            });
             totpSetupActive = true;
         } catch (err) {
             handleApiError(err);
@@ -277,10 +345,23 @@
                     <Input label="Email" bind:value={email} type="email" disabled />
                 </div>
                 <div class="field-row">
-                    <PasswordInput bind:value={currentPassword} label={$t('settings.currentPassword')} placeholder={$t('settings.currentPasswordPlaceholder')} error={passwordError} autocomplete="current-password" />
+                    <PasswordInput
+                        bind:value={currentPassword}
+                        label={$t('settings.currentPassword')}
+                        placeholder={$t('settings.currentPasswordPlaceholder')}
+                        error={passwordError}
+                        autocomplete="current-password"
+                    />
                 </div>
                 <div class="field-row">
-                    <PasswordInput bind:value={newPassword} label={$t('settings.newPassword')} placeholder={$t('settings.newPasswordPlaceholder')} error={newPasswordError} showRules autocomplete="new-password" />
+                    <PasswordInput
+                        bind:value={newPassword}
+                        label={$t('settings.newPassword')}
+                        placeholder={$t('settings.newPasswordPlaceholder')}
+                        error={newPasswordError}
+                        showRules
+                        autocomplete="new-password"
+                    />
                 </div>
                 <Button onclick={saveAccount}>{$t('common.save')}</Button>
             </div>
@@ -292,7 +373,9 @@
                 <Toggle label={$t('settings.hideApplications')} bind:checked={hideApplications} />
                 <Toggle label={$t('settings.hideResume')} bind:checked={hideResume} />
                 <Toggle label={$t('settings.publicProfile')} bind:checked={publicProfile} />
-                <Button variant="secondary" onclick={savePrivacy}>{$t('settings.saveSettings')}</Button>
+                <Button variant="secondary" onclick={savePrivacy}
+                    >{$t('settings.saveSettings')}</Button
+                >
             </div>
         </section>
 
@@ -305,27 +388,52 @@
                         <p class="totp-desc">{$t('settings.totpActiveDesc')}</p>
                     </div>
                     <div class="field-row">
-                        <Input label={$t('settings.totpCodeLabel')} bind:value={totpDisableCode} placeholder="000000" maxlength={6} />
+                        <Input
+                            label={$t('settings.totpCodeLabel')}
+                            bind:value={totpDisableCode}
+                            placeholder="000000"
+                            maxlength={6}
+                        />
                     </div>
-                    <Button variant="danger" onclick={disableTotp} disabled={totpDisableCode.length !== 6}>{$t('settings.totpDisableBtn')}</Button>
+                    <Button
+                        variant="danger"
+                        onclick={disableTotp}
+                        disabled={totpDisableCode.length !== 6}
+                        >{$t('settings.totpDisableBtn')}</Button
+                    >
                 {:else if totpSetupActive}
                     <div class="totp-setup">
                         <p class="totp-desc">{$t('settings.totpScanQR')}</p>
                         {#if totpQrDataUrl}
-                            <img class="totp-qr" src={totpQrDataUrl} alt="TOTP QR Code" width="200" height="200" />
+                            <img
+                                class="totp-qr"
+                                src={totpQrDataUrl}
+                                alt="TOTP QR Code"
+                                width="200"
+                                height="200"
+                            />
                         {/if}
                         <div class="totp-secret">
                             <span class="totp-secret-label">{$t('settings.totpManualKey')}</span>
                             <code class="totp-secret-value">{totpSetupSecret}</code>
                         </div>
                         <div class="field-row">
-                            <Input label={$t('settings.totpVerifyCode')} bind:value={totpSetupCode} placeholder="000000" maxlength={6} />
+                            <Input
+                                label={$t('settings.totpVerifyCode')}
+                                bind:value={totpSetupCode}
+                                placeholder="000000"
+                                maxlength={6}
+                            />
                         </div>
-                        <Button onclick={confirmTotpEnable} disabled={totpSetupCode.length !== 6}>{$t('settings.totpConfirmEnable')}</Button>
+                        <Button onclick={confirmTotpEnable} disabled={totpSetupCode.length !== 6}
+                            >{$t('settings.totpConfirmEnable')}</Button
+                        >
                     </div>
                 {:else}
                     <p class="totp-desc">{$t('settings.totpDesc')}</p>
-                    <Button onclick={startTotpSetup} loading={totpSetupLoading}>{$t('settings.totpEnableBtn')}</Button>
+                    <Button onclick={startTotpSetup} loading={totpSetupLoading}
+                        >{$t('settings.totpEnableBtn')}</Button
+                    >
                 {/if}
             </div>
         </section>
@@ -347,9 +455,13 @@
         <section class="settings-section">
             <h2>{$t('settings.activeSessions')}</h2>
             {#if sessionsLoading}
-                <p style="color: var(--text-tertiary); font-size: var(--font-sm);">{$t('settings.loadingSessions')}</p>
+                <p style="color: var(--text-tertiary); font-size: var(--font-sm);">
+                    {$t('settings.loadingSessions')}
+                </p>
             {:else if sessions.length === 0}
-                <p style="color: var(--text-tertiary); font-size: var(--font-sm);">{$t('settings.noSessions')}</p>
+                <p style="color: var(--text-tertiary); font-size: var(--font-sm);">
+                    {$t('settings.noSessions')}
+                </p>
             {:else}
                 <div class="sessions-list">
                     {#each sessions as session (session.id)}
@@ -358,15 +470,30 @@
                                 <div class="session-info">
                                     <span class="session-device">
                                         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                                        <span class="session-os-icon">{@html browser ? DOMPurify.sanitize(session.osIcon) : session.osIcon}</span>
+                                        <span class="session-os-icon"
+                                            >{@html browser
+                                                ? DOMPurify.sanitize(session.osIcon)
+                                                : session.osIcon}</span
+                                        >
                                         {session.osName} &middot; {session.browser}
-                                        {#if session.current}<Badge variant="success" size="sm">{$t('settings.currentSession')}</Badge>{/if}
+                                        {#if session.current}<Badge variant="success" size="sm"
+                                                >{$t('settings.currentSession')}</Badge
+                                            >{/if}
                                     </span>
-                                    <span class="session-meta">{session.ip ? `IP: ${session.ip} · ` : ''}{session.lastUsed}</span>
+                                    <span class="session-meta"
+                                        >{session.ip
+                                            ? `IP: ${session.ip} · `
+                                            : ''}{session.lastUsed}</span
+                                    >
                                 </div>
                                 <div class="session-actions">
                                     {#if !session.current}
-                                        <Button size="sm" variant="ghost" onclick={() => terminateSession(session.id)}>{$t('settings.terminate')}</Button>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onclick={() => terminateSession(session.id)}
+                                            >{$t('settings.terminate')}</Button
+                                        >
                                     {/if}
                                 </div>
                             </div>
@@ -375,13 +502,29 @@
                 </div>
                 {#if sessions.length > 1}
                     <button class="terminate-all-btn" type="button" onclick={terminateAllSessions}>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="16"
+                            height="16"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path
+                                d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                            /><line x1="12" y1="9" x2="12" y2="13" /><line
+                                x1="12"
+                                y1="17"
+                                x2="12.01"
+                                y2="17"
+                            /></svg
+                        >
                         {$t('settings.terminateAll')}
                     </button>
                 {/if}
             {/if}
         </section>
-
     </div>
 
     <section class="settings-section danger-zone">

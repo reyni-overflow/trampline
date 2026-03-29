@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { detectContactType, formatPhone, validatePhone, validateEmail } from '$lib/utils/contact-input';
+import {
+    detectContactType,
+    formatPhone,
+    validatePhone,
+    validateEmail
+} from '$lib/utils/contact-input';
 
 describe('contact-input utils', () => {
     describe('detectContactType()', () => {

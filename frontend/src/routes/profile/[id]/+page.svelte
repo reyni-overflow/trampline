@@ -34,7 +34,16 @@
         isContact: false
     });
 
-    function applyProfileData(data: { name?: string; lastName?: string; patronymic?: string; photo?: string | null; info?: { university?: string; course?: number } | null; about?: string | null; skills?: string[]; repos?: string[] }) {
+    function applyProfileData(data: {
+        name?: string;
+        lastName?: string;
+        patronymic?: string;
+        photo?: string | null;
+        info?: { university?: string; course?: number } | null;
+        about?: string | null;
+        skills?: string[];
+        repos?: string[];
+    }) {
         profile = {
             id: page.params.id,
             name: data.name ?? '',
@@ -45,7 +54,10 @@
             course: data.info?.course ? `${data.info.course} ${tGet('profile.courseLabel')}` : '',
             about: data.about ?? '',
             skills: data.skills ?? [],
-            repos: (data.repos ?? []).map((r: string) => ({ name: r.replace(/^https?:\/\//, ''), url: r.startsWith('http') ? r : `https://${r}` })),
+            repos: (data.repos ?? []).map((r: string) => ({
+                name: r.replace(/^https?:\/\//, ''),
+                url: r.startsWith('http') ? r : `https://${r}`
+            })),
             isContact: false
         };
     }
@@ -74,10 +86,15 @@
     let isContact = $state(false);
 
     async function handleContact() {
-        if (!isAuth) { authModal.open(); return; }
+        if (!isAuth) {
+            authModal.open();
+            return;
+        }
         const prev = isContact;
         isContact = !isContact;
-        toast.success(isContact ? $t('profile.contactRequestSent') : $t('profile.contactRequestCancelled'));
+        toast.success(
+            isContact ? $t('profile.contactRequestSent') : $t('profile.contactRequestCancelled')
+        );
 
         try {
             await contactsApi.sendRequest(page.params.id ?? '');
@@ -88,7 +105,10 @@
     }
 
     function handleRecommend() {
-        if (!isAuth) { authModal.open(); return; }
+        if (!isAuth) {
+            authModal.open();
+            return;
+        }
         toast.info($t('profile.recommendUnavailable'));
     }
 </script>
@@ -100,8 +120,19 @@
 <div class="profile-page container">
     {#if isPrivate}
         <div class="private-notice">
-            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <svg
+                viewBox="0 0 24 24"
+                width="48"
+                height="48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <rect width="18" height="11" x="3" y="11" rx="2" /><path
+                    d="M7 11V7a5 5 0 0 1 10 0v4"
+                />
             </svg>
             <h2>{$t('profile.hidden')}</h2>
             <p>{$t('profile.hiddenText')}</p>
@@ -111,8 +142,16 @@
         <div class="profile-layout">
             <aside class="profile-sidebar">
                 <div class="sidebar-top">
-                    <Avatar name="{profile.name} {profile.lastName}" src={profile.avatar} size={96} />
-                    <h1 class="profile-name">{profile.lastName} {profile.name} {profile.patronymic}</h1>
+                    <Avatar
+                        name="{profile.name} {profile.lastName}"
+                        src={profile.avatar}
+                        size={96}
+                    />
+                    <h1 class="profile-name">
+                        {profile.lastName}
+                        {profile.name}
+                        {profile.patronymic}
+                    </h1>
                     <div class="profile-meta">
                         <Badge variant="info">{profile.university}</Badge>
                         <Badge>{profile.course}</Badge>
@@ -120,17 +159,59 @@
                 </div>
 
                 <div class="sidebar-actions">
-                    <Button size="md" variant={isContact ? 'secondary' : 'primary'} onclick={handleContact}>
+                    <Button
+                        size="md"
+                        variant={isContact ? 'secondary' : 'primary'}
+                        onclick={handleContact}
+                    >
                         {#if isContact}
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="16"
+                                height="16"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
+                            >
                             {$t('profile.inContacts')}
                         {:else}
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="16"
+                                height="16"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle
+                                    cx="9"
+                                    cy="7"
+                                    r="4"
+                                /><line x1="19" y1="8" x2="19" y2="14" /><line
+                                    x1="22"
+                                    y1="11"
+                                    x2="16"
+                                    y2="11"
+                                /></svg
+                            >
                             {$t('profile.addToContacts')}
                         {/if}
                     </Button>
                     <Button size="md" variant="outline" onclick={handleRecommend}>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="16"
+                            height="16"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg
+                        >
                         {$t('profile.recommend')}
                     </Button>
                 </div>
@@ -141,7 +222,19 @@
                         <div class="repo-list">
                             {#each profile.repos as repo (repo.url)}
                                 <a href={repo.url} class="repo-link" target="_blank" rel="noopener">
-                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        width="14"
+                                        height="14"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.75"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        ><path
+                                            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"
+                                        /><path d="M9 18c-4.51 2-5-2-7-2" /></svg
+                                    >
                                     {repo.name}
                                 </a>
                             {/each}
@@ -288,9 +381,13 @@
         word-break: break-all;
     }
 
-    .repo-link:hover { color: var(--accent); }
+    .repo-link:hover {
+        color: var(--accent);
+    }
 
-    .repo-link svg { flex-shrink: 0; }
+    .repo-link svg {
+        flex-shrink: 0;
+    }
 
     .profile-main {
         display: flex;

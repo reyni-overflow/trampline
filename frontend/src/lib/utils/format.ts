@@ -26,7 +26,11 @@ export function timeAgo(dateStr: string): string {
             tGet('format.daysMany', { n: days })
         );
     }
-    return date.toLocaleDateString(getLocaleDateString(), { day: 'numeric', month: 'short', year: 'numeric' });
+    return date.toLocaleDateString(getLocaleDateString(), {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
 }
 
 export function formatDate(dateStr: string): string {

@@ -70,16 +70,43 @@
 
     <div class="filters">
         <div class="filter-item">
-            <SearchInput placeholder={$t('workerSearch.searchPlaceholder')} bind:value={search} onsearch={handleSearch} />
+            <SearchInput
+                placeholder={$t('workerSearch.searchPlaceholder')}
+                bind:value={search}
+                onsearch={handleSearch}
+            />
         </div>
         <div class="filter-item">
-            <Input placeholder={$t('workerSearch.skillsPlaceholder')} bind:value={skills} onchange={handleSearch} />
+            <Input
+                placeholder={$t('workerSearch.skillsPlaceholder')}
+                bind:value={skills}
+                onchange={handleSearch}
+            />
         </div>
         <div class="filter-item">
-            <Input placeholder={$t('workerSearch.universityPlaceholder')} bind:value={university} onchange={handleSearch} />
+            <Input
+                placeholder={$t('workerSearch.universityPlaceholder')}
+                bind:value={university}
+                onchange={handleSearch}
+            />
         </div>
-        <button class="search-btn" type="button" onclick={handleSearch} aria-label={$t('common.search')}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <button
+            class="search-btn"
+            type="button"
+            onclick={handleSearch}
+            aria-label={$t('common.search')}
+        >
+            <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg
+            >
         </button>
     </div>
 
@@ -95,7 +122,17 @@
         </div>
     {:else if workers.length === 0}
         <div class="empty">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg
+            >
             <p>{$t('workerSearch.noResults')}</p>
             <p>{$t('workerSearch.noResultsHint')}</p>
         </div>
@@ -109,7 +146,19 @@
                         </div>
                         <span class="worker-name">{fullName(worker)}</span>
                         <div class="private-badge">
-                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="14"
+                                height="14"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path
+                                    d="M7 11V7a5 5 0 0 1 10 0v4"
+                                /></svg
+                            >
                             <span>{$t('workerSearch.privateProfile')}</span>
                         </div>
                     </div>
@@ -120,7 +169,10 @@
                         </div>
                         <span class="worker-name">{fullName(worker)}</span>
                         {#if worker.university}
-                            <Badge size="sm">{worker.university}{#if worker.course}, {worker.course} {$t('workerSearch.course')}{/if}</Badge>
+                            <Badge size="sm"
+                                >{worker.university}{#if worker.course}, {worker.course}
+                                    {$t('workerSearch.course')}{/if}</Badge
+                            >
                         {/if}
                         {#if worker.skills && worker.skills.length > 0}
                             <div class="worker-skills">
@@ -139,14 +191,47 @@
 
         {#if totalPages > 1}
             <div class="pagination">
-                <Button size="sm" variant="ghost" disabled={page <= 1} onclick={() => goPage(page - 1)}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={page <= 1}
+                    onclick={() => goPage(page - 1)}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg
+                    >
                 </Button>
                 {#each Array(totalPages) as _, i (i)}
-                    <button class="page-btn" class:active={page === i + 1} type="button" onclick={() => goPage(i + 1)}>{i + 1}</button>
+                    <button
+                        class="page-btn"
+                        class:active={page === i + 1}
+                        type="button"
+                        onclick={() => goPage(i + 1)}>{i + 1}</button
+                    >
                 {/each}
-                <Button size="sm" variant="ghost" disabled={page >= totalPages} onclick={() => goPage(page + 1)}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={page >= totalPages}
+                    onclick={() => goPage(page + 1)}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg
+                    >
                 </Button>
             </div>
         {/if}
@@ -154,8 +239,15 @@
 </div>
 
 <style>
-    .search-page { display: flex; flex-direction: column; gap: var(--space-6); }
-    .page-heading { font-size: var(--font-2xl); font-weight: var(--weight-bold); }
+    .search-page {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+    }
+    .page-heading {
+        font-size: var(--font-2xl);
+        font-weight: var(--weight-bold);
+    }
 
     .filters {
         display: flex;
@@ -164,7 +256,9 @@
         align-items: flex-end;
     }
 
-    .filter-item { width: 14rem; }
+    .filter-item {
+        width: 14rem;
+    }
 
     .search-btn {
         display: flex;
@@ -216,7 +310,9 @@
         cursor: default;
     }
 
-    .worker-avatar { flex-shrink: 0; }
+    .worker-avatar {
+        flex-shrink: 0;
+    }
 
     .worker-name {
         font-size: var(--font-sm);
@@ -260,10 +356,18 @@
         transition: var(--transition-colors);
     }
 
-    .page-btn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
-    .page-btn.active { background: var(--accent); color: var(--accent-contrast); }
+    .page-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+    }
+    .page-btn.active {
+        background: var(--accent);
+        color: var(--accent-contrast);
+    }
 
-    .skeleton-card { min-height: 10rem; }
+    .skeleton-card {
+        min-height: 10rem;
+    }
     .skeleton-avatar {
         width: 3.5rem;
         height: 3.5rem;
@@ -277,12 +381,21 @@
         background: var(--bg-tertiary);
         animation: pulse 1.5s infinite;
     }
-    .skeleton-line.w60 { width: 60%; }
-    .skeleton-line.w40 { width: 40%; }
+    .skeleton-line.w60 {
+        width: 60%;
+    }
+    .skeleton-line.w40 {
+        width: 40%;
+    }
 
     @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
     }
 
     .empty {
@@ -294,11 +407,19 @@
         text-align: center;
         color: var(--text-tertiary);
     }
-    .empty svg { opacity: 0.5; }
-    .empty p { max-width: 20rem; }
+    .empty svg {
+        opacity: 0.5;
+    }
+    .empty p {
+        max-width: 20rem;
+    }
 
     @media (max-width: 640px) {
-        .filters { flex-direction: column; }
-        .filter-item { width: 100%; }
+        .filters {
+            flex-direction: column;
+        }
+        .filter-item {
+            width: 100%;
+        }
     }
 </style>

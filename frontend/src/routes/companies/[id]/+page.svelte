@@ -23,17 +23,28 @@
     let _loading = $state(true);
 
     const emptyCompany: EmployeeProfileResponse = {
-        id: companyId, userId: '', name: '...', description: '', activity: '', link: null,
-        socials: [], photos: [], videos: [], isVerified: false, verificationLevel: 0, verifiedName: null, info: { address: '', inn: '', email: '' }
+        id: companyId,
+        userId: '',
+        name: '...',
+        description: '',
+        activity: '',
+        link: null,
+        socials: [],
+        photos: [],
+        videos: [],
+        isVerified: false,
+        verificationLevel: 0,
+        verifiedName: null,
+        info: { address: '', inn: '', email: '' }
     };
 
     let company = $derived(companyData ?? emptyCompany);
-    let jobs = $derived(companyJobs.filter(j => j.isActive));
-    let events = $derived(companyEvents.filter(e => e.isActive));
-    let mentorships = $derived(companyMentorships.filter(m => m.isActive));
+    let jobs = $derived(companyJobs.filter((j) => j.isActive));
+    let events = $derived(companyEvents.filter((e) => e.isActive));
+    let mentorships = $derived(companyMentorships.filter((m) => m.isActive));
     let companyCoords = $derived.by(() => {
         const allItems = [...companyJobs, ...companyEvents, ...companyMentorships];
-        const first = allItems.find(i => i.geoLat && i.geoLon);
+        const first = allItems.find((i) => i.geoLat && i.geoLon);
         if (first) return [first.geoLat, first.geoLon] as [number, number];
         return getCityCoords(allItems[0]?.city ?? '');
     });
@@ -67,8 +78,17 @@
 
 <div class="company-page container">
     <a href="/companies" class="back-link">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15 18-6-6 6-6"/>
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="m15 18-6-6 6-6" />
         </svg>
         {$t('company.backToCompanies')}
     </a>
@@ -81,12 +101,30 @@
                     <h1 class="company-name">{company.name}</h1>
                     {#if company.verificationLevel >= 2}
                         <Badge variant="info">
-                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="12"
+                                height="12"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
+                            >
                             {$t('companies.trustedVerified')}
                         </Badge>
                     {:else if company.isVerified}
                         <Badge variant="success">
-                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="12"
+                                height="12"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
+                            >
                             {$t('companies.verified')}
                         </Badge>
                     {/if}
@@ -95,16 +133,56 @@
                 <div class="company-contacts">
                     {#if company.link}
                         <a href={company.link} class="contact-link" target="_blank" rel="noopener">
-                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="14"
+                                height="14"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path
+                                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                                /><path
+                                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                                /></svg
+                            >
                             {company.link.replace(/^https?:\/\//, '')}
                         </a>
                     {/if}
                     <span class="contact-item">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="14"
+                            height="14"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><rect width="20" height="16" x="2" y="4" rx="2" /><path
+                                d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+                            /></svg
+                        >
                         {company.info.email}
                     </span>
                     <span class="contact-item">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="14"
+                            height="14"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle
+                                cx="12"
+                                cy="10"
+                                r="3"
+                            /></svg
+                        >
                         {company.info.address}
                     </span>
                 </div>
@@ -113,7 +191,9 @@
         {#if company.socials.length > 0}
             <div class="social-links">
                 {#each company.socials as social (social)}
-                    <a href={social} class="social-chip" target="_blank" rel="noopener">{social.replace(/^https?:\/\//, '')}</a>
+                    <a href={social} class="social-chip" target="_blank" rel="noopener"
+                        >{social.replace(/^https?:\/\//, '')}</a
+                    >
                 {/each}
             </div>
         {/if}
@@ -129,7 +209,14 @@
             <h2 class="section-heading">{$t('company.gallery')}</h2>
             <div class="gallery-grid">
                 {#each company.photos as photo, i (photo)}
-                    <button class="gallery-item" type="button" onclick={() => { lightboxSrc = photo; lightboxOpen = true; }}>
+                    <button
+                        class="gallery-item"
+                        type="button"
+                        onclick={() => {
+                            lightboxSrc = photo;
+                            lightboxOpen = true;
+                        }}
+                    >
                         <img src={photo} alt="{company.name} — фото {i + 1}" loading="lazy" />
                     </button>
                 {/each}
@@ -174,7 +261,11 @@
                             <span class="opp-title">{m.title}</span>
                             <Badge variant="info">{$t('company.mentorship')}</Badge>
                         </div>
-                        <p class="opp-meta">{m.city}{m.duration ? ` · ${m.duration}` : ''}{m.maxParticipants ? ` · ${$t('company.upToParticipants', { count: m.maxParticipants })}` : ''}</p>
+                        <p class="opp-meta">
+                            {m.city}{m.duration ? ` · ${m.duration}` : ''}{m.maxParticipants
+                                ? ` · ${$t('company.upToParticipants', { count: m.maxParticipants })}`
+                                : ''}
+                        </p>
                     </a>
                 {/each}
             </div>
@@ -196,7 +287,11 @@
                             <span class="opp-title">{ev.title}</span>
                             <Badge variant="warning">{$t('company.event')}</Badge>
                         </div>
-                        <p class="opp-meta">{ev.city}{ev.startDate ? ` · ${new Date(ev.startDate).toLocaleDateString()}` : ''}</p>
+                        <p class="opp-meta">
+                            {ev.city}{ev.startDate
+                                ? ` · ${new Date(ev.startDate).toLocaleDateString()}`
+                                : ''}
+                        </p>
                     </a>
                 {/each}
             </div>
@@ -208,7 +303,17 @@
             <h2 class="section-heading">{$t('job.location')}</h2>
             <div class="company-map">
                 <MapView
-                    markers={[{ id: company.id, lat: companyCoords[0], lng: companyCoords[1], title: company.name, company: company.name, type: 'Work', link: `/companies/${company.id}` }]}
+                    markers={[
+                        {
+                            id: company.id,
+                            lat: companyCoords[0],
+                            lng: companyCoords[1],
+                            title: company.name,
+                            company: company.name,
+                            type: 'Work',
+                            link: `/companies/${company.id}`
+                        }
+                    ]}
                     center={companyCoords}
                     zoom={14}
                     height="16rem"
@@ -288,7 +393,8 @@
         margin-top: var(--space-1);
     }
 
-    .contact-link, .contact-item {
+    .contact-link,
+    .contact-item {
         display: flex;
         align-items: center;
         gap: var(--space-1);
@@ -410,7 +516,9 @@
         transition: transform var(--duration-normal) var(--ease-out);
     }
 
-    .gallery-item:hover { transform: scale(1.03); }
+    .gallery-item:hover {
+        transform: scale(1.03);
+    }
 
     .gallery-item img {
         width: 100%;

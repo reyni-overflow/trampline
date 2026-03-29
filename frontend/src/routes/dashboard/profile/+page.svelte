@@ -14,7 +14,13 @@
     import { authApi } from '$lib/api/auth';
     import { handleApiError } from '$lib/api/client';
     import { t } from '$lib/i18n';
-    import { required, email as emailRule, inn as innRule, url as urlRule, validate } from '$lib/utils/validation';
+    import {
+        required,
+        email as emailRule,
+        inn as innRule,
+        url as urlRule,
+        validate
+    } from '$lib/utils/validation';
     import { onMount, onDestroy } from 'svelte';
 
     let role = $state('Worker');
@@ -74,7 +80,7 @@
                     university = wp.info.university || '';
                     course = wp.info.course ? String(wp.info.course) : '';
                 }
-                }
+            }
             if (!name && !lastName && !patronymic && v.nickname) {
                 const parts = v.nickname.trim().split(/\s+/);
                 if (parts.length === 1) {
@@ -214,7 +220,7 @@
     async function deletePhoto(path: string) {
         try {
             await employeesApi.deletePhoto(path);
-            companyPhotos = companyPhotos.filter(p => p !== path);
+            companyPhotos = companyPhotos.filter((p) => p !== path);
             if (avatar === path) avatar = companyPhotos[0] || null;
             await userStore.fetchUser();
             toast.success($t('dashProfile.photoDeleted'));
@@ -226,7 +232,7 @@
     async function deleteVideo(path: string) {
         try {
             await employeesApi.deleteVideo(path);
-            companyVideos = companyVideos.filter(v => v !== path);
+            companyVideos = companyVideos.filter((v) => v !== path);
             await userStore.fetchUser();
             toast.success($t('dashProfile.videoDeleted'));
         } catch (err) {
@@ -294,7 +300,9 @@
 
     function addSkill() {
         const s = newSkill.trim();
-        if (s && !skills.includes(s)) { skills = [...skills, s]; }
+        if (s && !skills.includes(s)) {
+            skills = [...skills, s];
+        }
         newSkill = '';
     }
 
@@ -309,7 +317,9 @@
             toast.error($t('dashProfile.invalidRepoUrl'));
             return;
         }
-        if (!repos.includes(r)) { repos = [...repos, r]; }
+        if (!repos.includes(r)) {
+            repos = [...repos, r];
+        }
         newRepo = '';
     }
 
@@ -362,10 +372,12 @@
                 about: about || undefined,
                 skills: skills.length > 0 ? skills : undefined,
                 repos: repos.length > 0 ? repos : undefined,
-                info: university ? {
-                    university,
-                    course: course ? parseInt(course) : 0
-                } : undefined
+                info: university
+                    ? {
+                          university,
+                          course: course ? parseInt(course) : 0
+                      }
+                    : undefined
             });
             await userStore.fetchUser();
             toast.success($t('dashProfile.profileSaved'));
@@ -382,248 +394,370 @@
 </svelte:head>
 
 <div class="profile-edit">
-{#if role === 'Worker'}
-    <h1 class="page-heading">{$t('dashProfile.title')}</h1>
+    {#if role === 'Worker'}
+        <h1 class="page-heading">{$t('dashProfile.title')}</h1>
 
-    {@const completionSteps = [
-        { done: !!avatar, label: $t('profileCompletion.addAvatar') },
-        { done: !!about.trim(), label: $t('profileCompletion.addAbout') },
-        { done: skills.length > 0, label: $t('profileCompletion.addSkills') },
-        { done: !!resumeFile, label: $t('profileCompletion.addResume') },
-        { done: repos.length > 0, label: $t('profileCompletion.addRepos') }
-    ]}
-    {@const completionPercent = Math.round(completionSteps.filter(s => s.done).length / completionSteps.length * 100)}
+        {@const completionSteps = [
+            { done: !!avatar, label: $t('profileCompletion.addAvatar') },
+            { done: !!about.trim(), label: $t('profileCompletion.addAbout') },
+            { done: skills.length > 0, label: $t('profileCompletion.addSkills') },
+            { done: !!resumeFile, label: $t('profileCompletion.addResume') },
+            { done: repos.length > 0, label: $t('profileCompletion.addRepos') }
+        ]}
+        {@const completionPercent = Math.round(
+            (completionSteps.filter((s) => s.done).length / completionSteps.length) * 100
+        )}
 
-    <div class="completion-card">
-        <div class="completion-header">
-            <span class="completion-title">{$t('profileCompletion.title')}</span>
-            <span class="completion-percent" class:complete={completionPercent === 100}>{completionPercent}%</span>
-        </div>
-        <div class="completion-bar">
-            <div class="completion-fill" style="width: {completionPercent}%"></div>
-        </div>
-        {#if completionPercent < 100}
-            <ul class="completion-hints">
-                {#each completionSteps.filter(s => !s.done) as step (step.label)}
-                    <li>{step.label}</li>
-                {/each}
-            </ul>
-        {:else}
-            <p class="completion-done">{$t('profileCompletion.complete')}</p>
-        {/if}
-    </div>
-
-    <div class="qr-card">
-        <div class="qr-info">
-            <h3 class="qr-title">{$t('dashProfile.qrTitle')}</h3>
-            <p class="qr-desc">{$t('dashProfile.qrDesc')}</p>
-            <Button size="sm" variant="outline" onclick={() => { if (typeof navigator.clipboard !== 'undefined') { navigator.clipboard.writeText(`${typeof window !== 'undefined' ? window.location.origin : ''}/profile/me`); toast.success($t('share.copied')); } }}>
-                {$t('share.copyLink')}
-            </Button>
-        </div>
-        <div class="qr-wrapper">
-            <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={encodeURIComponent(`${typeof window !== 'undefined' ? window.location.origin : ''}/profile/me`)}" alt="QR" loading="lazy" />
-        </div>
-    </div>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.photo')}</h2>
-        <div class="avatar-upload">
-            <Avatar name="{name} {lastName}" src={avatar} size={96} />
-            <div class="avatar-actions">
-                <label class="upload-btn">
-                    {$t('dashProfile.uploadPhoto')}
-                    <input type="file" accept="image/*" onchange={handleAvatarUpload} hidden />
-                </label>
-                {#if avatar}
-                    <button class="remove-link" type="button" onclick={() => { avatar = null; }}>{$t('dashProfile.removePhoto')}</button>
-                {/if}
+        <div class="completion-card">
+            <div class="completion-header">
+                <span class="completion-title">{$t('profileCompletion.title')}</span>
+                <span class="completion-percent" class:complete={completionPercent === 100}
+                    >{completionPercent}%</span
+                >
             </div>
-        </div>
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.mainInfo')}</h2>
-        <div class="form-grid">
-            <Input label={$t('dashProfile.lastName')} bind:value={lastName} error={errors.lastName} onblur={validateLastName} oninput={() => clearError('lastName')} />
-            <Input label={$t('dashProfile.firstName')} bind:value={name} error={errors.name} onblur={validateName} oninput={() => clearError('name')} />
-            <Input label={$t('dashProfile.middleName')} bind:value={patronymic} />
-            <Input label={$t('dashProfile.university')} bind:value={university} />
-            <Input label={$t('dashProfile.courseYear')} bind:value={course} />
-        </div>
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.aboutMe')}</h2>
-        <Textarea bind:value={about} placeholder={$t('dashProfile.aboutPlaceholder')} />
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.skills')}</h2>
-        <div class="tags-edit">
-            <div class="tags-list">
-                {#each skills as skill (skill)}
-                    <Tag removable onremove={() => removeSkill(skill)}>{skill}</Tag>
-                {/each}
+            <div class="completion-bar">
+                <div class="completion-fill" style="width: {completionPercent}%"></div>
             </div>
-            <form class="tag-add" onsubmit={(e) => { e.preventDefault(); addSkill(); }}>
-                <Input placeholder={$t('dashProfile.addSkillPlaceholder')} bind:value={newSkill} />
-                <Button type="submit" variant="secondary" size="sm">{$t('dashProfile.addSkill')}</Button>
-            </form>
-        </div>
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.resume')}</h2>
-        <div class="resume-upload">
-            <FileUpload
-                accept=".pdf,.docx,.doc"
-                label={$t('dashProfile.resumeDrag')}
-                hint={$t('dashProfile.resumeFormats')}
-                onchange={(f) => handleResumeUpload(f)}
-            />
-        </div>
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.repositories')}</h2>
-        <div class="repos-list">
-            {#each repos as repo (repo)}
-                <div class="repo-item">
-                    <span>{repo}</span>
-                    <button class="remove-link" type="button" onclick={() => removeRepo(repo)}>{$t('common.delete')}</button>
-                </div>
-            {/each}
-        </div>
-        <form class="tag-add" onsubmit={(e) => { e.preventDefault(); addRepo(); }}>
-            <Input placeholder={$t('dashProfile.repoPlaceholder')} bind:value={newRepo} />
-            <Button type="submit" variant="secondary" size="sm">{$t('common.add')}</Button>
-        </form>
-    </section>
-
-    <div class="form-actions">
-        <Button size="lg" onclick={save} disabled={saving}>{saving ? $t('common.saving') : $t('dashProfile.save')}</Button>
-    </div>
-{:else}
-    <h1 class="page-heading">{$t('dashProfile.companyTitle')}</h1>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.logo')}</h2>
-        <div class="avatar-upload">
-            <Avatar name={companyName} src={avatar} size={96} />
-            <div class="avatar-actions">
-                <label class="upload-btn">
-                    {$t('dashProfile.uploadLogo')}
-                    <input type="file" accept="image/*" onchange={handleAvatarUpload} hidden />
-                </label>
-            </div>
-        </div>
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.mainInfo')}</h2>
-        <div class="form-grid">
-            <Input label={$t('dashProfile.companyName')} bind:value={companyName} error={errors.companyName} onblur={validateCompanyName} oninput={() => clearError('companyName')} />
-            <Input label={$t('dashProfile.fieldOfActivity')} bind:value={companyActivity} />
-        </div>
-        <Textarea label={$t('dashProfile.description')} bind:value={companyDesc} placeholder={$t('dashProfile.descPlaceholder')} />
-        <Input label={$t('dashProfile.website')} bind:value={companyLink} placeholder={$t('dashProfile.websitePlaceholder')} error={errors.companyLink} onblur={validateCompanyLink} oninput={() => clearError('companyLink')} />
-    </section>
-
-    <section class="form-section" class:compact-section={companySocials.length === 0}>
-        <h2>{$t('dashProfile.socials')}</h2>
-        {#if companySocials.length > 0}
-            <div class="repos-list">
-                {#each companySocials as social (social)}
-                    <div class="repo-item">
-                        <span>{social}</span>
-                        <button class="remove-link" type="button" onclick={() => removeSocial(social)}>{$t('common.delete')}</button>
-                    </div>
-                {/each}
-            </div>
-        {/if}
-        <form class="tag-add" onsubmit={(e) => { e.preventDefault(); addSocial(); }}>
-            <Input placeholder={$t('dashProfile.socialsPlaceholder')} bind:value={newSocial} />
-            <Button type="submit" variant="secondary" size="sm">{$t('common.add')}</Button>
-        </form>
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.photos')}</h2>
-        {#if companyPhotos.length > 0}
-            <div class="repos-list">
-                {#each companyPhotos as photo (photo)}
-                    <div class="repo-item">
-                        <span>{photo.split('/').pop()}</span>
-                        <button class="remove-link" type="button" onclick={() => deletePhoto(photo)}>{$t('dashProfile.deletePhoto')}</button>
-                    </div>
-                {/each}
-            </div>
-        {/if}
-        <FileUpload
-            accept=".jpg,.jpeg,.png,.webp"
-            multiple
-            maxSizeMb={50}
-            label={$t('dashProfile.photoDrag')}
-            hint={$t('dashProfile.photoFormats')}
-            onchange={(f) => handlePhotoUpload(f)}
-        />
-    </section>
-
-    <section class="form-section">
-        <h2>{$t('dashProfile.videos')}</h2>
-        {#if companyVideos.length > 0}
-            <div class="repos-list">
-                {#each companyVideos as video (video)}
-                    <div class="repo-item">
-                        <span>{video.split('/').pop()}</span>
-                        <button class="remove-link" type="button" onclick={() => deleteVideo(video)}>{$t('dashProfile.deleteVideo')}</button>
-                    </div>
-                {/each}
-            </div>
-        {/if}
-        <FileUpload
-            accept=".mp4,.webp"
-            multiple
-            maxSizeMb={100}
-            label={$t('dashProfile.videoDrag')}
-            hint={$t('dashProfile.videoFormats')}
-            onchange={(f) => handleVideoUpload(f)}
-        />
-    </section>
-
-    <section class="form-section">
-        <div class="section-header-row">
-            <h2>{$t('dashProfile.verification')}</h2>
-            {#if verificationLevel >= 2}
-                <Badge variant="info">{$t('dashProfile.trustedVerified')}</Badge>
-            {:else if isVerified}
-                <Badge variant="success">{$t('dashProfile.verified')}</Badge>
+            {#if completionPercent < 100}
+                <ul class="completion-hints">
+                    {#each completionSteps.filter((s) => !s.done) as step (step.label)}
+                        <li>{step.label}</li>
+                    {/each}
+                </ul>
             {:else}
-                <Badge variant="warning">{$t('dashProfile.notVerified')}</Badge>
+                <p class="completion-done">{$t('profileCompletion.complete')}</p>
             {/if}
         </div>
-        <div class="form-grid">
-            <Input label={$t('dashProfile.inn')} bind:value={companyInn} error={errors.companyInn} onblur={validateCompanyInn} oninput={() => clearError('companyInn')} />
-            <Input label={$t('dashProfile.corpEmail')} bind:value={companyEmail} type="email" error={errors.companyEmail} onblur={validateCompanyEmail} oninput={() => clearError('companyEmail')} />
-        </div>
-        <Input label={$t('dashProfile.legalAddress')} bind:value={companyAddress} />
-        {#if !isVerified}
-            <Button variant="secondary" onclick={verify}>{$t('dashProfile.verifyBtn')}</Button>
-        {/if}
-    </section>
 
-    <div class="form-actions">
-        <Button size="lg" onclick={saveCompany} disabled={saving}>{saving ? $t('common.saving') : $t('dashProfile.save')}</Button>
-    </div>
-{/if}
+        <div class="qr-card">
+            <div class="qr-info">
+                <h3 class="qr-title">{$t('dashProfile.qrTitle')}</h3>
+                <p class="qr-desc">{$t('dashProfile.qrDesc')}</p>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onclick={() => {
+                        if (typeof navigator.clipboard !== 'undefined') {
+                            navigator.clipboard.writeText(
+                                `${typeof window !== 'undefined' ? window.location.origin : ''}/profile/me`
+                            );
+                            toast.success($t('share.copied'));
+                        }
+                    }}
+                >
+                    {$t('share.copyLink')}
+                </Button>
+            </div>
+            <div class="qr-wrapper">
+                <img
+                    class="qr-image"
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={encodeURIComponent(
+                        `${typeof window !== 'undefined' ? window.location.origin : ''}/profile/me`
+                    )}"
+                    alt="QR"
+                    loading="lazy"
+                />
+            </div>
+        </div>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.photo')}</h2>
+            <div class="avatar-upload">
+                <Avatar name="{name} {lastName}" src={avatar} size={96} />
+                <div class="avatar-actions">
+                    <label class="upload-btn">
+                        {$t('dashProfile.uploadPhoto')}
+                        <input type="file" accept="image/*" onchange={handleAvatarUpload} hidden />
+                    </label>
+                    {#if avatar}
+                        <button
+                            class="remove-link"
+                            type="button"
+                            onclick={() => {
+                                avatar = null;
+                            }}>{$t('dashProfile.removePhoto')}</button
+                        >
+                    {/if}
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.mainInfo')}</h2>
+            <div class="form-grid">
+                <Input
+                    label={$t('dashProfile.lastName')}
+                    bind:value={lastName}
+                    error={errors.lastName}
+                    onblur={validateLastName}
+                    oninput={() => clearError('lastName')}
+                />
+                <Input
+                    label={$t('dashProfile.firstName')}
+                    bind:value={name}
+                    error={errors.name}
+                    onblur={validateName}
+                    oninput={() => clearError('name')}
+                />
+                <Input label={$t('dashProfile.middleName')} bind:value={patronymic} />
+                <Input label={$t('dashProfile.university')} bind:value={university} />
+                <Input label={$t('dashProfile.courseYear')} bind:value={course} />
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.aboutMe')}</h2>
+            <Textarea bind:value={about} placeholder={$t('dashProfile.aboutPlaceholder')} />
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.skills')}</h2>
+            <div class="tags-edit">
+                <div class="tags-list">
+                    {#each skills as skill (skill)}
+                        <Tag removable onremove={() => removeSkill(skill)}>{skill}</Tag>
+                    {/each}
+                </div>
+                <form
+                    class="tag-add"
+                    onsubmit={(e) => {
+                        e.preventDefault();
+                        addSkill();
+                    }}
+                >
+                    <Input
+                        placeholder={$t('dashProfile.addSkillPlaceholder')}
+                        bind:value={newSkill}
+                    />
+                    <Button type="submit" variant="secondary" size="sm"
+                        >{$t('dashProfile.addSkill')}</Button
+                    >
+                </form>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.resume')}</h2>
+            <div class="resume-upload">
+                <FileUpload
+                    accept=".pdf,.docx,.doc"
+                    label={$t('dashProfile.resumeDrag')}
+                    hint={$t('dashProfile.resumeFormats')}
+                    onchange={(f) => handleResumeUpload(f)}
+                />
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.repositories')}</h2>
+            <div class="repos-list">
+                {#each repos as repo (repo)}
+                    <div class="repo-item">
+                        <span>{repo}</span>
+                        <button class="remove-link" type="button" onclick={() => removeRepo(repo)}
+                            >{$t('common.delete')}</button
+                        >
+                    </div>
+                {/each}
+            </div>
+            <form
+                class="tag-add"
+                onsubmit={(e) => {
+                    e.preventDefault();
+                    addRepo();
+                }}
+            >
+                <Input placeholder={$t('dashProfile.repoPlaceholder')} bind:value={newRepo} />
+                <Button type="submit" variant="secondary" size="sm">{$t('common.add')}</Button>
+            </form>
+        </section>
+
+        <div class="form-actions">
+            <Button size="lg" onclick={save} disabled={saving}
+                >{saving ? $t('common.saving') : $t('dashProfile.save')}</Button
+            >
+        </div>
+    {:else}
+        <h1 class="page-heading">{$t('dashProfile.companyTitle')}</h1>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.logo')}</h2>
+            <div class="avatar-upload">
+                <Avatar name={companyName} src={avatar} size={96} />
+                <div class="avatar-actions">
+                    <label class="upload-btn">
+                        {$t('dashProfile.uploadLogo')}
+                        <input type="file" accept="image/*" onchange={handleAvatarUpload} hidden />
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.mainInfo')}</h2>
+            <div class="form-grid">
+                <Input
+                    label={$t('dashProfile.companyName')}
+                    bind:value={companyName}
+                    error={errors.companyName}
+                    onblur={validateCompanyName}
+                    oninput={() => clearError('companyName')}
+                />
+                <Input label={$t('dashProfile.fieldOfActivity')} bind:value={companyActivity} />
+            </div>
+            <Textarea
+                label={$t('dashProfile.description')}
+                bind:value={companyDesc}
+                placeholder={$t('dashProfile.descPlaceholder')}
+            />
+            <Input
+                label={$t('dashProfile.website')}
+                bind:value={companyLink}
+                placeholder={$t('dashProfile.websitePlaceholder')}
+                error={errors.companyLink}
+                onblur={validateCompanyLink}
+                oninput={() => clearError('companyLink')}
+            />
+        </section>
+
+        <section class="form-section" class:compact-section={companySocials.length === 0}>
+            <h2>{$t('dashProfile.socials')}</h2>
+            {#if companySocials.length > 0}
+                <div class="repos-list">
+                    {#each companySocials as social (social)}
+                        <div class="repo-item">
+                            <span>{social}</span>
+                            <button
+                                class="remove-link"
+                                type="button"
+                                onclick={() => removeSocial(social)}>{$t('common.delete')}</button
+                            >
+                        </div>
+                    {/each}
+                </div>
+            {/if}
+            <form
+                class="tag-add"
+                onsubmit={(e) => {
+                    e.preventDefault();
+                    addSocial();
+                }}
+            >
+                <Input placeholder={$t('dashProfile.socialsPlaceholder')} bind:value={newSocial} />
+                <Button type="submit" variant="secondary" size="sm">{$t('common.add')}</Button>
+            </form>
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.photos')}</h2>
+            {#if companyPhotos.length > 0}
+                <div class="repos-list">
+                    {#each companyPhotos as photo (photo)}
+                        <div class="repo-item">
+                            <span>{photo.split('/').pop()}</span>
+                            <button
+                                class="remove-link"
+                                type="button"
+                                onclick={() => deletePhoto(photo)}
+                                >{$t('dashProfile.deletePhoto')}</button
+                            >
+                        </div>
+                    {/each}
+                </div>
+            {/if}
+            <FileUpload
+                accept=".jpg,.jpeg,.png,.webp"
+                multiple
+                maxSizeMb={50}
+                label={$t('dashProfile.photoDrag')}
+                hint={$t('dashProfile.photoFormats')}
+                onchange={(f) => handlePhotoUpload(f)}
+            />
+        </section>
+
+        <section class="form-section">
+            <h2>{$t('dashProfile.videos')}</h2>
+            {#if companyVideos.length > 0}
+                <div class="repos-list">
+                    {#each companyVideos as video (video)}
+                        <div class="repo-item">
+                            <span>{video.split('/').pop()}</span>
+                            <button
+                                class="remove-link"
+                                type="button"
+                                onclick={() => deleteVideo(video)}
+                                >{$t('dashProfile.deleteVideo')}</button
+                            >
+                        </div>
+                    {/each}
+                </div>
+            {/if}
+            <FileUpload
+                accept=".mp4,.webp"
+                multiple
+                maxSizeMb={100}
+                label={$t('dashProfile.videoDrag')}
+                hint={$t('dashProfile.videoFormats')}
+                onchange={(f) => handleVideoUpload(f)}
+            />
+        </section>
+
+        <section class="form-section">
+            <div class="section-header-row">
+                <h2>{$t('dashProfile.verification')}</h2>
+                {#if verificationLevel >= 2}
+                    <Badge variant="info">{$t('dashProfile.trustedVerified')}</Badge>
+                {:else if isVerified}
+                    <Badge variant="success">{$t('dashProfile.verified')}</Badge>
+                {:else}
+                    <Badge variant="warning">{$t('dashProfile.notVerified')}</Badge>
+                {/if}
+            </div>
+            <div class="form-grid">
+                <Input
+                    label={$t('dashProfile.inn')}
+                    bind:value={companyInn}
+                    error={errors.companyInn}
+                    onblur={validateCompanyInn}
+                    oninput={() => clearError('companyInn')}
+                />
+                <Input
+                    label={$t('dashProfile.corpEmail')}
+                    bind:value={companyEmail}
+                    type="email"
+                    error={errors.companyEmail}
+                    onblur={validateCompanyEmail}
+                    oninput={() => clearError('companyEmail')}
+                />
+            </div>
+            <Input label={$t('dashProfile.legalAddress')} bind:value={companyAddress} />
+            {#if !isVerified}
+                <Button variant="secondary" onclick={verify}>{$t('dashProfile.verifyBtn')}</Button>
+            {/if}
+        </section>
+
+        <div class="form-actions">
+            <Button size="lg" onclick={saveCompany} disabled={saving}
+                >{saving ? $t('common.saving') : $t('dashProfile.save')}</Button
+            >
+        </div>
+    {/if}
 </div>
 
-<Modal bind:open={showVerificationWarning} title={$t('dashProfile.verificationWarningTitle')} maxWidth="480px">
+<Modal
+    bind:open={showVerificationWarning}
+    title={$t('dashProfile.verificationWarningTitle')}
+    maxWidth="480px"
+>
     <p class="verification-warning-text">{$t('dashProfile.verificationWarningText')}</p>
     <div class="verification-warning-actions">
         <Button onclick={doSaveCompany} disabled={saving}>{$t('dashProfile.confirmChange')}</Button>
-        <Button variant="outline" onclick={() => { showVerificationWarning = false; }}>{$t('common.cancel')}</Button>
+        <Button
+            variant="outline"
+            onclick={() => {
+                showVerificationWarning = false;
+            }}>{$t('common.cancel')}</Button
+        >
     </div>
 </Modal>
 
@@ -698,7 +832,9 @@
         cursor: pointer;
     }
 
-    .remove-link:hover { text-decoration: underline; }
+    .remove-link:hover {
+        text-decoration: underline;
+    }
 
     .tags-edit {
         display: flex;
@@ -723,7 +859,9 @@
         flex-shrink: 0;
     }
 
-    .tag-add :global(.input-group) { flex: 1; }
+    .tag-add :global(.input-group) {
+        flex: 1;
+    }
 
     .resume-upload {
         display: flex;
@@ -836,7 +974,9 @@
         color: var(--accent);
     }
 
-    .completion-percent.complete { color: var(--color-success); }
+    .completion-percent.complete {
+        color: var(--color-success);
+    }
 
     .completion-bar {
         height: 0.375rem;
@@ -862,7 +1002,9 @@
         gap: var(--space-1);
     }
 
-    .completion-hints li::marker { color: var(--accent); }
+    .completion-hints li::marker {
+        color: var(--accent);
+    }
 
     .completion-done {
         margin-top: var(--space-3);
@@ -884,7 +1026,12 @@
     }
 
     @media (max-width: 640px) {
-        .form-grid { grid-template-columns: 1fr; }
-        .avatar-upload { flex-direction: column; align-items: flex-start; }
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        .avatar-upload {
+            flex-direction: column;
+            align-items: flex-start;
+        }
     }
 </style>

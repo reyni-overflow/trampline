@@ -59,7 +59,7 @@ describe('notifications store', () => {
         notifications.add({ type: 'system', title: '2', message: '' });
         notifications.markAllAsRead();
         const all = get(notifications);
-        expect(all.every(n => n.read)).toBe(true);
+        expect(all.every((n) => n.read)).toBe(true);
     });
 
     it('unreadCount updates correctly', () => {
@@ -97,7 +97,9 @@ describe('notifications store', () => {
 
     it('fetchUnreadCount calls API and returns count', async () => {
         const { notificationsApi } = await import('$lib/api/notifications');
-        (notificationsApi.getUnreadCount as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ count: 5 });
+        (notificationsApi.getUnreadCount as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+            count: 5
+        });
         const count = await notifications.fetchUnreadCount();
         expect(notificationsApi.getUnreadCount).toHaveBeenCalled();
         expect(count).toBe(5);
@@ -105,7 +107,9 @@ describe('notifications store', () => {
 
     it('fetchUnreadCount returns 0 on error', async () => {
         const { notificationsApi } = await import('$lib/api/notifications');
-        (notificationsApi.getUnreadCount as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('fail'));
+        (notificationsApi.getUnreadCount as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+            new Error('fail')
+        );
         const count = await notifications.fetchUnreadCount();
         expect(count).toBe(0);
     });

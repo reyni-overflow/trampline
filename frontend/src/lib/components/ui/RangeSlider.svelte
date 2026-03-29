@@ -42,7 +42,10 @@
     {/if}
     <div class="range-track-wrapper">
         <div class="range-track">
-            <div class="range-fill" style="left: {leftPercent}%; right: {100 - rightPercent}%"></div>
+            <div
+                class="range-fill"
+                style="left: {leftPercent}%; right: {100 - rightPercent}%"
+            ></div>
         </div>
         <input
             type="range"

@@ -17,35 +17,37 @@
             .join('')
     );
 
-    let fontSize = $derived(size <= 32 ? 'var(--font-xs)' : size <= 48 ? 'var(--font-sm)' : 'var(--font-md)');
+    let fontSize = $derived(
+        size <= 32 ? 'var(--font-xs)' : size <= 48 ? 'var(--font-sm)' : 'var(--font-md)'
+    );
 </script>
 
 {#if clickable}
-<button
-    class="avatar clickable"
-    style="width: {size}px; height: {size}px; font-size: {fontSize}"
-    type="button"
-    aria-label={alt || name}
->
-    {#if src}
-        <img {src} alt={alt || name} />
-    {:else}
-        <span class="initials">{initials || '?'}</span>
-    {/if}
-</button>
+    <button
+        class="avatar clickable"
+        style="width: {size}px; height: {size}px; font-size: {fontSize}"
+        type="button"
+        aria-label={alt || name}
+    >
+        {#if src}
+            <img {src} alt={alt || name} />
+        {:else}
+            <span class="initials">{initials || '?'}</span>
+        {/if}
+    </button>
 {:else}
-<span
-    class="avatar"
-    style="width: {size}px; height: {size}px; font-size: {fontSize}"
-    role="img"
-    aria-label={alt || name}
->
-    {#if src}
-        <img {src} alt={alt || name} />
-    {:else}
-        <span class="initials">{initials || '?'}</span>
-    {/if}
-</span>
+    <span
+        class="avatar"
+        style="width: {size}px; height: {size}px; font-size: {fontSize}"
+        role="img"
+        aria-label={alt || name}
+    >
+        {#if src}
+            <img {src} alt={alt || name} />
+        {:else}
+            <span class="initials">{initials || '?'}</span>
+        {/if}
+    </span>
 {/if}
 
 <style>

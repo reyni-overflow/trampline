@@ -78,18 +78,44 @@
             {#if title}
                 <div class="modal-header">
                     <h2 class="modal-title">{title}</h2>
-                    <button class="modal-close" onclick={close} aria-label={$t('common.close')} type="button">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
-                            <line x1="18" y1="6" x2="6" y2="18"/>
-                            <line x1="6" y1="6" x2="18" y2="18"/>
+                    <button
+                        class="modal-close"
+                        onclick={close}
+                        aria-label={$t('common.close')}
+                        type="button"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            fill="none"
+                            stroke-linecap="round"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
                         </svg>
                     </button>
                 </div>
             {:else}
-                <button class="modal-close floating" onclick={close} aria-label={$t('common.close')} type="button">
-                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
+                <button
+                    class="modal-close floating"
+                    onclick={close}
+                    aria-label={$t('common.close')}
+                    type="button"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        fill="none"
+                        stroke-linecap="round"
+                    >
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                 </button>
             {/if}

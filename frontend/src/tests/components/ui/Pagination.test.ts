@@ -19,7 +19,7 @@ describe('Pagination', () => {
         const onchange = vi.fn();
         const { container } = render(Pagination, { props: { page: 1, totalPages: 5, onchange } });
         const buttons = container.querySelectorAll('button');
-        const page2 = Array.from(buttons).find(b => b.textContent?.trim() === '2');
+        const page2 = Array.from(buttons).find((b) => b.textContent?.trim() === '2');
         if (page2) await fireEvent.click(page2);
         expect(onchange).toHaveBeenCalled();
     });

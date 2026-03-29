@@ -11,35 +11,86 @@
         children: Snippet;
     }
 
-    let { removable = false, selected = false, clickable = false, onremove, onclick, children }: Props = $props();
+    let {
+        removable = false,
+        selected = false,
+        clickable = false,
+        onremove,
+        onclick,
+        children
+    }: Props = $props();
 </script>
 
 {#if clickable}
-<button
-    class="tag clickable"
-    class:selected
-    type="button"
-    {onclick}
->
-    {@render children()}
-    {#if removable}
-        <span class="remove" role="button" tabindex={-1} onclick={(e) => { e.stopPropagation(); onremove?.(); }} onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); onremove?.(); } }} aria-label={$t('common.remove')}>
-            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </span>
-    {/if}
-</button>
+    <button class="tag clickable" class:selected type="button" {onclick}>
+        {@render children()}
+        {#if removable}
+            <span
+                class="remove"
+                role="button"
+                tabindex={-1}
+                onclick={(e) => {
+                    e.stopPropagation();
+                    onremove?.();
+                }}
+                onkeydown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onremove?.();
+                    }
+                }}
+                aria-label={$t('common.remove')}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="14"
+                    height="14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                    ><line x1="18" y1="6" x2="6" y2="18" /><line
+                        x1="6"
+                        y1="6"
+                        x2="18"
+                        y2="18"
+                    /></svg
+                >
+            </span>
+        {/if}
+    </button>
 {:else}
-<span
-    class="tag"
-    class:selected
->
-    {@render children()}
-    {#if removable}
-        <button class="remove" onclick={(e) => { e.stopPropagation(); onremove?.(); }} aria-label={$t('common.remove')} type="button">
-            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-    {/if}
-</span>
+    <span class="tag" class:selected>
+        {@render children()}
+        {#if removable}
+            <button
+                class="remove"
+                onclick={(e) => {
+                    e.stopPropagation();
+                    onremove?.();
+                }}
+                aria-label={$t('common.remove')}
+                type="button"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="14"
+                    height="14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                    ><line x1="18" y1="6" x2="6" y2="18" /><line
+                        x1="6"
+                        y1="6"
+                        x2="18"
+                        y2="18"
+                    /></svg
+                >
+            </button>
+        {/if}
+    </span>
 {/if}
 
 <style>

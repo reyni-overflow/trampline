@@ -17,7 +17,10 @@
     onDestroy(() => {
         unsubModal();
 
-        if (cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
+        if (cooldownTimer) {
+            clearInterval(cooldownTimer);
+            cooldownTimer = null;
+        }
     });
 
     let step = $state<'email' | 'sent' | 'reset'>('email');
@@ -89,7 +92,9 @@
     function validateResetForm(): boolean {
         let valid = true;
 
-        const codeErr = validate(codeValue, [required]) || (!/^\d{6}$/.test(codeValue) ? $t('forgotPassword.codeFormat') : null);
+        const codeErr =
+            validate(codeValue, [required]) ||
+            (!/^\d{6}$/.test(codeValue) ? $t('forgotPassword.codeFormat') : null);
         codeError = codeErr || '';
         if (codeErr) valid = false;
 
@@ -114,7 +119,9 @@
         try {
             const res = await authApi.forgotPassword(emailValue);
             if (res.debugCode) {
-                toast.info(`[DEV] ${$t('forgotPassword.code')}: ${res.debugCode}`, { duration: 30000 });
+                toast.info(`[DEV] ${$t('forgotPassword.code')}: ${res.debugCode}`, {
+                    duration: 30000
+                });
             }
             step = 'sent';
             startCooldown();
@@ -133,9 +140,13 @@
         try {
             const res = await authApi.forgotPassword(emailValue);
             if (res.debugCode) {
-                toast.info(`[DEV] ${$t('forgotPassword.code')}: ${res.debugCode}`, { duration: 30000 });
+                toast.info(`[DEV] ${$t('forgotPassword.code')}: ${res.debugCode}`, {
+                    duration: 30000
+                });
             }
-        } catch { /* resend is best-effort */ }
+        } catch {
+            /* resend is best-effort */
+        }
 
         loading = false;
         startCooldown();
@@ -167,11 +178,7 @@
     }
 </script>
 
-<Modal
-    open={isOpen}
-    onclose={handleClose}
-    maxWidth="26rem"
->
+<Modal open={isOpen} onclose={handleClose} maxWidth="26rem">
     {#if step === 'email'}
         <div class="forgot-form">
             <div class="forgot-header">
@@ -196,8 +203,17 @@
             </form>
 
             <button class="back-link" type="button" onclick={backToLogin}>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m15 18-6-6 6-6"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="m15 18-6-6 6-6" />
                 </svg>
                 {$t('forgotPassword.backToLogin')}
             </button>
@@ -205,22 +221,40 @@
     {:else if step === 'sent'}
         <div class="forgot-form sent-step">
             <div class="check-icon">
-                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="48"
+                    height="48"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
             </div>
 
             <div class="forgot-header">
                 <h2 class="forgot-title">{$t('forgotPassword.sent')}</h2>
-                <p class="forgot-subtitle">{$t('forgotPassword.sentMessage', { email: emailValue })}</p>
+                <p class="forgot-subtitle">
+                    {$t('forgotPassword.sentMessage', { email: emailValue })}
+                </p>
             </div>
 
             <div class="resend-row">
                 {#if cooldown > 0}
-                    <span class="resend-disabled">{$t('forgotPassword.resendIn', { seconds: String(cooldown) })}</span>
+                    <span class="resend-disabled"
+                        >{$t('forgotPassword.resendIn', { seconds: String(cooldown) })}</span
+                    >
                 {:else}
-                    <button class="resend-link" type="button" onclick={handleResend} disabled={loading}>
+                    <button
+                        class="resend-link"
+                        type="button"
+                        onclick={handleResend}
+                        disabled={loading}
+                    >
                         {$t('forgotPassword.resend')}
                     </button>
                 {/if}
@@ -262,8 +296,17 @@
             </form>
 
             <button class="back-link" type="button" onclick={backToLogin}>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m15 18-6-6 6-6"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="m15 18-6-6 6-6" />
                 </svg>
                 {$t('forgotPassword.backToLogin')}
             </button>

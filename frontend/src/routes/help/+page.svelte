@@ -63,10 +63,25 @@
                 <h2 class="faq-group-title">{group.title}</h2>
                 {#each group.items as item (item.id)}
                     <div class="faq-item" class:open={openId === item.id}>
-                        <button class="faq-question" type="button" onclick={() => toggle(item.id)} aria-expanded={openId === item.id}>
+                        <button
+                            class="faq-question"
+                            type="button"
+                            onclick={() => toggle(item.id)}
+                            aria-expanded={openId === item.id}
+                        >
                             <span>{item.q}</span>
-                            <svg class="faq-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"/>
+                            <svg
+                                class="faq-chevron"
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <polyline points="6 9 12 15 18 9" />
                             </svg>
                         </button>
                         {#if openId === item.id}

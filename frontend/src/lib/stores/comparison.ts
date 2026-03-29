@@ -29,7 +29,9 @@ function saveToStorage(items: ComparisonJob[]) {
     if (!browser) return;
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch { /* ignored */ }
+    } catch {
+        /* ignored */
+    }
 }
 
 function createComparisonStore() {

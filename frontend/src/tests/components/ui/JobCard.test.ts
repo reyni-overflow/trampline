@@ -16,7 +16,10 @@ const mockJob = {
     geoLon: 37.62,
     salaryFrom: 80000,
     salaryTo: 150000,
-    tags: [{ id: '1', name: 'TypeScript', category: 'language', lvl: 0 }, { id: '2', name: 'Svelte', category: 'framework', lvl: 0 }],
+    tags: [
+        { id: '1', name: 'TypeScript', category: 'language', lvl: 0 },
+        { id: '2', name: 'Svelte', category: 'framework', lvl: 0 }
+    ],
     photos: [],
     videos: [],
     createdAt: '2026-03-01T00:00:00Z',

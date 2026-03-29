@@ -19,8 +19,20 @@
     <div class="choose-header">
         <div class="logo-row">
             <svg viewBox="0 0 200 200" width="32" height="32" class="logo-icon">
-                <path d="M 90 160 L 90 80" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" />
-                <path d="M 30 100 L 135 65" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" />
+                <path
+                    d="M 90 160 L 90 80"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="20"
+                    stroke-linecap="round"
+                />
+                <path
+                    d="M 30 100 L 135 65"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="20"
+                    stroke-linecap="round"
+                />
                 <circle cx="165" cy="55" r="14" fill="currentColor" />
             </svg>
         </div>
@@ -36,8 +48,21 @@
             onclick={() => selectRole('Worker')}
         >
             <span class="role-icon">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle
+                        cx="12"
+                        cy="7"
+                        r="4"
+                    />
                 </svg>
             </span>
             <div class="role-info">
@@ -52,8 +77,21 @@
             onclick={() => selectRole('Employee')}
         >
             <span class="role-icon">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /><path
+                        d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                    /><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /><path d="M10 6h4" /><path
+                        d="M10 10h4"
+                    /><path d="M10 14h4" /><path d="M10 18h4" />
                 </svg>
             </span>
             <div class="role-info">
@@ -65,7 +103,9 @@
 
     <div class="choose-actions">
         <Button size="lg" onclick={() => authModal.goToLogin()}>{$t('auth.login')}</Button>
-        <Button size="lg" variant="outline" onclick={() => authModal.goToRegister()}>{$t('auth.register')}</Button>
+        <Button size="lg" variant="outline" onclick={() => authModal.goToRegister()}
+            >{$t('auth.register')}</Button
+        >
     </div>
 </div>
 
@@ -113,7 +153,9 @@
         border: 2px solid var(--border-default);
         border-radius: var(--radius-lg);
         cursor: pointer;
-        transition: var(--transition-colors), border-color var(--duration-normal) var(--ease-in-out);
+        transition:
+            var(--transition-colors),
+            border-color var(--duration-normal) var(--ease-in-out);
         text-align: left;
     }
 

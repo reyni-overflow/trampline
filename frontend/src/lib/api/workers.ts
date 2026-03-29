@@ -110,7 +110,13 @@ export const workersApi = {
         return api.get<{ count: number }>('/worker/count');
     },
 
-    search(params: { search?: string; skills?: string; university?: string; pageSize?: number; pageNumber?: number }) {
+    search(params: {
+        search?: string;
+        skills?: string;
+        university?: string;
+        pageSize?: number;
+        pageNumber?: number;
+    }) {
         const query = new URLSearchParams();
         if (params.search) query.set('search', params.search);
         if (params.skills) query.set('skills', params.skills);

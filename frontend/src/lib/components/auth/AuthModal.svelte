@@ -12,11 +12,7 @@
     onDestroy(unsub);
 </script>
 
-<Modal
-    open={state.open}
-    onclose={() => authModal.close()}
-    maxWidth="26rem"
->
+<Modal open={state.open} onclose={() => authModal.close()} maxWidth="26rem">
     {#if state.view === 'choose'}
         <AuthChoose />
     {:else if state.view === 'login'}

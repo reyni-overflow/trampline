@@ -9,24 +9,43 @@
     let count = $state(0);
     let expanded = $state(false);
 
-    const unsubItems = comparison.subscribe(v => items = v);
-    const unsubCount = comparisonCount.subscribe(v => count = v);
+    const unsubItems = comparison.subscribe((v) => (items = v));
+    const unsubCount = comparisonCount.subscribe((v) => (count = v));
 
-    onDestroy(() => { unsubItems(); unsubCount(); });
+    onDestroy(() => {
+        unsubItems();
+        unsubCount();
+    });
 </script>
 
 {#if count > 0}
     <div class="comparison-bar" class:expanded>
-        <div class="bar-header" >
-            <button class="bar-toggle" type="button" onclick={() => expanded = !expanded}>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        <div class="bar-header">
+            <button class="bar-toggle" type="button" onclick={() => (expanded = !expanded)}>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <line x1="18" y1="20" x2="18" y2="10" /><line
+                        x1="12"
+                        y1="20"
+                        x2="12"
+                        y2="4"
+                    /><line x1="6" y1="20" x2="6" y2="14" />
                 </svg>
                 {$t('comparison.title')}
                 <Badge variant="accent" size="sm">{count}</Badge>
             </button>
             <div class="bar-actions">
-                <Button size="sm" variant="ghost" onclick={() => comparison.clear()}>{$t('comparison.clear')}</Button>
+                <Button size="sm" variant="ghost" onclick={() => comparison.clear()}
+                    >{$t('comparison.clear')}</Button
+                >
             </div>
         </div>
 
@@ -37,23 +56,38 @@
                     {#each items as job (job.id)}
                         <div class="comp-cell comp-job-header">
                             <strong>{job.title}</strong>
-                            <button class="comp-remove" type="button" onclick={() => comparison.remove(job.id)} aria-label={$t('comparison.remove')}>
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            <button
+                                class="comp-remove"
+                                type="button"
+                                onclick={() => comparison.remove(job.id)}
+                                aria-label={$t('comparison.remove')}
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="14"
+                                    height="14"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    ><line x1="18" y1="6" x2="6" y2="18" /><line
+                                        x1="6"
+                                        y1="6"
+                                        x2="18"
+                                        y2="18"
+                                    /></svg
+                                >
                             </button>
                         </div>
                     {/each}
                 </div>
-                {#each [
-                    ['comparison.company', 'company'],
-                    ['comparison.salary', 'salary'],
-                    ['comparison.format', 'format'],
-                    ['comparison.type', 'type'],
-                    ['comparison.location', 'city']
-                ] as [labelKey, field] (field)}
+                {#each [['comparison.company', 'company'], ['comparison.salary', 'salary'], ['comparison.format', 'format'], ['comparison.type', 'type'], ['comparison.location', 'city']] as [labelKey, field] (field)}
                     <div class="comp-row">
                         <span class="comp-label">{$t(labelKey)}</span>
                         {#each items as job (job.id)}
-                            <span class="comp-cell">{(job as unknown as Record<string, unknown>)[field] || '—'}</span>
+                            <span class="comp-cell"
+                                >{(job as unknown as Record<string, unknown>)[field] || '—'}</span
+                            >
                         {/each}
                     </div>
                 {/each}
@@ -77,7 +111,7 @@
         z-index: var(--z-overlay);
         background: var(--bg-elevated);
         border-top: 1px solid var(--border-default);
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
         animation: slide-up var(--duration-fast) var(--ease-out);
     }
 
@@ -98,7 +132,10 @@
         cursor: pointer;
     }
 
-    .bar-actions { display: flex; gap: var(--space-2); }
+    .bar-actions {
+        display: flex;
+        gap: var(--space-2);
+    }
 
     .comparison-table {
         padding: 0 var(--space-5) var(--space-5);
@@ -114,7 +151,9 @@
         align-items: center;
     }
 
-    .comp-row.comp-header { border-bottom: 2px solid var(--border-default); }
+    .comp-row.comp-header {
+        border-bottom: 2px solid var(--border-default);
+    }
 
     .comp-label {
         font-size: var(--font-xs);
@@ -134,7 +173,9 @@
         gap: var(--space-2);
     }
 
-    .comp-job-header strong { font-size: var(--font-sm); }
+    .comp-job-header strong {
+        font-size: var(--font-sm);
+    }
 
     .comp-remove {
         display: flex;
@@ -143,7 +184,9 @@
         border-radius: var(--radius-sm);
         transition: var(--transition-colors);
     }
-    .comp-remove:hover { color: var(--color-error); }
+    .comp-remove:hover {
+        color: var(--color-error);
+    }
 
     .comp-tags {
         font-size: var(--font-xs);
@@ -152,6 +195,9 @@
     }
 
     @media (max-width: 640px) {
-        .comp-row { grid-template-columns: 5rem repeat(var(--comp-cols, 3), 1fr); gap: var(--space-2); }
+        .comp-row {
+            grid-template-columns: 5rem repeat(var(--comp-cols, 3), 1fr);
+            gap: var(--space-2);
+        }
     }
 </style>

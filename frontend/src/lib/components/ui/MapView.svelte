@@ -55,7 +55,13 @@
     }
 
     function createMarkerIcon(marker: MapMarker): Leaflet {
-        const typeClass = marker.isFavorite ? 'marker--favorite' : (marker.type === 'Event' ? 'marker--event' : (marker.type === 'Mentorship' ? 'marker--mentorship' : 'marker--job'));
+        const typeClass = marker.isFavorite
+            ? 'marker--favorite'
+            : marker.type === 'Event'
+              ? 'marker--event'
+              : marker.type === 'Mentorship'
+                ? 'marker--mentorship'
+                : 'marker--job';
         const initial = marker.company.charAt(0).toUpperCase();
 
         return L.divIcon({
@@ -68,11 +74,19 @@
     }
 
     function escapeHtml(s: string): string {
-        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        return s
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     }
 
     function createPopup(marker: MapMarker): string {
-        const tags = marker.tags?.slice(0, 3).map((t) => `<span class="popup-tag">${escapeHtml(t)}</span>`).join('') || '';
+        const tags =
+            marker.tags
+                ?.slice(0, 3)
+                .map((t) => `<span class="popup-tag">${escapeHtml(t)}</span>`)
+                .join('') || '';
         return `
             <div class="map-popup">
                 <strong class="popup-title">${escapeHtml(marker.title)}</strong>
@@ -104,7 +118,10 @@
         if (theme === currentTheme && tileLayer) return;
         currentTheme = theme;
         if (tileLayer) map.removeLayer(tileLayer);
-        tileLayer = L.tileLayer(theme === 'dark' ? DARK_TILES : LIGHT_TILES, { attribution: TILE_ATTR, maxZoom: 19 });
+        tileLayer = L.tileLayer(theme === 'dark' ? DARK_TILES : LIGHT_TILES, {
+            attribution: TILE_ATTR,
+            maxZoom: 19
+        });
         tileLayer.addTo(map);
     }
 
@@ -140,7 +157,10 @@
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
             currentTheme = getTheme();
-            tileLayer = L.tileLayer(currentTheme === 'dark' ? DARK_TILES : LIGHT_TILES, { attribution: TILE_ATTR, maxZoom: 19 });
+            tileLayer = L.tileLayer(currentTheme === 'dark' ? DARK_TILES : LIGHT_TILES, {
+                attribution: TILE_ATTR,
+                maxZoom: 19
+            });
             tileLayer.addTo(map);
 
             markerGroup = L.markerClusterGroup({
@@ -162,7 +182,10 @@
             updateMarkers();
 
             themeObserver = new MutationObserver(() => updateTiles());
-            themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            themeObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme']
+            });
 
             let pulseMarker: Leaflet = null;
             const handleFlyTo = (e: Event) => {
@@ -170,7 +193,11 @@
                 map.flyTo([lat, lng], 13, { duration: 1.5 });
                 if (pulseMarker) map.removeLayer(pulseMarker);
                 pulseMarker = L.circleMarker([lat, lng], {
-                    radius: 8, color: 'var(--color-blue, #3B82F6)', fillColor: 'var(--color-blue, #3B82F6)', fillOpacity: 0.4, weight: 2
+                    radius: 8,
+                    color: 'var(--color-blue, #3B82F6)',
+                    fillColor: 'var(--color-blue, #3B82F6)',
+                    fillOpacity: 0.4,
+                    weight: 2
                 });
                 pulseMarker.addTo(map);
             };
@@ -189,7 +216,10 @@
 
     onDestroy(() => {
         flyToCleanup?.();
-        if (map) { map.remove(); map = null; }
+        if (map) {
+            map.remove();
+            map = null;
+        }
     });
 
     $effect(() => {
@@ -244,15 +274,23 @@
         transform: scale(1.15);
     }
 
-    :global(.marker--job) { background: var(--color-info, #3B82F6); }
-    :global(.marker--mentorship) { background: var(--color-success, #10B981); }
-    :global(.marker--event) { background: var(--color-purple, #8B5CF6); }
-    :global(.marker--favorite) { background: var(--accent, #FACC15); }
+    :global(.marker--job) {
+        background: var(--color-info, #3b82f6);
+    }
+    :global(.marker--mentorship) {
+        background: var(--color-success, #10b981);
+    }
+    :global(.marker--event) {
+        background: var(--color-purple, #8b5cf6);
+    }
+    :global(.marker--favorite) {
+        background: var(--accent, #facc15);
+    }
 
     :global(.custom-popup .leaflet-popup-content-wrapper) {
         background: var(--bg-elevated, #111);
         color: var(--text-primary, #fff);
-        border: 1px solid var(--border-default, #1F1F1F);
+        border: 1px solid var(--border-default, #1f1f1f);
         border-radius: var(--radius-lg, 14px);
         box-shadow: var(--shadow-lg);
         padding: 0;
@@ -260,7 +298,7 @@
 
     :global(.custom-popup .leaflet-popup-tip) {
         background: var(--bg-elevated, #111);
-        border: 1px solid var(--border-default, #1F1F1F);
+        border: 1px solid var(--border-default, #1f1f1f);
     }
 
     :global(.custom-popup .leaflet-popup-close-button) {
@@ -285,13 +323,13 @@
 
     :global(.popup-company) {
         font-size: 0.8125rem;
-        color: var(--text-secondary, #A0A0A0);
+        color: var(--text-secondary, #a0a0a0);
     }
 
     :global(.popup-salary) {
         font-size: 0.8125rem;
         font-weight: 600;
-        color: var(--accent, #3B82F6);
+        color: var(--accent, #3b82f6);
     }
 
     :global(.popup-tags) {
@@ -305,13 +343,13 @@
         padding: 0.125rem 0.5rem;
         background: var(--bg-tertiary, #141414);
         border-radius: 9999px;
-        color: var(--text-secondary, #A0A0A0);
+        color: var(--text-secondary, #a0a0a0);
     }
 
     :global(.popup-link) {
         font-size: 0.8125rem;
         font-weight: 500;
-        color: var(--accent, #3B82F6);
+        color: var(--accent, #3b82f6);
         text-decoration: none;
         margin-top: 0.25rem;
     }
@@ -330,7 +368,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--accent, #3B82F6);
+        background: var(--accent, #3b82f6);
         color: var(--text-inverse, #fff);
         font-weight: 700;
         font-size: 0.8125rem;

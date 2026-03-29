@@ -67,7 +67,7 @@ describe('toast store', () => {
         toast.info('2');
         toast.info('3');
         toast.info('4');
-        const messages = get(toast).map(t => t.message);
+        const messages = get(toast).map((t) => t.message);
         expect(messages).not.toContain('1');
         expect(messages).toContain('4');
     });

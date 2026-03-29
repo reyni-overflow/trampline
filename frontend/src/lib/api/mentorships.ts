@@ -75,7 +75,12 @@ export interface MentorshipApplicationResponse {
         about: string | null;
         photo: string | null;
         resume: string | null;
-        info: { university: string; course: number; admissionAt: string; graduationAt: string } | null;
+        info: {
+            university: string;
+            course: number;
+            admissionAt: string;
+            graduationAt: string;
+        } | null;
     };
     workerProfileId: string;
     createdAt: string;
@@ -84,8 +89,15 @@ export interface MentorshipApplicationResponse {
 }
 
 export const mentorshipsApi = {
-    getAll(pageNumber = 1, pageSize = 10, filters?: { city?: string; search?: string; format?: string; tags?: string }) {
-        const params = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
+    getAll(
+        pageNumber = 1,
+        pageSize = 10,
+        filters?: { city?: string; search?: string; format?: string; tags?: string }
+    ) {
+        const params = new URLSearchParams({
+            pageNumber: String(pageNumber),
+            pageSize: String(pageSize)
+        });
         if (filters?.city) params.set('city', filters.city);
         if (filters?.search) params.set('search', filters.search);
         if (filters?.format) params.set('format', filters.format);
@@ -110,7 +122,9 @@ export const mentorshipsApi = {
     },
 
     getByUser(userId: string, pageNumber = 1, pageSize = 10) {
-        return api.get<MentorshipResponse[]>(`/mentorship/all-by/${userId}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+        return api.get<MentorshipResponse[]>(
+            `/mentorship/all-by/${userId}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        );
     },
 
     apply(mentorshipId: string, coverLetter: string = '') {

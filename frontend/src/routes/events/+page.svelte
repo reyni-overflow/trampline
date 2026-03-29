@@ -71,7 +71,7 @@
             city: e.city || '',
             address: e.address || '',
             description: e.description || '',
-            tags: (e.tags || []).map(tag => tag.name),
+            tags: (e.tags || []).map((tag) => tag.name),
             participants: e.views
         };
     }
@@ -97,18 +97,22 @@
         for (let i = 0; i < startDay; i++) days.push({ day: 0, events: [] });
         for (let d = 1; d <= daysInMonth; d++) {
             const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            days.push({ day: d, events: filtered.filter(e => e.date === dateStr) });
+            days.push({ day: d, events: filtered.filter((e) => e.date === dateStr) });
         }
         return days;
     });
 
     function prevMonth() {
-        if (calendarMonth === 0) { calendarMonth = 11; calendarYear--; }
-        else calendarMonth--;
+        if (calendarMonth === 0) {
+            calendarMonth = 11;
+            calendarYear--;
+        } else calendarMonth--;
     }
     function nextMonth() {
-        if (calendarMonth === 11) { calendarMonth = 0; calendarYear++; }
-        else calendarMonth++;
+        if (calendarMonth === 11) {
+            calendarMonth = 0;
+            calendarYear++;
+        } else calendarMonth++;
     }
 
     let sortOptions = $derived([
@@ -120,7 +124,12 @@
         let list = displayEvents;
         if (search) {
             const q = search.toLowerCase();
-            list = list.filter((e) => e.title.toLowerCase().includes(q) || e.organizer.toLowerCase().includes(q) || e.tags.some((t) => t.toLowerCase().includes(q)));
+            list = list.filter(
+                (e) =>
+                    e.title.toLowerCase().includes(q) ||
+                    e.organizer.toLowerCase().includes(q) ||
+                    e.tags.some((t) => t.toLowerCase().includes(q))
+            );
         }
         if (formatOnline && !formatOffline) list = list.filter((e) => e.format === 'online');
         if (formatOffline && !formatOnline) list = list.filter((e) => e.format === 'offline');
@@ -128,7 +137,10 @@
             const q = city.toLowerCase();
             list = list.filter((e) => e.city.toLowerCase().includes(q));
         }
-        if (sortBy === 'date') list = [...list].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        if (sortBy === 'date')
+            list = [...list].sort(
+                (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
         if (sortBy === 'name') list = [...list].sort((a, b) => a.title.localeCompare(b.title));
         return list;
     });
@@ -140,7 +152,10 @@
     let coverLetterError = $state('');
 
     function handleRegister(ev: EventItem) {
-        if (!isAuth) { authModal.open(); return; }
+        if (!isAuth) {
+            authModal.open();
+            return;
+        }
         applyTarget = ev;
         coverLetter = '';
         coverLetterError = '';
@@ -173,7 +188,11 @@
 
     async function toggleEventFavorite(ev: EventItem) {
         favorites.toggleEvent(ev.id);
-        toast.success(favorites.isEventFavorite(ev.id) ? $t('event.addToFavorites') : $t('event.removeFromFavorites'));
+        toast.success(
+            favorites.isEventFavorite(ev.id)
+                ? $t('event.addToFavorites')
+                : $t('event.removeFromFavorites')
+        );
         try {
             if (isAuth) {
                 await favoritesApi.toggle(ev.id, 'Event');
@@ -198,13 +217,73 @@
         <h1 class="page-title">{$t('events.title')}</h1>
         <div class="page-controls">
             <SearchInput placeholder={$t('events.searchPlaceholder')} bind:value={search} />
-            <Select options={sortOptions} bind:value={sortBy} placeholder={$t('jobs.sortPlaceholder')} />
+            <Select
+                options={sortOptions}
+                bind:value={sortBy}
+                placeholder={$t('jobs.sortPlaceholder')}
+            />
             <div class="view-toggle-group">
-                <button class="vt-btn" class:active={viewMode === 'list'} type="button" onclick={() => viewMode = 'list'} title={$t('events.listView')}>
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                <button
+                    class="vt-btn"
+                    class:active={viewMode === 'list'}
+                    type="button"
+                    onclick={() => (viewMode = 'list')}
+                    title={$t('events.listView')}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        ><line x1="8" y1="6" x2="21" y2="6" /><line
+                            x1="8"
+                            y1="12"
+                            x2="21"
+                            y2="12"
+                        /><line x1="8" y1="18" x2="21" y2="18" /><line
+                            x1="3"
+                            y1="6"
+                            x2="3.01"
+                            y2="6"
+                        /><line x1="3" y1="12" x2="3.01" y2="12" /><line
+                            x1="3"
+                            y1="18"
+                            x2="3.01"
+                            y2="18"
+                        /></svg
+                    >
                 </button>
-                <button class="vt-btn" class:active={viewMode === 'calendar'} type="button" onclick={() => viewMode = 'calendar'} title={$t('events.calendarView')}>
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <button
+                    class="vt-btn"
+                    class:active={viewMode === 'calendar'}
+                    type="button"
+                    onclick={() => (viewMode = 'calendar')}
+                    title={$t('events.calendarView')}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><rect width="18" height="18" x="3" y="4" rx="2" /><line
+                            x1="16"
+                            y1="2"
+                            x2="16"
+                            y2="6"
+                        /><line x1="8" y1="2" x2="8" y2="6" /><line
+                            x1="3"
+                            y1="10"
+                            x2="21"
+                            y2="10"
+                        /></svg
+                    >
                 </button>
             </div>
         </div>
@@ -218,7 +297,11 @@
                 <Checkbox label={$t('events.offline')} bind:checked={formatOffline} />
             </div>
             <div class="filter-group">
-                <Input label={$t('jobs.city')} placeholder={$t('jobs.cityPlaceholder')} bind:value={city} />
+                <Input
+                    label={$t('jobs.city')}
+                    placeholder={$t('jobs.cityPlaceholder')}
+                    bind:value={city}
+                />
             </div>
         </aside>
 
@@ -226,12 +309,38 @@
             {#if viewMode === 'calendar'}
                 <div class="calendar">
                     <div class="cal-header">
-                        <button class="cal-nav" type="button" onclick={prevMonth} aria-label={$t('common.back')}>
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+                        <button
+                            class="cal-nav"
+                            type="button"
+                            onclick={prevMonth}
+                            aria-label={$t('common.back')}
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"><path d="m15 18-6-6 6-6" /></svg
+                            >
                         </button>
                         <span class="cal-month">{MONTH_NAMES[calendarMonth]} {calendarYear}</span>
-                        <button class="cal-nav" type="button" onclick={nextMonth} aria-label={$t('common.more')}>
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+                        <button
+                            class="cal-nav"
+                            type="button"
+                            onclick={nextMonth}
+                            aria-label={$t('common.more')}
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"><path d="m9 18 6-6-6-6" /></svg
+                            >
                         </button>
                     </div>
                     <div class="cal-weekdays">
@@ -241,7 +350,13 @@
                     </div>
                     <div class="cal-grid">
                         {#each calendarDays as cell, i (i)}
-                            <div class="cal-cell" class:empty={cell.day === 0} class:today={cell.day === new Date().getDate() && calendarMonth === new Date().getMonth() && calendarYear === new Date().getFullYear()}>
+                            <div
+                                class="cal-cell"
+                                class:empty={cell.day === 0}
+                                class:today={cell.day === new Date().getDate() &&
+                                    calendarMonth === new Date().getMonth() &&
+                                    calendarYear === new Date().getFullYear()}
+                            >
                                 {#if cell.day}
                                     <span class="cal-day">{cell.day}</span>
                                     {#each cell.events.slice(0, 2) as ev (ev.id)}
@@ -254,7 +369,7 @@
                             </div>
                         {/each}
                     </div>
-                    {#if calendarDays.every(c => c.events.length === 0)}
+                    {#if calendarDays.every((c) => c.events.length === 0)}
                         <p class="cal-empty">{$t('events.noEventsThisMonth')}</p>
                     {/if}
                 </div>
@@ -268,8 +383,16 @@
                             </div>
                             <div class="sk-main">
                                 <div class="sk-badges-row">
-                                    <Skeleton width="4rem" height="1.25rem" radius="var(--radius-full)" />
-                                    <Skeleton width="3.5rem" height="1.25rem" radius="var(--radius-full)" />
+                                    <Skeleton
+                                        width="4rem"
+                                        height="1.25rem"
+                                        radius="var(--radius-full)"
+                                    />
+                                    <Skeleton
+                                        width="3.5rem"
+                                        height="1.25rem"
+                                        radius="var(--radius-full)"
+                                    />
                                 </div>
                                 <Skeleton width="60%" height="1.125rem" />
                                 <div class="sk-meta-row">
@@ -281,11 +404,27 @@
                                 <Skeleton width="70%" height="0.875rem" />
                                 <div class="sk-bottom-row">
                                     <div class="sk-tags-row">
-                                        <Skeleton width="3.5rem" height="1.25rem" radius="var(--radius-full)" />
-                                        <Skeleton width="4rem" height="1.25rem" radius="var(--radius-full)" />
-                                        <Skeleton width="3rem" height="1.25rem" radius="var(--radius-full)" />
+                                        <Skeleton
+                                            width="3.5rem"
+                                            height="1.25rem"
+                                            radius="var(--radius-full)"
+                                        />
+                                        <Skeleton
+                                            width="4rem"
+                                            height="1.25rem"
+                                            radius="var(--radius-full)"
+                                        />
+                                        <Skeleton
+                                            width="3rem"
+                                            height="1.25rem"
+                                            radius="var(--radius-full)"
+                                        />
                                     </div>
-                                    <Skeleton width="6rem" height="2rem" radius="var(--radius-md)" />
+                                    <Skeleton
+                                        width="6rem"
+                                        height="2rem"
+                                        radius="var(--radius-md)"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -293,30 +432,70 @@
                 </div>
             {:else if filtered.length === 0}
                 <div class="empty-state">
-                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="48"
+                        height="48"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect width="18" height="18" x="3" y="4" rx="2" /><line
+                            x1="16"
+                            y1="2"
+                            x2="16"
+                            y2="6"
+                        /><line x1="8" y1="2" x2="8" y2="6" /><line
+                            x1="3"
+                            y1="10"
+                            x2="21"
+                            y2="10"
+                        />
                     </svg>
                     <p>{$t('events.notFound')}</p>
                 </div>
             {:else}
                 <div class="events-list content-fade-in">
                     {#each filtered as event, i (event.id)}
-                        <article class="event-card stagger-item" style="animation-delay: {Math.min(i * 50, 500)}ms">
+                        <article
+                            class="event-card stagger-item"
+                            style="animation-delay: {Math.min(i * 50, 500)}ms"
+                        >
                             <div class="event-date-col">
                                 <span class="event-day">{new Date(event.date).getDate()}</span>
-                                <span class="event-month">{new Date(event.date).toLocaleDateString('ru-RU', { month: 'short' })}</span>
+                                <span class="event-month"
+                                    >{new Date(event.date).toLocaleDateString('ru-RU', {
+                                        month: 'short'
+                                    })}</span
+                                >
                             </div>
                             <div class="event-main">
                                 <div class="event-top">
                                     <div class="event-badges">
                                         <Badge variant="accent">{event.type}</Badge>
-                                        <Badge variant={event.format === 'online' ? 'success' : 'warning'}>{event.format === 'online' ? $t('events.online') : $t('events.offline')}</Badge>
+                                        <Badge
+                                            variant={event.format === 'online'
+                                                ? 'success'
+                                                : 'warning'}
+                                            >{event.format === 'online'
+                                                ? $t('events.online')
+                                                : $t('events.offline')}</Badge
+                                        >
                                     </div>
-                                    <span class="event-participants">{formatViews(event.participants)}</span>
+                                    <span class="event-participants"
+                                        >{formatViews(event.participants)}</span
+                                    >
                                 </div>
-                                <a href="/events/{event.id}" class="event-title-link"><h3 class="event-title">{event.title}</h3></a>
+                                <a href="/events/{event.id}" class="event-title-link"
+                                    ><h3 class="event-title">{event.title}</h3></a
+                                >
                                 <div class="event-meta">
-                                    <a href="/companies/{event.organizerId}" class="event-organizer">
+                                    <a
+                                        href="/companies/{event.organizerId}"
+                                        class="event-organizer"
+                                    >
                                         <Avatar name={event.organizer} size={20} />
                                         {event.organizer}
                                     </a>
@@ -334,13 +513,39 @@
                                         {/each}
                                     </div>
                                     <div class="event-actions">
-                                        <button class="fav-btn" class:active={isEventFav(event.id)} onclick={() => toggleEventFavorite(event)} title={isEventFav(event.id) ? $t('event.removeFromFavorites') : $t('event.addToFavorites')} type="button">
-                                            <svg viewBox="0 0 24 24" width="20" height="20" fill={isEventFav(event.id) ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                                        <button
+                                            class="fav-btn"
+                                            class:active={isEventFav(event.id)}
+                                            onclick={() => toggleEventFavorite(event)}
+                                            title={isEventFav(event.id)
+                                                ? $t('event.removeFromFavorites')
+                                                : $t('event.addToFavorites')}
+                                            type="button"
+                                        >
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                width="20"
+                                                height="20"
+                                                fill={isEventFav(event.id)
+                                                    ? 'currentColor'
+                                                    : 'none'}
+                                                stroke="currentColor"
+                                                stroke-width="1.75"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <path
+                                                    d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                                                />
                                             </svg>
                                         </button>
-                                        <ShareButton title={event.title} url={`${typeof window !== 'undefined' ? window.location.origin : ''}/events/${event.id}`} />
-                                        <Button size="sm" onclick={() => handleRegister(event)}>{$t('events.participate')}</Button>
+                                        <ShareButton
+                                            title={event.title}
+                                            url={`${typeof window !== 'undefined' ? window.location.origin : ''}/events/${event.id}`}
+                                        />
+                                        <Button size="sm" onclick={() => handleRegister(event)}
+                                            >{$t('events.participate')}</Button
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -353,7 +558,13 @@
 </div>
 
 <Modal bind:open={showApplyModal} title={$t('event.applyTitle')} maxWidth="480px">
-    <form class="apply-form" onsubmit={(e) => { e.preventDefault(); submitApplication(); }}>
+    <form
+        class="apply-form"
+        onsubmit={(e) => {
+            e.preventDefault();
+            submitApplication();
+        }}
+    >
         <p class="apply-hint">{$t('event.applyHint')}</p>
         <Textarea
             label={$t('event.coverLetter')}
@@ -364,7 +575,12 @@
             rows={5}
         />
         <div class="apply-actions">
-            <Button variant="outline" onclick={() => { showApplyModal = false; }}>{$t('common.cancel')}</Button>
+            <Button
+                variant="outline"
+                onclick={() => {
+                    showApplyModal = false;
+                }}>{$t('common.cancel')}</Button
+            >
             <Button type="submit" disabled={applyLoading}>
                 {applyLoading ? $t('common.loading') : $t('event.submitApplication')}
             </Button>
@@ -398,8 +614,15 @@
         gap: var(--space-3);
     }
 
-    .page-controls :global(.select-trigger) { height: 2.25rem; font-size: var(--font-xs); padding: 0 0.75rem; min-width: 14rem; }
-    .page-controls :global(.option) { font-size: var(--font-xs); }
+    .page-controls :global(.select-trigger) {
+        height: 2.25rem;
+        font-size: var(--font-xs);
+        padding: 0 0.75rem;
+        min-width: 14rem;
+    }
+    .page-controls :global(.option) {
+        font-size: var(--font-xs);
+    }
 
     .events-layout {
         display: flex;
@@ -531,7 +754,9 @@
         transition: var(--transition-colors);
     }
 
-    .event-organizer:hover { color: var(--accent); }
+    .event-organizer:hover {
+        color: var(--accent);
+    }
 
     .event-location {
         font-size: var(--font-sm);
@@ -616,7 +841,9 @@
         transition: var(--transition-colors);
     }
 
-    .event-title-link:hover { color: var(--accent); }
+    .event-title-link:hover {
+        color: var(--accent);
+    }
 
     .event-actions {
         display: flex;
@@ -636,7 +863,8 @@
         flex-shrink: 0;
     }
 
-    .fav-btn:hover, .fav-btn.active {
+    .fav-btn:hover,
+    .fav-btn.active {
         color: var(--color-error);
     }
 
@@ -671,7 +899,9 @@
         color: var(--text-tertiary);
     }
 
-    .empty-state p { font-size: var(--font-md); }
+    .empty-state p {
+        font-size: var(--font-md);
+    }
 
     .view-toggle-group {
         display: flex;
@@ -708,107 +938,139 @@
         border-radius: var(--radius-lg);
     }
 
-        .cal-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: var(--space-4);
+    .cal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-4);
+    }
+
+    .cal-month {
+        font-size: var(--font-md);
+        font-weight: var(--weight-semibold);
+    }
+
+    .cal-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        color: var(--text-tertiary);
+        border-radius: var(--radius-sm);
+        transition: var(--transition-colors);
+    }
+
+    .cal-nav:hover {
+        color: var(--text-primary);
+        background: var(--bg-tertiary);
+    }
+
+    .cal-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        margin-bottom: var(--space-2);
+    }
+
+    .cal-wd {
+        text-align: center;
+        font-size: var(--font-xs);
+        font-weight: var(--weight-medium);
+        color: var(--text-tertiary);
+        padding: var(--space-1);
+    }
+
+    .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+    }
+
+    .cal-cell {
+        min-height: 5rem;
+        padding: var(--space-1);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-sm);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        overflow: hidden;
+    }
+
+    .cal-cell.empty {
+        border-color: transparent;
+    }
+
+    .cal-cell.today {
+        background: var(--accent-subtle);
+        border-color: var(--accent);
+    }
+
+    .cal-day {
+        font-size: var(--font-xs);
+        font-weight: var(--weight-semibold);
+        color: var(--text-secondary);
+    }
+
+    .cal-event {
+        font-size: 0.625rem;
+        padding: 1px 4px;
+        background: var(--accent-subtle);
+        color: var(--accent);
+        border-radius: var(--radius-sm);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: default;
+    }
+
+    .cal-more {
+        font-size: 0.625rem;
+        color: var(--text-tertiary);
+        padding: 1px 4px;
+    }
+
+    .cal-empty {
+        text-align: center;
+        color: var(--text-tertiary);
+        font-size: var(--font-sm);
+        padding: var(--space-6);
+    }
+
+    @media (max-width: 768px) {
+        .events-layout {
+            flex-direction: column;
         }
-
-        .cal-month {
-                font-size: var(--font-md);
-                font-weight: var(--weight-semibold);
+        .events-filters {
+            width: 100%;
+            position: static;
+            flex-direction: row;
+            flex-wrap: wrap;
         }
-
-        .cal-nav {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 2rem;
-                height: 2rem;
-                color: var(--text-tertiary);
-                border-radius: var(--radius-sm);
-                transition: var(--transition-colors);
+        .event-card {
+            flex-direction: column;
         }
-
-        .cal-nav:hover { color: var(--text-primary); background: var(--bg-tertiary); }
-
-        .cal-weekdays {
-                display: grid;
-                grid-template-columns: repeat(7, 1fr);
-                gap: 1px;
-                margin-bottom: var(--space-2);
+        .event-date-col {
+            flex-direction: row;
+            gap: var(--space-2);
+            width: fit-content;
         }
-
-        .cal-wd {
-                text-align: center;
-                font-size: var(--font-xs);
-                font-weight: var(--weight-medium);
-                color: var(--text-tertiary);
-                padding: var(--space-1);
+        .event-bottom {
+            flex-direction: column;
+            align-items: stretch;
         }
-
-        .cal-grid {
-                display: grid;
-                grid-template-columns: repeat(7, 1fr);
-                gap: 1px;
+        .page-controls {
+            width: 100%;
         }
-
         .cal-cell {
-                min-height: 5rem;
-                padding: var(--space-1);
-                border: 1px solid var(--border-default);
-                border-radius: var(--radius-sm);
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                overflow: hidden;
+            min-height: 3rem;
         }
-
-        .cal-cell.empty { border-color: transparent; }
-
-        .cal-cell.today { background: var(--accent-subtle); border-color: var(--accent); }
-
-        .cal-day {
-                font-size: var(--font-xs);
-                font-weight: var(--weight-semibold);
-                color: var(--text-secondary);
-        }
-
         .cal-event {
-                font-size: 0.625rem;
-                padding: 1px 4px;
-                background: var(--accent-subtle);
-                color: var(--accent);
-                border-radius: var(--radius-sm);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                cursor: default;
+            display: none;
         }
-
-        .cal-more {
-                font-size: 0.625rem;
-                color: var(--text-tertiary);
-                padding: 1px 4px;
+        .cal-cell.today .cal-day {
+            color: var(--accent);
         }
-
-        .cal-empty {
-                text-align: center;
-                color: var(--text-tertiary);
-                font-size: var(--font-sm);
-                padding: var(--space-6);
-        }
-
-        @media (max-width: 768px) {
-                .events-layout { flex-direction: column; }
-                .events-filters { width: 100%; position: static; flex-direction: row; flex-wrap: wrap; }
-                .event-card { flex-direction: column; }
-                .event-date-col { flex-direction: row; gap: var(--space-2); width: fit-content; }
-                .event-bottom { flex-direction: column; align-items: stretch; }
-                .page-controls { width: 100%; }
-                .cal-cell { min-height: 3rem; }
-                .cal-event { display: none; }
-                .cal-cell.today .cal-day { color: var(--accent); }
-        }
+    }
 </style>

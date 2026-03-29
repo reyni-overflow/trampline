@@ -1,6 +1,5 @@
 declare global {
-    namespace App {
-    }
+    namespace App {}
 }
 
 declare module '$env/static/public' {

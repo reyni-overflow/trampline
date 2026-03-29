@@ -91,9 +91,22 @@
             aria-expanded={open}
             aria-haspopup="listbox"
         >
-            <span class="select-text">{selectedLabel || placeholder || $t('ui.selectPlaceholder')}</span>
-            <svg class="chevron" class:rotated={open} viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"/>
+            <span class="select-text"
+                >{selectedLabel || placeholder || $t('ui.selectPlaceholder')}</span
+            >
+            <svg
+                class="chevron"
+                class:rotated={open}
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <polyline points="6 9 12 15 18 9" />
             </svg>
         </button>
 
@@ -122,8 +135,17 @@
                         >
                             <span>{opt.label}</span>
                             {#if opt.value === value}
-                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"/>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    stroke="currentColor"
+                                    stroke-width="2.5"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <polyline points="20 6 9 17 4 12" />
                                 </svg>
                             {/if}
                         </button>
@@ -174,7 +196,9 @@
         color: var(--text-tertiary);
         font-size: var(--font-base);
         text-align: left;
-        transition: var(--transition-colors), border-color var(--duration-normal) var(--ease-in-out),
+        transition:
+            var(--transition-colors),
+            border-color var(--duration-normal) var(--ease-in-out),
             box-shadow var(--duration-normal) var(--ease-in-out);
     }
 
@@ -285,6 +309,11 @@
         color: var(--text-tertiary);
     }
 
-    .message { font-size: var(--font-xs); animation: slide-down var(--duration-fast) var(--ease-out); }
-    .error-message { color: var(--color-error); }
+    .message {
+        font-size: var(--font-xs);
+        animation: slide-down var(--duration-fast) var(--ease-out);
+    }
+    .error-message {
+        color: var(--color-error);
+    }
 </style>

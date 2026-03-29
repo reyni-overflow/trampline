@@ -60,11 +60,28 @@
     let pendingJobs = $derived(apiJobs);
     let pendingEvents = $derived(apiEvents);
     let pendingMentorships = $derived(apiMentorships);
-    let totalPending = $derived(pendingJobs.length + pendingEvents.length + pendingMentorships.length);
+    let totalPending = $derived(
+        pendingJobs.length + pendingEvents.length + pendingMentorships.length
+    );
 
-    let editingJob = $state<{ id: string; title: string; description: string; isActive: boolean } | null>(null);
-    let editingEvent = $state<{ id: string; title: string; description: string; isActive: boolean } | null>(null);
-    let editingMentorship = $state<{ id: string; title: string; description: string; isActive: boolean } | null>(null);
+    let editingJob = $state<{
+        id: string;
+        title: string;
+        description: string;
+        isActive: boolean;
+    } | null>(null);
+    let editingEvent = $state<{
+        id: string;
+        title: string;
+        description: string;
+        isActive: boolean;
+    } | null>(null);
+    let editingMentorship = $state<{
+        id: string;
+        title: string;
+        description: string;
+        isActive: boolean;
+    } | null>(null);
     let saving = $state(false);
 
     async function approveJob(id: string, title: string) {
@@ -96,7 +113,11 @@
                 description: editingJob.description,
                 isActive: editingJob.isActive
             });
-            apiJobs = apiJobs.map((j) => j.id === editingJob!.id ? { ...j, title: editingJob!.title, description: editingJob!.description } : j);
+            apiJobs = apiJobs.map((j) =>
+                j.id === editingJob!.id
+                    ? { ...j, title: editingJob!.title, description: editingJob!.description }
+                    : j
+            );
             toast.success($t('adminMod.editSaved'));
             editingJob = null;
         } catch (err) {
@@ -135,7 +156,11 @@
                 description: editingEvent.description,
                 isActive: editingEvent.isActive
             });
-            apiEvents = apiEvents.map((e) => e.id === editingEvent!.id ? { ...e, title: editingEvent!.title, description: editingEvent!.description } : e);
+            apiEvents = apiEvents.map((e) =>
+                e.id === editingEvent!.id
+                    ? { ...e, title: editingEvent!.title, description: editingEvent!.description }
+                    : e
+            );
             toast.success($t('adminMod.editSaved'));
             editingEvent = null;
         } catch (err) {
@@ -174,7 +199,15 @@
                 description: editingMentorship.description,
                 isActive: editingMentorship.isActive
             });
-            apiMentorships = apiMentorships.map((m) => m.id === editingMentorship!.id ? { ...m, title: editingMentorship!.title, description: editingMentorship!.description } : m);
+            apiMentorships = apiMentorships.map((m) =>
+                m.id === editingMentorship!.id
+                    ? {
+                          ...m,
+                          title: editingMentorship!.title,
+                          description: editingMentorship!.description
+                      }
+                    : m
+            );
             toast.success($t('adminMod.editSaved'));
             editingMentorship = null;
         } catch (err) {
@@ -219,7 +252,10 @@
                 description: m.description || '',
                 format: m.format || '',
                 address: m.address || '',
-                salary: m.salaryFrom || m.salaryTo ? formatSalary(m.salaryFrom ?? null, m.salaryTo ?? null) : null,
+                salary:
+                    m.salaryFrom || m.salaryTo
+                        ? formatSalary(m.salaryFrom ?? null, m.salaryTo ?? null)
+                        : null,
                 tags: m.tags || [],
                 isActive: m.isActive ?? true,
                 date: m.createdAt || ''
@@ -239,17 +275,34 @@
     </div>
 
     <div class="tabs">
-        <button class="tab" class:active={activeTab === 'jobs'} onclick={() => (activeTab = 'jobs')}>
+        <button
+            class="tab"
+            class:active={activeTab === 'jobs'}
+            onclick={() => (activeTab = 'jobs')}
+        >
             {$t('adminMod.jobsTab')}
-            {#if pendingJobs.length}<Badge variant="warning" size="sm">{pendingJobs.length}</Badge>{/if}
+            {#if pendingJobs.length}<Badge variant="warning" size="sm">{pendingJobs.length}</Badge
+                >{/if}
         </button>
-        <button class="tab" class:active={activeTab === 'events'} onclick={() => (activeTab = 'events')}>
+        <button
+            class="tab"
+            class:active={activeTab === 'events'}
+            onclick={() => (activeTab = 'events')}
+        >
             {$t('adminMod.eventsTab')}
-            {#if pendingEvents.length}<Badge variant="warning" size="sm">{pendingEvents.length}</Badge>{/if}
+            {#if pendingEvents.length}<Badge variant="warning" size="sm"
+                    >{pendingEvents.length}</Badge
+                >{/if}
         </button>
-        <button class="tab" class:active={activeTab === 'mentorships'} onclick={() => (activeTab = 'mentorships')}>
+        <button
+            class="tab"
+            class:active={activeTab === 'mentorships'}
+            onclick={() => (activeTab = 'mentorships')}
+        >
             {$t('adminMod.mentorshipsTab')}
-            {#if pendingMentorships.length}<Badge variant="warning" size="sm">{pendingMentorships.length}</Badge>{/if}
+            {#if pendingMentorships.length}<Badge variant="warning" size="sm"
+                    >{pendingMentorships.length}</Badge
+                >{/if}
         </button>
     </div>
 
@@ -260,19 +313,53 @@
                     <div class="mod-main">
                         <div class="mod-title-row">
                             <span class="mod-title">{job.title}</span>
-                            <Badge variant={job.type === 'Internship' ? 'info' : job.type === 'Event' ? 'accent' : 'default'} size="sm">{job.type === 'Internship' ? $t('adminMod.internship') : job.type === 'Event' ? $t('adminMod.event') : $t('adminMod.vacancy')}</Badge>
+                            <Badge
+                                variant={job.type === 'Internship'
+                                    ? 'info'
+                                    : job.type === 'Event'
+                                      ? 'accent'
+                                      : 'default'}
+                                size="sm"
+                                >{job.type === 'Internship'
+                                    ? $t('adminMod.internship')
+                                    : job.type === 'Event'
+                                      ? $t('adminMod.event')
+                                      : $t('adminMod.vacancy')}</Badge
+                            >
                         </div>
                         <span class="mod-company">{job.company}</span>
                         {#if job.salary}<span class="mod-salary">{job.salary}</span>{/if}
                         <div class="mod-tags">
                             {#each job.tags as tag (tag.name)}<Tag>{tag.name}</Tag>{/each}
                         </div>
-                        <span class="mod-date">{new Date(job.date).toLocaleDateString(getLocaleDateString(), { day: 'numeric', month: 'short' })}</span>
+                        <span class="mod-date"
+                            >{new Date(job.date).toLocaleDateString(getLocaleDateString(), {
+                                day: 'numeric',
+                                month: 'short'
+                            })}</span
+                        >
                     </div>
                     <div class="mod-actions">
-                        <Button size="sm" variant="ghost" onclick={() => (editingJob = { id: job.id, title: job.title, description: job.description, isActive: job.isActive })}>{$t('common.edit')}</Button>
-                        <Button size="sm" onclick={() => approveJob(job.id, job.title)}>{$t('common.approve')}</Button>
-                        <Button size="sm" variant="danger" onclick={() => rejectJob(job.id, job.title)}>{$t('common.reject')}</Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onclick={() =>
+                                (editingJob = {
+                                    id: job.id,
+                                    title: job.title,
+                                    description: job.description,
+                                    isActive: job.isActive
+                                })}>{$t('common.edit')}</Button
+                        >
+                        <Button size="sm" onclick={() => approveJob(job.id, job.title)}
+                            >{$t('common.approve')}</Button
+                        >
+                        <Button
+                            size="sm"
+                            variant="danger"
+                            onclick={() => rejectJob(job.id, job.title)}
+                            >{$t('common.reject')}</Button
+                        >
                     </div>
                 </div>
             {:else}
@@ -286,19 +373,43 @@
                     <div class="mod-main">
                         <div class="mod-title-row">
                             <span class="mod-title">{event.title}</span>
-                            {#if event.format}<Badge variant="accent" size="sm">{event.format}</Badge>{/if}
+                            {#if event.format}<Badge variant="accent" size="sm"
+                                    >{event.format}</Badge
+                                >{/if}
                         </div>
                         {#if event.address}<span class="mod-company">{event.address}</span>{/if}
                         {#if event.salary}<span class="mod-salary">{event.salary}</span>{/if}
                         <div class="mod-tags">
                             {#each event.tags as tag (tag.name)}<Tag>{tag.name}</Tag>{/each}
                         </div>
-                        <span class="mod-date">{new Date(event.date).toLocaleDateString(getLocaleDateString(), { day: 'numeric', month: 'short' })}</span>
+                        <span class="mod-date"
+                            >{new Date(event.date).toLocaleDateString(getLocaleDateString(), {
+                                day: 'numeric',
+                                month: 'short'
+                            })}</span
+                        >
                     </div>
                     <div class="mod-actions">
-                        <Button size="sm" variant="ghost" onclick={() => (editingEvent = { id: event.id, title: event.title, description: event.description, isActive: event.isActive })}>{$t('common.edit')}</Button>
-                        <Button size="sm" onclick={() => approveEvent(event.id, event.title)}>{$t('common.approve')}</Button>
-                        <Button size="sm" variant="danger" onclick={() => rejectEvent(event.id, event.title)}>{$t('common.reject')}</Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onclick={() =>
+                                (editingEvent = {
+                                    id: event.id,
+                                    title: event.title,
+                                    description: event.description,
+                                    isActive: event.isActive
+                                })}>{$t('common.edit')}</Button
+                        >
+                        <Button size="sm" onclick={() => approveEvent(event.id, event.title)}
+                            >{$t('common.approve')}</Button
+                        >
+                        <Button
+                            size="sm"
+                            variant="danger"
+                            onclick={() => rejectEvent(event.id, event.title)}
+                            >{$t('common.reject')}</Button
+                        >
                     </div>
                 </div>
             {:else}
@@ -312,19 +423,47 @@
                     <div class="mod-main">
                         <div class="mod-title-row">
                             <span class="mod-title">{mentorship.title}</span>
-                            {#if mentorship.format}<Badge variant="accent" size="sm">{mentorship.format}</Badge>{/if}
+                            {#if mentorship.format}<Badge variant="accent" size="sm"
+                                    >{mentorship.format}</Badge
+                                >{/if}
                         </div>
-                        {#if mentorship.address}<span class="mod-company">{mentorship.address}</span>{/if}
-                        {#if mentorship.salary}<span class="mod-salary">{mentorship.salary}</span>{/if}
+                        {#if mentorship.address}<span class="mod-company">{mentorship.address}</span
+                            >{/if}
+                        {#if mentorship.salary}<span class="mod-salary">{mentorship.salary}</span
+                            >{/if}
                         <div class="mod-tags">
                             {#each mentorship.tags as tag (tag.name)}<Tag>{tag.name}</Tag>{/each}
                         </div>
-                        <span class="mod-date">{new Date(mentorship.date).toLocaleDateString(getLocaleDateString(), { day: 'numeric', month: 'short' })}</span>
+                        <span class="mod-date"
+                            >{new Date(mentorship.date).toLocaleDateString(getLocaleDateString(), {
+                                day: 'numeric',
+                                month: 'short'
+                            })}</span
+                        >
                     </div>
                     <div class="mod-actions">
-                        <Button size="sm" variant="ghost" onclick={() => (editingMentorship = { id: mentorship.id, title: mentorship.title, description: mentorship.description, isActive: mentorship.isActive })}>{$t('common.edit')}</Button>
-                        <Button size="sm" onclick={() => approveMentorship(mentorship.id, mentorship.title)}>{$t('common.approve')}</Button>
-                        <Button size="sm" variant="danger" onclick={() => rejectMentorship(mentorship.id, mentorship.title)}>{$t('common.reject')}</Button>
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            onclick={() =>
+                                (editingMentorship = {
+                                    id: mentorship.id,
+                                    title: mentorship.title,
+                                    description: mentorship.description,
+                                    isActive: mentorship.isActive
+                                })}>{$t('common.edit')}</Button
+                        >
+                        <Button
+                            size="sm"
+                            onclick={() => approveMentorship(mentorship.id, mentorship.title)}
+                            >{$t('common.approve')}</Button
+                        >
+                        <Button
+                            size="sm"
+                            variant="danger"
+                            onclick={() => rejectMentorship(mentorship.id, mentorship.title)}
+                            >{$t('common.reject')}</Button
+                        >
                     </div>
                 </div>
             {:else}
@@ -338,10 +477,18 @@
     <Modal open={true} onclose={() => (editingJob = null)} title={$t('adminMod.editJob')}>
         <div class="edit-form">
             <Input label={$t('adminMod.titleLabel')} bind:value={editingJob.title} />
-            <Textarea label={$t('adminMod.descriptionLabel')} bind:value={editingJob.description} rows={5} />
+            <Textarea
+                label={$t('adminMod.descriptionLabel')}
+                bind:value={editingJob.description}
+                rows={5}
+            />
             <div class="edit-actions">
-                <Button variant="ghost" onclick={() => (editingJob = null)}>{$t('common.cancel')}</Button>
-                <Button onclick={saveJobEdit} disabled={saving}>{saving ? '...' : $t('common.save')}</Button>
+                <Button variant="ghost" onclick={() => (editingJob = null)}
+                    >{$t('common.cancel')}</Button
+                >
+                <Button onclick={saveJobEdit} disabled={saving}
+                    >{saving ? '...' : $t('common.save')}</Button
+                >
             </div>
         </div>
     </Modal>
@@ -351,52 +498,169 @@
     <Modal open={true} onclose={() => (editingEvent = null)} title={$t('adminMod.editEvent')}>
         <div class="edit-form">
             <Input label={$t('adminMod.titleLabel')} bind:value={editingEvent.title} />
-            <Textarea label={$t('adminMod.descriptionLabel')} bind:value={editingEvent.description} rows={5} />
+            <Textarea
+                label={$t('adminMod.descriptionLabel')}
+                bind:value={editingEvent.description}
+                rows={5}
+            />
             <div class="edit-actions">
-                <Button variant="ghost" onclick={() => (editingEvent = null)}>{$t('common.cancel')}</Button>
-                <Button onclick={saveEventEdit} disabled={saving}>{saving ? '...' : $t('common.save')}</Button>
+                <Button variant="ghost" onclick={() => (editingEvent = null)}
+                    >{$t('common.cancel')}</Button
+                >
+                <Button onclick={saveEventEdit} disabled={saving}
+                    >{saving ? '...' : $t('common.save')}</Button
+                >
             </div>
         </div>
     </Modal>
 {/if}
 
 {#if editingMentorship}
-    <Modal open={true} onclose={() => (editingMentorship = null)} title={$t('adminMod.editMentorship')}>
+    <Modal
+        open={true}
+        onclose={() => (editingMentorship = null)}
+        title={$t('adminMod.editMentorship')}
+    >
         <div class="edit-form">
             <Input label={$t('adminMod.titleLabel')} bind:value={editingMentorship.title} />
-            <Textarea label={$t('adminMod.descriptionLabel')} bind:value={editingMentorship.description} rows={5} />
+            <Textarea
+                label={$t('adminMod.descriptionLabel')}
+                bind:value={editingMentorship.description}
+                rows={5}
+            />
             <div class="edit-actions">
-                <Button variant="ghost" onclick={() => (editingMentorship = null)}>{$t('common.cancel')}</Button>
-                <Button onclick={saveMentorshipEdit} disabled={saving}>{saving ? '...' : $t('common.save')}</Button>
+                <Button variant="ghost" onclick={() => (editingMentorship = null)}
+                    >{$t('common.cancel')}</Button
+                >
+                <Button onclick={saveMentorshipEdit} disabled={saving}
+                    >{saving ? '...' : $t('common.save')}</Button
+                >
             </div>
         </div>
     </Modal>
 {/if}
 
 <style>
-    .moderation { display: flex; flex-direction: column; gap: var(--space-6); }
-    .page-header { display: flex; align-items: center; gap: var(--space-3); }
-    .page-heading { font-size: var(--font-2xl); font-weight: var(--weight-bold); }
+    .moderation {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+    }
+    .page-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+    }
+    .page-heading {
+        font-size: var(--font-2xl);
+        font-weight: var(--weight-bold);
+    }
 
-    .tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--border-default); }
-    .tab { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); font-size: var(--font-sm); font-weight: var(--weight-medium); color: var(--text-secondary); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: var(--transition-colors); }
-    .tab:hover { color: var(--text-primary); }
-    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tabs {
+        display: flex;
+        gap: var(--space-1);
+        border-bottom: 1px solid var(--border-default);
+    }
+    .tab {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        font-size: var(--font-sm);
+        font-weight: var(--weight-medium);
+        color: var(--text-secondary);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: var(--transition-colors);
+    }
+    .tab:hover {
+        color: var(--text-primary);
+    }
+    .tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+    }
 
-    .mod-list { display: flex; flex-direction: column; gap: var(--space-3); }
-    .mod-card { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) var(--space-5); background: var(--bg-secondary); border: 1px solid var(--border-default); border-radius: var(--radius-lg); }
-    .mod-main { display: flex; flex-direction: column; gap: var(--space-1); flex: 1; min-width: 0; }
-    .mod-title-row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-    .mod-title { font-size: var(--font-sm); font-weight: var(--weight-semibold); }
-    .mod-company { font-size: var(--font-xs); color: var(--text-secondary); }
-    .mod-salary { font-size: var(--font-xs); color: var(--accent); font-weight: var(--weight-medium); }
-    .mod-tags { display: flex; gap: var(--space-1); flex-wrap: wrap; }
-    .mod-date { font-size: var(--font-xs); color: var(--text-tertiary); }
-    .mod-actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
-    .mod-empty { font-size: var(--font-sm); color: var(--text-tertiary); text-align: center; padding: var(--space-8) 0; }
+    .mod-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+    .mod-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        padding: var(--space-4) var(--space-5);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+    }
+    .mod-main {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-1);
+        flex: 1;
+        min-width: 0;
+    }
+    .mod-title-row {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+    }
+    .mod-title {
+        font-size: var(--font-sm);
+        font-weight: var(--weight-semibold);
+    }
+    .mod-company {
+        font-size: var(--font-xs);
+        color: var(--text-secondary);
+    }
+    .mod-salary {
+        font-size: var(--font-xs);
+        color: var(--accent);
+        font-weight: var(--weight-medium);
+    }
+    .mod-tags {
+        display: flex;
+        gap: var(--space-1);
+        flex-wrap: wrap;
+    }
+    .mod-date {
+        font-size: var(--font-xs);
+        color: var(--text-tertiary);
+    }
+    .mod-actions {
+        display: flex;
+        gap: var(--space-2);
+        flex-shrink: 0;
+    }
+    .mod-empty {
+        font-size: var(--font-sm);
+        color: var(--text-tertiary);
+        text-align: center;
+        padding: var(--space-8) 0;
+    }
 
-    .edit-form { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-2) 0; }
-    .edit-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+    .edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        padding: var(--space-2) 0;
+    }
+    .edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--space-2);
+    }
 
-    @media (max-width: 640px) { .mod-card { flex-direction: column; align-items: stretch; } }
+    @media (max-width: 640px) {
+        .mod-card {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
 </style>

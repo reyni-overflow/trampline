@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { formatSalary, timeAgo, formatDate, jobTypeLabel, formatViews, workFormatLabel } from '$lib/utils/format';
+import {
+    formatSalary,
+    timeAgo,
+    formatDate,
+    jobTypeLabel,
+    formatViews,
+    workFormatLabel
+} from '$lib/utils/format';
 
 describe('format utils', () => {
     describe('formatSalary()', () => {

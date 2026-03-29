@@ -13,7 +13,15 @@
         link?: string | null;
     }
 
-    let { id, name, activity, isVerified = false, verificationLevel = 0, jobCount = 0, link }: Props = $props();
+    let {
+        id,
+        name,
+        activity,
+        isVerified = false,
+        verificationLevel = 0,
+        jobCount = 0,
+        link
+    }: Props = $props();
 </script>
 
 <a href="/companies/{id}" class="company-card">
@@ -21,18 +29,44 @@
         <Avatar {name} size={48} />
         {#if verificationLevel >= 2}
             <Badge variant="info" size="sm">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="12"
+                    height="12"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
+                >
             </Badge>
         {:else if isVerified}
             <Badge variant="success" size="sm">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="12"
+                    height="12"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
+                >
             </Badge>
         {/if}
     </div>
     <h3 class="card-name">{name}</h3>
     <p class="card-activity">{activity}</p>
     <div class="card-footer">
-        <span class="card-jobs">{jobCount} {pluralForm(jobCount, $t('plural.vacancyOne'), $t('plural.vacancyFew'), $t('plural.vacancyMany'))}</span>
+        <span class="card-jobs"
+            >{jobCount}
+            {pluralForm(
+                jobCount,
+                $t('plural.vacancyOne'),
+                $t('plural.vacancyFew'),
+                $t('plural.vacancyMany')
+            )}</span
+        >
         {#if link}
             <span class="card-link">{link.replace(/^https?:\/\//, '')}</span>
         {/if}

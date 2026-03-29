@@ -12,8 +12,20 @@
     <div class="about-header">
         <div class="logo-row">
             <svg viewBox="0 0 200 200" width="48" height="48" class="logo-icon">
-                <path d="M 90 160 L 90 80" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" />
-                <path d="M 30 100 L 135 65" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" />
+                <path
+                    d="M 90 160 L 90 80"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="20"
+                    stroke-linecap="round"
+                />
+                <path
+                    d="M 30 100 L 135 65"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="20"
+                    stroke-linecap="round"
+                />
                 <circle cx="165" cy="55" r="14" fill="currentColor" />
             </svg>
         </div>
@@ -33,21 +45,59 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <span class="feature-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><circle cx="12" cy="7" r="4" /><path
+                                d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                            /></svg
+                        >
                     </span>
                     <h3>{$t('about.seekersTitle')}</h3>
                     <p>{$t('about.seekersText')}</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /><path
+                                d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                            /><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /></svg
+                        >
                     </span>
                     <h3>{$t('about.employersTitle')}</h3>
                     <p>{$t('about.employersText')}</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle
+                                cx="12"
+                                cy="10"
+                                r="3"
+                            /></svg
+                        >
                     </span>
                     <h3>{$t('about.mapTitle')}</h3>
                     <p>{$t('about.mapText')}</p>
@@ -107,13 +157,37 @@
                     </div>
                     <div class="license-detail">
                         <span class="license-label">{$t('about.licenseCopyright')}</span>
-                        <span class="license-value">&copy; 2025–2026 reyni-overflow, programistro</span>
+                        <span class="license-value"
+                            >&copy; 2025–2026 reyni-overflow, programistro</span
+                        >
                     </div>
                     <div class="license-detail">
                         <span class="license-label">{$t('about.licenseRepo')}</span>
-                        <a href="https://github.com/reyni-overflow/trampline" target="_blank" rel="noopener noreferrer" class="license-link">
+                        <a
+                            href="https://github.com/reyni-overflow/trampline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="license-link"
+                        >
                             GitHub
-                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="14"
+                                height="14"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path
+                                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                                /><polyline points="15 3 21 3 21 9" /><line
+                                    x1="10"
+                                    y1="14"
+                                    x2="21"
+                                    y2="3"
+                                /></svg
+                            >
                         </a>
                     </div>
                 </div>
@@ -127,7 +201,8 @@
             <p>{$t('about.wantToTry')}</p>
             <div class="cta-buttons">
                 <Button href="/jobs" size="lg">{$t('about.viewJobs')}</Button>
-                <Button href="/contacts" variant="outline" size="lg">{$t('about.contactUs')}</Button>
+                <Button href="/contacts" variant="outline" size="lg">{$t('about.contactUs')}</Button
+                >
             </div>
         </section>
     </div>
@@ -325,13 +400,24 @@
     }
 
     @media (max-width: 768px) {
-        .stack-grid { grid-template-columns: 1fr; }
-        .license-detail { flex-direction: column; gap: var(--space-1); }
-        .license-label { min-width: unset; }
+        .stack-grid {
+            grid-template-columns: 1fr;
+        }
+        .license-detail {
+            flex-direction: column;
+            gap: var(--space-1);
+        }
+        .license-label {
+            min-width: unset;
+        }
     }
 
     @media (max-width: 640px) {
-        .features-grid { grid-template-columns: 1fr; }
-        .cta-buttons { flex-direction: column; }
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        .cta-buttons {
+            flex-direction: column;
+        }
     }
 </style>

@@ -65,14 +65,24 @@ function createThemeStore() {
         subscribe,
         set(value: Theme) {
             set(value);
-            if (browser) try { localStorage.setItem(THEME_KEY, value); } catch { /* ignored */ }
+            if (browser)
+                try {
+                    localStorage.setItem(THEME_KEY, value);
+                } catch {
+                    /* ignored */
+                }
             applyTheme(resolveTheme(value));
         },
         toggle() {
             update((current) => {
                 const resolved = resolveTheme(current);
                 const next = resolved === 'dark' ? 'light' : 'dark';
-                if (browser) try { localStorage.setItem(THEME_KEY, next); } catch { /* ignored */ }
+                if (browser)
+                    try {
+                        localStorage.setItem(THEME_KEY, next);
+                    } catch {
+                        /* ignored */
+                    }
                 applyTheme(next);
                 return next;
             });
@@ -103,7 +113,12 @@ function createAccentStore() {
         subscribe,
         set(value: AccentColor) {
             set(value);
-            if (browser) try { localStorage.setItem(ACCENT_KEY, value); } catch { /* ignored */ }
+            if (browser)
+                try {
+                    localStorage.setItem(ACCENT_KEY, value);
+                } catch {
+                    /* ignored */
+                }
             applyAccent(value);
         },
         init() {

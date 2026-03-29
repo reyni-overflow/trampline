@@ -66,7 +66,7 @@
             city: m.city || '',
             address: m.address || '',
             description: m.description || '',
-            tags: (m.tags || []).map(tag => tag.name),
+            tags: (m.tags || []).map((tag) => tag.name),
             participants: m.views,
             maxParticipants: m.maxParticipants,
             duration: m.duration
@@ -95,7 +95,12 @@
         let list = displayMentorships;
         if (search) {
             const q = search.toLowerCase();
-            list = list.filter((m) => m.title.toLowerCase().includes(q) || m.organizer.toLowerCase().includes(q) || m.tags.some((t) => t.toLowerCase().includes(q)));
+            list = list.filter(
+                (m) =>
+                    m.title.toLowerCase().includes(q) ||
+                    m.organizer.toLowerCase().includes(q) ||
+                    m.tags.some((t) => t.toLowerCase().includes(q))
+            );
         }
         if (formatOnline && !formatOffline) list = list.filter((m) => m.format === 'online');
         if (formatOffline && !formatOnline) list = list.filter((m) => m.format === 'offline');
@@ -103,7 +108,10 @@
             const q = city.toLowerCase();
             list = list.filter((m) => m.city.toLowerCase().includes(q));
         }
-        if (sortBy === 'date') list = [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        if (sortBy === 'date')
+            list = [...list].sort(
+                (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
         if (sortBy === 'name') list = [...list].sort((a, b) => a.title.localeCompare(b.title));
         return list;
     });
@@ -115,7 +123,10 @@
     let coverLetterError = $state('');
 
     function handleRegister(m: MentorshipItem) {
-        if (!isAuth) { authModal.open(); return; }
+        if (!isAuth) {
+            authModal.open();
+            return;
+        }
         applyTarget = m;
         coverLetter = '';
         coverLetterError = '';
@@ -148,7 +159,11 @@
 
     async function toggleMentorshipFavorite(m: MentorshipItem) {
         favorites.toggleMentorship(m.id);
-        toast.success(favorites.isMentorshipFavorite(m.id) ? $t('mentorship.addToFavorites') : $t('mentorship.removeFromFavorites'));
+        toast.success(
+            favorites.isMentorshipFavorite(m.id)
+                ? $t('mentorship.addToFavorites')
+                : $t('mentorship.removeFromFavorites')
+        );
         try {
             if (isAuth) {
                 await favoritesApi.toggle(m.id, 'Mentorship');
@@ -173,7 +188,11 @@
         <h1 class="page-title">{$t('mentorships.title')}</h1>
         <div class="page-controls">
             <SearchInput placeholder={$t('mentorships.searchPlaceholder')} bind:value={search} />
-            <Select options={sortOptions} bind:value={sortBy} placeholder={$t('jobs.sortPlaceholder')} />
+            <Select
+                options={sortOptions}
+                bind:value={sortBy}
+                placeholder={$t('jobs.sortPlaceholder')}
+            />
         </div>
     </div>
 
@@ -185,7 +204,11 @@
                 <Checkbox label={$t('events.offline')} bind:checked={formatOffline} />
             </div>
             <div class="filter-group">
-                <Input label={$t('jobs.city')} placeholder={$t('jobs.cityPlaceholder')} bind:value={city} />
+                <Input
+                    label={$t('jobs.city')}
+                    placeholder={$t('jobs.cityPlaceholder')}
+                    bind:value={city}
+                />
             </div>
         </aside>
 
@@ -195,12 +218,24 @@
                     {#each Array(4) as _, i (i)}
                         <div class="mentorship-card-skeleton">
                             <div class="sk-icon-col">
-                                <Skeleton width="2.5rem" height="2.5rem" radius="var(--radius-md)" />
+                                <Skeleton
+                                    width="2.5rem"
+                                    height="2.5rem"
+                                    radius="var(--radius-md)"
+                                />
                             </div>
                             <div class="sk-main">
                                 <div class="sk-badges-row">
-                                    <Skeleton width="4rem" height="1.25rem" radius="var(--radius-full)" />
-                                    <Skeleton width="3.5rem" height="1.25rem" radius="var(--radius-full)" />
+                                    <Skeleton
+                                        width="4rem"
+                                        height="1.25rem"
+                                        radius="var(--radius-full)"
+                                    />
+                                    <Skeleton
+                                        width="3.5rem"
+                                        height="1.25rem"
+                                        radius="var(--radius-full)"
+                                    />
                                 </div>
                                 <Skeleton width="60%" height="1.125rem" />
                                 <div class="sk-meta-row">
@@ -212,11 +247,27 @@
                                 <Skeleton width="70%" height="0.875rem" />
                                 <div class="sk-bottom-row">
                                     <div class="sk-tags-row">
-                                        <Skeleton width="3.5rem" height="1.25rem" radius="var(--radius-full)" />
-                                        <Skeleton width="4rem" height="1.25rem" radius="var(--radius-full)" />
-                                        <Skeleton width="3rem" height="1.25rem" radius="var(--radius-full)" />
+                                        <Skeleton
+                                            width="3.5rem"
+                                            height="1.25rem"
+                                            radius="var(--radius-full)"
+                                        />
+                                        <Skeleton
+                                            width="4rem"
+                                            height="1.25rem"
+                                            radius="var(--radius-full)"
+                                        />
+                                        <Skeleton
+                                            width="3rem"
+                                            height="1.25rem"
+                                            radius="var(--radius-full)"
+                                        />
                                     </div>
-                                    <Skeleton width="6rem" height="2rem" radius="var(--radius-md)" />
+                                    <Skeleton
+                                        width="6rem"
+                                        height="2rem"
+                                        radius="var(--radius-md)"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -224,41 +275,91 @@
                 </div>
             {:else if filtered.length === 0}
                 <div class="empty-state">
-                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="48"
+                        height="48"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle
+                            cx="9"
+                            cy="7"
+                            r="4"
+                        /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path
+                            d="M16 3.13a4 4 0 0 1 0 7.75"
+                        />
                     </svg>
                     <p>{$t('mentorships.notFound')}</p>
                 </div>
             {:else}
                 <div class="mentorships-list content-fade-in">
                     {#each filtered as mentorship, i (mentorship.id)}
-                        <article class="mentorship-card stagger-item" style="animation-delay: {Math.min(i * 50, 500)}ms">
+                        <article
+                            class="mentorship-card stagger-item"
+                            style="animation-delay: {Math.min(i * 50, 500)}ms"
+                        >
                             <div class="mentorship-icon-col">
-                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="24"
+                                    height="24"
+                                    fill="none"
+                                    stroke="var(--accent)"
+                                    stroke-width="1.75"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle
+                                        cx="9"
+                                        cy="7"
+                                        r="4"
+                                    /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path
+                                        d="M16 3.13a4 4 0 0 1 0 7.75"
+                                    />
                                 </svg>
                             </div>
                             <div class="mentorship-main">
                                 <div class="mentorship-top">
                                     <div class="mentorship-badges">
                                         <Badge variant="warning">{$t('mentorships.badge')}</Badge>
-                                        <Badge variant={mentorship.format === 'online' ? 'success' : 'default'}>{mentorship.format === 'online' ? $t('events.online') : $t('events.offline')}</Badge>
+                                        <Badge
+                                            variant={mentorship.format === 'online'
+                                                ? 'success'
+                                                : 'default'}
+                                            >{mentorship.format === 'online'
+                                                ? $t('events.online')
+                                                : $t('events.offline')}</Badge
+                                        >
                                     </div>
-                                    <span class="mentorship-participants">{formatViews(mentorship.participants)}</span>
+                                    <span class="mentorship-participants"
+                                        >{formatViews(mentorship.participants)}</span
+                                    >
                                 </div>
-                                <a href="/mentorships/{mentorship.id}" class="mentorship-title-link"><h3 class="mentorship-title">{mentorship.title}</h3></a>
+                                <a href="/mentorships/{mentorship.id}" class="mentorship-title-link"
+                                    ><h3 class="mentorship-title">{mentorship.title}</h3></a
+                                >
                                 <div class="mentorship-meta">
-                                    <a href="/companies/{mentorship.organizerId}" class="mentorship-organizer">
+                                    <a
+                                        href="/companies/{mentorship.organizerId}"
+                                        class="mentorship-organizer"
+                                    >
                                         <Avatar name={mentorship.organizer} size={20} />
                                         {mentorship.organizer}
                                     </a>
                                     {#if mentorship.address}
-                                        <span class="mentorship-location">{mentorship.address}</span>
+                                        <span class="mentorship-location">{mentorship.address}</span
+                                        >
                                     {:else}
                                         <span class="mentorship-location">{mentorship.city}</span>
                                     {/if}
                                     {#if mentorship.duration}
-                                        <span class="mentorship-duration">{mentorship.duration}</span>
+                                        <span class="mentorship-duration"
+                                            >{mentorship.duration}</span
+                                        >
                                     {/if}
                                 </div>
                                 <p class="mentorship-description">{mentorship.description}</p>
@@ -269,13 +370,39 @@
                                         {/each}
                                     </div>
                                     <div class="mentorship-actions">
-                                        <button class="fav-btn" class:active={isMentorshipFav(mentorship.id)} onclick={() => toggleMentorshipFavorite(mentorship)} title={isMentorshipFav(mentorship.id) ? $t('mentorship.removeFromFavorites') : $t('mentorship.addToFavorites')} type="button">
-                                            <svg viewBox="0 0 24 24" width="20" height="20" fill={isMentorshipFav(mentorship.id) ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                                        <button
+                                            class="fav-btn"
+                                            class:active={isMentorshipFav(mentorship.id)}
+                                            onclick={() => toggleMentorshipFavorite(mentorship)}
+                                            title={isMentorshipFav(mentorship.id)
+                                                ? $t('mentorship.removeFromFavorites')
+                                                : $t('mentorship.addToFavorites')}
+                                            type="button"
+                                        >
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                width="20"
+                                                height="20"
+                                                fill={isMentorshipFav(mentorship.id)
+                                                    ? 'currentColor'
+                                                    : 'none'}
+                                                stroke="currentColor"
+                                                stroke-width="1.75"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <path
+                                                    d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                                                />
                                             </svg>
                                         </button>
-                                        <ShareButton title={mentorship.title} url={`${typeof window !== 'undefined' ? window.location.origin : ''}/mentorships/${mentorship.id}`} />
-                                        <Button size="sm" onclick={() => handleRegister(mentorship)}>{$t('mentorships.apply')}</Button>
+                                        <ShareButton
+                                            title={mentorship.title}
+                                            url={`${typeof window !== 'undefined' ? window.location.origin : ''}/mentorships/${mentorship.id}`}
+                                        />
+                                        <Button size="sm" onclick={() => handleRegister(mentorship)}
+                                            >{$t('mentorships.apply')}</Button
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -288,7 +415,13 @@
 </div>
 
 <Modal bind:open={showApplyModal} title={$t('mentorship.applyTitle')} maxWidth="480px">
-    <form class="apply-form" onsubmit={(e) => { e.preventDefault(); submitApplication(); }}>
+    <form
+        class="apply-form"
+        onsubmit={(e) => {
+            e.preventDefault();
+            submitApplication();
+        }}
+    >
         <p class="apply-hint">{$t('mentorship.applyHint')}</p>
         <Textarea
             label={$t('mentorship.coverLetter')}
@@ -299,7 +432,12 @@
             rows={5}
         />
         <div class="apply-actions">
-            <Button variant="outline" onclick={() => { showApplyModal = false; }}>{$t('common.cancel')}</Button>
+            <Button
+                variant="outline"
+                onclick={() => {
+                    showApplyModal = false;
+                }}>{$t('common.cancel')}</Button
+            >
             <Button type="submit" disabled={applyLoading}>
                 {applyLoading ? $t('common.loading') : $t('mentorship.submitApplication')}
             </Button>
@@ -333,8 +471,15 @@
         gap: var(--space-3);
     }
 
-    .page-controls :global(.select-trigger) { height: 2.25rem; font-size: var(--font-xs); padding: 0 0.75rem; min-width: 14rem; }
-    .page-controls :global(.option) { font-size: var(--font-xs); }
+    .page-controls :global(.select-trigger) {
+        height: 2.25rem;
+        font-size: var(--font-xs);
+        padding: 0 0.75rem;
+        min-width: 14rem;
+    }
+    .page-controls :global(.option) {
+        font-size: var(--font-xs);
+    }
 
     .mentorships-layout {
         display: flex;
@@ -451,7 +596,9 @@
         transition: var(--transition-colors);
     }
 
-    .mentorship-organizer:hover { color: var(--accent); }
+    .mentorship-organizer:hover {
+        color: var(--accent);
+    }
 
     .mentorship-location {
         font-size: var(--font-sm);
@@ -541,7 +688,9 @@
         transition: var(--transition-colors);
     }
 
-    .mentorship-title-link:hover { color: var(--accent); }
+    .mentorship-title-link:hover {
+        color: var(--accent);
+    }
 
     .mentorship-actions {
         display: flex;
@@ -561,7 +710,8 @@
         flex-shrink: 0;
     }
 
-    .fav-btn:hover, .fav-btn.active {
+    .fav-btn:hover,
+    .fav-btn.active {
         color: var(--color-error);
     }
 
@@ -596,14 +746,34 @@
         color: var(--text-tertiary);
     }
 
-    .empty-state p { font-size: var(--font-md); }
+    .empty-state p {
+        font-size: var(--font-md);
+    }
 
     @media (max-width: 768px) {
-        .mentorships-layout { flex-direction: column; }
-        .mentorships-filters { width: 100%; position: static; flex-direction: row; flex-wrap: wrap; }
-        .mentorship-card { flex-direction: column; }
-        .mentorship-icon-col { flex-direction: row; gap: var(--space-2); width: fit-content; }
-        .mentorship-bottom { flex-direction: column; align-items: stretch; }
-        .page-controls { width: 100%; }
+        .mentorships-layout {
+            flex-direction: column;
+        }
+        .mentorships-filters {
+            width: 100%;
+            position: static;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .mentorship-card {
+            flex-direction: column;
+        }
+        .mentorship-icon-col {
+            flex-direction: row;
+            gap: var(--space-2);
+            width: fit-content;
+        }
+        .mentorship-bottom {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .page-controls {
+            width: 100%;
+        }
     }
 </style>

@@ -50,7 +50,16 @@
 {#if status === 'pending'}
     <div class="cookie-banner" class:shaking>
         <div class="cookie-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+                viewBox="0 0 24 24"
+                width="28"
+                height="28"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
                 <circle cx="12" cy="12" r="10" />
                 <circle cx="8" cy="9" r="1.5" fill="currentColor" stroke="none" />
                 <circle cx="15" cy="7" r="1" fill="currentColor" stroke="none" />
@@ -101,7 +110,13 @@
 
             <div class="cookie-actions">
                 <Button size="sm" variant="ghost" onclick={decline}>{$t('cookie.decline')}</Button>
-                <Button size="sm" variant="ghost" onclick={() => { expanded = !expanded; }}>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    onclick={() => {
+                        expanded = !expanded;
+                    }}
+                >
                     {expanded ? $t('cookie.hideSettings') : $t('cookie.showSettings')}
                 </Button>
                 {#if expanded}
@@ -117,7 +132,16 @@
     <div class="cookie-overlay">
         <div class="cookie-overlay-card">
             <div class="overlay-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                    viewBox="0 0 24 24"
+                    width="48"
+                    height="48"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
                     <circle cx="12" cy="12" r="10" />
                     <circle cx="8" cy="9" r="1.5" fill="currentColor" stroke="none" />
                     <circle cx="15" cy="7" r="1" fill="currentColor" stroke="none" />
@@ -155,20 +179,43 @@
     }
 
     .cookie-banner.shaking {
-        animation: slide-up var(--duration-moderate) var(--ease-out) both, cookie-shake 0.5s var(--ease-out);
+        animation:
+            slide-up var(--duration-moderate) var(--ease-out) both,
+            cookie-shake 0.5s var(--ease-out);
     }
 
     @keyframes cookie-shake {
-        0%, 100% { transform: translateX(0); }
-        10% { transform: translateX(-8px); }
-        20% { transform: translateX(8px); }
-        30% { transform: translateX(-6px); }
-        40% { transform: translateX(6px); }
-        50% { transform: translateX(-4px); }
-        60% { transform: translateX(4px); }
-        70% { transform: translateX(-2px); }
-        80% { transform: translateX(2px); }
-        90% { transform: translateX(-1px); }
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        10% {
+            transform: translateX(-8px);
+        }
+        20% {
+            transform: translateX(8px);
+        }
+        30% {
+            transform: translateX(-6px);
+        }
+        40% {
+            transform: translateX(6px);
+        }
+        50% {
+            transform: translateX(-4px);
+        }
+        60% {
+            transform: translateX(4px);
+        }
+        70% {
+            transform: translateX(-2px);
+        }
+        80% {
+            transform: translateX(2px);
+        }
+        90% {
+            transform: translateX(-1px);
+        }
     }
 
     .cookie-icon {

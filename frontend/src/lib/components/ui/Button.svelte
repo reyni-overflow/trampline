@@ -23,12 +23,7 @@
 </script>
 
 {#if href && !disabled}
-    <a
-        {href}
-        class="btn btn--{variant} btn--{size}"
-        class:loading
-        {...rest}
-    >
+    <a {href} class="btn btn--{variant} btn--{size}" class:loading {...rest}>
         {#if loading}
             <span class="spinner"></span>
         {/if}
@@ -73,9 +68,21 @@
         cursor: not-allowed;
     }
 
-    .btn--sm { height: 2rem; padding: 0 0.75rem; font-size: var(--font-sm); }
-    .btn--md { height: 2.5rem; padding: 0 1rem; font-size: var(--font-sm); }
-    .btn--lg { height: 3rem; padding: 0 1.5rem; font-size: var(--font-base); }
+    .btn--sm {
+        height: 2rem;
+        padding: 0 0.75rem;
+        font-size: var(--font-sm);
+    }
+    .btn--md {
+        height: 2.5rem;
+        padding: 0 1rem;
+        font-size: var(--font-sm);
+    }
+    .btn--lg {
+        height: 3rem;
+        padding: 0 1.5rem;
+        font-size: var(--font-base);
+    }
 
     .btn--primary {
         background: var(--accent);
@@ -117,7 +124,7 @@
         color: var(--text-inverse);
     }
     .btn--danger:hover:not(:disabled) {
-        background: var(--color-danger-dark, #B91C1C);
+        background: var(--color-danger-dark, #b91c1c);
     }
 
     .spinner {

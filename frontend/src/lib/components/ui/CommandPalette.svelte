@@ -36,13 +36,55 @@
     }
 
     const pages: ResultItem[] = $derived([
-        { id: 'p-home', title: $t('cmdPalette.pageHome'), category: $t('cmdPalette.pages'), icon: 'home', route: '/' },
-        { id: 'p-jobs', title: $t('nav.jobs'), category: $t('cmdPalette.pages'), icon: 'briefcase', route: '/jobs' },
-        { id: 'p-companies', title: $t('nav.companies'), category: $t('cmdPalette.pages'), icon: 'building', route: '/companies' },
-        { id: 'p-events', title: $t('nav.events'), category: $t('cmdPalette.pages'), icon: 'calendar', route: '/events' },
-        { id: 'p-map', title: $t('nav.map'), category: $t('cmdPalette.pages'), icon: 'map', route: '/map' },
-        { id: 'p-settings', title: $t('cmdPalette.pageSettings'), category: $t('cmdPalette.pages'), icon: 'settings', route: '/settings' },
-        { id: 'p-profile', title: $t('cmdPalette.pageProfile'), category: $t('cmdPalette.pages'), icon: 'user', route: '/dashboard' }
+        {
+            id: 'p-home',
+            title: $t('cmdPalette.pageHome'),
+            category: $t('cmdPalette.pages'),
+            icon: 'home',
+            route: '/'
+        },
+        {
+            id: 'p-jobs',
+            title: $t('nav.jobs'),
+            category: $t('cmdPalette.pages'),
+            icon: 'briefcase',
+            route: '/jobs'
+        },
+        {
+            id: 'p-companies',
+            title: $t('nav.companies'),
+            category: $t('cmdPalette.pages'),
+            icon: 'building',
+            route: '/companies'
+        },
+        {
+            id: 'p-events',
+            title: $t('nav.events'),
+            category: $t('cmdPalette.pages'),
+            icon: 'calendar',
+            route: '/events'
+        },
+        {
+            id: 'p-map',
+            title: $t('nav.map'),
+            category: $t('cmdPalette.pages'),
+            icon: 'map',
+            route: '/map'
+        },
+        {
+            id: 'p-settings',
+            title: $t('cmdPalette.pageSettings'),
+            category: $t('cmdPalette.pages'),
+            icon: 'settings',
+            route: '/settings'
+        },
+        {
+            id: 'p-profile',
+            title: $t('cmdPalette.pageProfile'),
+            category: $t('cmdPalette.pages'),
+            icon: 'user',
+            route: '/dashboard'
+        }
     ]);
 
     async function searchLive(q: string) {
@@ -164,10 +206,15 @@
     function saveRecent(term: string) {
         const trimmed = term.trim();
         if (!trimmed) return;
-        recentSearches = [trimmed, ...recentSearches.filter((s) => s !== trimmed)].slice(0, MAX_RECENT);
+        recentSearches = [trimmed, ...recentSearches.filter((s) => s !== trimmed)].slice(
+            0,
+            MAX_RECENT
+        );
         try {
             localStorage.setItem(RECENT_KEY, JSON.stringify(recentSearches));
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
     }
 
     function close() {
@@ -243,11 +290,15 @@
 
     const icons: Record<string, string> = {
         home: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1',
-        briefcase: 'M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2',
-        building: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2m-16 0H3m4-8h2m4 0h2m-8 4h2m4 0h2m-8-8h2m4 0h2',
-        calendar: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+        briefcase:
+            'M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2',
+        building:
+            'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2m-16 0H3m4-8h2m4 0h2m-8 4h2m4 0h2m-8-8h2m4 0h2',
+        calendar:
+            'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
         map: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
-        settings: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
+        settings:
+            'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
         user: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
         clock: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
         search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
@@ -262,7 +313,17 @@
     <div class="cmd-overlay" onclick={handleOverlayClick}>
         <div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command palette">
             <div class="cmd-input-wrapper">
-                <svg class="cmd-search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                    class="cmd-search-icon"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
                     <path d={icons.search} />
                 </svg>
                 <input
@@ -279,7 +340,19 @@
             <div class="cmd-results" bind:this={listEl}>
                 {#if searchLoading}
                     <div class="cmd-loading">
-                        <svg class="cmd-spinner" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                        <svg
+                            class="cmd-spinner"
+                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            ><circle cx="12" cy="12" r="10" opacity="0.25" /><path
+                                d="M12 2a10 10 0 0 1 10 10"
+                                stroke-linecap="round"
+                            /></svg
+                        >
                         <span>{$t('cmdPalette.searching')}</span>
                     </div>
                 {:else if query.trim() && results.length === 0}
@@ -296,9 +369,21 @@
                                     data-index={idx}
                                     type="button"
                                     onclick={() => navigate(item)}
-                                    onmouseenter={() => { selectedIndex = idx; }}
+                                    onmouseenter={() => {
+                                        selectedIndex = idx;
+                                    }}
                                 >
-                                    <svg class="cmd-item-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg
+                                        class="cmd-item-icon"
+                                        viewBox="0 0 24 24"
+                                        width="18"
+                                        height="18"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
                                         <path d={icons[item.icon]} />
                                     </svg>
                                     <div class="cmd-item-text">
@@ -316,8 +401,22 @@
                     <div class="cmd-group">
                         <div class="cmd-group-label">{$t('cmdPalette.recentSearches')}</div>
                         {#each recentSearches as term (term)}
-                            <button class="cmd-item" type="button" onclick={() => applyRecent(term)}>
-                                <svg class="cmd-item-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <button
+                                class="cmd-item"
+                                type="button"
+                                onclick={() => applyRecent(term)}
+                            >
+                                <svg
+                                    class="cmd-item-icon"
+                                    viewBox="0 0 24 24"
+                                    width="18"
+                                    height="18"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
                                     <path d={icons.clock} />
                                 </svg>
                                 <div class="cmd-item-text">
@@ -424,7 +523,9 @@
     }
 
     @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .cmd-empty {

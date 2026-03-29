@@ -33,7 +33,11 @@
         e.preventDefault();
         e.stopPropagation();
         favorites.toggleJob(job.id);
-        toast.success(favorites.isJobFavorite(job.id) ? $t('job.addToFavorites') : $t('job.removeFromFavorites'));
+        toast.success(
+            favorites.isJobFavorite(job.id)
+                ? $t('job.addToFavorites')
+                : $t('job.removeFromFavorites')
+        );
         if (isAuth) {
             favoritesApi.toggle(job.id, 'Job').catch(() => {
                 favorites.toggleJob(job.id);
@@ -53,19 +57,26 @@
             format: job.format,
             type: job.type,
             city: job.city,
-            tags: job.tags?.map(t => typeof t === 'string' ? t : t.name)
+            tags: job.tags?.map((t) => (typeof t === 'string' ? t : t.name))
         });
     }
 
     let typeBadge = $derived(
-        job.type === 'Internship' ? 'info' as const :
-        job.type === 'Mentorship' ? 'warning' as const :
-        job.type === 'Event' ? 'accent' as const : 'default' as const
+        job.type === 'Internship'
+            ? ('info' as const)
+            : job.type === 'Mentorship'
+              ? ('warning' as const)
+              : job.type === 'Event'
+                ? ('accent' as const)
+                : ('default' as const)
     );
 
     let formatBadge = $derived(
-        job.format === 'Remote' ? 'success' as const :
-        job.format === 'Office' ? 'warning' as const : 'default' as const
+        job.format === 'Remote'
+            ? ('success' as const)
+            : job.format === 'Office'
+              ? ('warning' as const)
+              : ('default' as const)
     );
 </script>
 
@@ -96,12 +107,49 @@
                 <span class="card-date">{timeAgo(job.createdAt)}</span>
             </div>
             <div class="card-actions">
-                <button class="card-action-btn" type="button" title={$t('comparison.add')} onclick={handleCompare}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <button
+                    class="card-action-btn"
+                    type="button"
+                    title={$t('comparison.add')}
+                    onclick={handleCompare}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><line x1="18" y1="20" x2="18" y2="10" /><line
+                            x1="12"
+                            y1="20"
+                            x2="12"
+                            y2="4"
+                        /><line x1="6" y1="20" x2="6" y2="14" /></svg
+                    >
                 </button>
-                <button class="card-action-btn" class:fav-active={isFav} type="button" title={isFav ? $t('job.removeFromFavorites') : $t('job.addToFavorites')} onclick={handleFavorite}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill={isFav ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                <button
+                    class="card-action-btn"
+                    class:fav-active={isFav}
+                    type="button"
+                    title={isFav ? $t('job.removeFromFavorites') : $t('job.addToFavorites')}
+                    onclick={handleFavorite}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill={isFav ? 'currentColor' : 'none'}
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                        />
                     </svg>
                 </button>
             </div>
@@ -135,12 +183,49 @@
             {/if}
         </div>
         <div class="list-actions">
-            <button class="card-action-btn" type="button" title={$t('comparison.add')} onclick={handleCompare}>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <button
+                class="card-action-btn"
+                type="button"
+                title={$t('comparison.add')}
+                onclick={handleCompare}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><line x1="18" y1="20" x2="18" y2="10" /><line
+                        x1="12"
+                        y1="20"
+                        x2="12"
+                        y2="4"
+                    /><line x1="6" y1="20" x2="6" y2="14" /></svg
+                >
             </button>
-            <button class="card-action-btn" class:fav-active={isFav} type="button" title={isFav ? $t('job.removeFromFavorites') : $t('job.addToFavorites')} onclick={handleFavorite}>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill={isFav ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            <button
+                class="card-action-btn"
+                class:fav-active={isFav}
+                type="button"
+                title={isFav ? $t('job.removeFromFavorites') : $t('job.addToFavorites')}
+                onclick={handleFavorite}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill={isFav ? 'currentColor' : 'none'}
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path
+                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                    />
                 </svg>
             </button>
         </div>
@@ -257,7 +342,9 @@
         border-radius: var(--radius-sm);
         color: var(--text-tertiary);
         opacity: 0;
-        transition: opacity var(--duration-fast) var(--ease-out), var(--transition-colors);
+        transition:
+            opacity var(--duration-fast) var(--ease-out),
+            var(--transition-colors);
         cursor: pointer;
     }
 
@@ -324,7 +411,9 @@
             align-items: stretch;
         }
 
-        .list-left { display: none; }
+        .list-left {
+            display: none;
+        }
 
         .list-right {
             flex-direction: row;

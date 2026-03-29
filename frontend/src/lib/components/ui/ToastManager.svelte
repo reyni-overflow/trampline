@@ -12,12 +12,7 @@
 
 <div class="toast-container" aria-live="polite" aria-label={$t('ui.notifications')}>
     {#each toasts as t (t.id)}
-        <Toast
-            id={t.id}
-            type={t.type}
-            message={t.message}
-            onclose={(id) => toast.remove(id)}
-        />
+        <Toast id={t.id} type={t.type} message={t.message} onclose={(id) => toast.remove(id)} />
     {/each}
 </div>
 

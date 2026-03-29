@@ -16,7 +16,9 @@
     import { onMount, onDestroy } from 'svelte';
 
     let isTrusted = $state(false);
-    const unsub = userStore.subscribe((v) => { isTrusted = (v?.employeeProfile?.verificationLevel ?? 0) >= 2; });
+    const unsub = userStore.subscribe((v) => {
+        isTrusted = (v?.employeeProfile?.verificationLevel ?? 0) >= 2;
+    });
     onDestroy(unsub);
 
     let title = $state('');
@@ -36,8 +38,10 @@
     onMount(async () => {
         try {
             const res = await jobsApi.getTags();
-            allTags = res.map(t => t.name);
-        } catch { /* tags are optional, UI still works */ }
+            allTags = res.map((t) => t.name);
+        } catch {
+            /* tags are optional, UI still works */
+        }
     });
 
     function onTagInput() {
@@ -47,7 +51,7 @@
             return;
         }
         suggestions = allTags
-            .filter(t => t.toLowerCase().includes(q) && !tags.includes(t))
+            .filter((t) => t.toLowerCase().includes(q) && !tags.includes(t))
             .slice(0, 5);
     }
 
@@ -171,7 +175,8 @@
                 description: description || title,
                 type: type as 'Work' | 'Internship' | 'Mentorship' | 'Event',
                 format: format as 'Remote' | 'Hybrid' | 'Office',
-                address: [address, city, country].filter(Boolean).join(', ') || tGet('geo.notSpecified'),
+                address:
+                    [address, city, country].filter(Boolean).join(', ') || tGet('geo.notSpecified'),
                 salaryFrom: salaryFrom ? +salaryFrom : undefined,
                 salaryTo: salaryTo ? +salaryTo : undefined,
                 tags: tags.map((t) => ({ name: t, category: 'tech', lvl: 0 }))
@@ -192,7 +197,16 @@
 
 <div class="create-job">
     <a href="/dashboard/jobs" class="back-link">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
+        >
         {$t('createJob.backToJobs')}
     </a>
 
@@ -201,34 +215,85 @@
     <div class="create-layout">
         <div class="form-col">
             <section class="form-section">
-                <Input label={$t('createJob.nameLabel')} bind:value={title} placeholder={$t('createJob.namePlaceholder')} error={errors.title} onblur={validateTitle} oninput={() => clearError('title')} />
+                <Input
+                    label={$t('createJob.nameLabel')}
+                    bind:value={title}
+                    placeholder={$t('createJob.namePlaceholder')}
+                    error={errors.title}
+                    onblur={validateTitle}
+                    oninput={() => clearError('title')}
+                />
             </section>
 
             <section class="form-section">
                 <div class="form-row">
                     <Select options={typeOptions} bind:value={type} label={$t('createJob.type')} />
-                    <Select options={formatOptions} bind:value={format} label={$t('createJob.format')} />
+                    <Select
+                        options={formatOptions}
+                        bind:value={format}
+                        label={$t('createJob.format')}
+                    />
                 </div>
             </section>
 
             <section class="form-section">
-                <MarkdownEditor label={$t('createJob.descLabel')} bind:value={description} placeholder={$t('createJob.descPlaceholder')} error={errors.description} onblur={validateDescription} oninput={() => clearError('description')} />
+                <MarkdownEditor
+                    label={$t('createJob.descLabel')}
+                    bind:value={description}
+                    placeholder={$t('createJob.descPlaceholder')}
+                    error={errors.description}
+                    onblur={validateDescription}
+                    oninput={() => clearError('description')}
+                />
             </section>
 
             <section class="form-section">
                 <div class="form-row">
-                    <Input label={$t('createJob.city')} bind:value={city} placeholder={$t('createJob.cityPlaceholder')} error={errors.city} onblur={validateCity} oninput={() => clearError('city')} />
-                    <Input label={$t('createJob.country')} bind:value={country} placeholder={$t('createJob.countryPlaceholder')} />
+                    <Input
+                        label={$t('createJob.city')}
+                        bind:value={city}
+                        placeholder={$t('createJob.cityPlaceholder')}
+                        error={errors.city}
+                        onblur={validateCity}
+                        oninput={() => clearError('city')}
+                    />
+                    <Input
+                        label={$t('createJob.country')}
+                        bind:value={country}
+                        placeholder={$t('createJob.countryPlaceholder')}
+                    />
                 </div>
                 {#if format !== 'Remote'}
-                    <Input label={$t('createJob.address')} bind:value={address} placeholder={$t('createJob.addressPlaceholder')} error={errors.address} onblur={validateAddress} oninput={() => clearError('address')} />
+                    <Input
+                        label={$t('createJob.address')}
+                        bind:value={address}
+                        placeholder={$t('createJob.addressPlaceholder')}
+                        error={errors.address}
+                        onblur={validateAddress}
+                        oninput={() => clearError('address')}
+                    />
                 {/if}
             </section>
 
             <section class="form-section">
                 <div class="form-row">
-                    <Input label={$t('createJob.salaryFrom')} type="number" bind:value={salaryFrom} placeholder={$t('createJob.salaryFromPlaceholder')} error={errors.salaryFrom} onblur={validateSalary} oninput={() => clearError('salaryFrom')} />
-                    <Input label={$t('createJob.salaryTo')} type="number" bind:value={salaryTo} placeholder={$t('createJob.salaryToPlaceholder')} onblur={validateSalary} oninput={() => clearError('salaryFrom')} />
+                    <Input
+                        label={$t('createJob.salaryFrom')}
+                        type="number"
+                        bind:value={salaryFrom}
+                        placeholder={$t('createJob.salaryFromPlaceholder')}
+                        error={errors.salaryFrom}
+                        onblur={validateSalary}
+                        oninput={() => clearError('salaryFrom')}
+                    />
+                    <Input
+                        label={$t('createJob.salaryTo')}
+                        type="number"
+                        bind:value={salaryTo}
+                        placeholder={$t('createJob.salaryToPlaceholder')}
+                        onblur={validateSalary}
+                        oninput={() => clearError('salaryFrom')}
+                    />
                 </div>
             </section>
 
@@ -242,16 +307,46 @@
                             {/each}
                         </div>
                     {/if}
-                    <form class="tag-add" onsubmit={(e) => { e.preventDefault(); addTag(); suggestions = []; }}>
+                    <form
+                        class="tag-add"
+                        onsubmit={(e) => {
+                            e.preventDefault();
+                            addTag();
+                            suggestions = [];
+                        }}
+                    >
                         <div class="tag-input-wrap">
-                            <Input placeholder={$t('createJob.tagsPlaceholder')} bind:value={newTag} oninput={onTagInput} />
+                            <Input
+                                placeholder={$t('createJob.tagsPlaceholder')}
+                                bind:value={newTag}
+                                oninput={onTagInput}
+                            />
                             <button class="tag-add-btn" type="submit" aria-label={$t('common.add')}>
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    ><line x1="12" y1="5" x2="12" y2="19" /><line
+                                        x1="5"
+                                        y1="12"
+                                        x2="19"
+                                        y2="12"
+                                    /></svg
+                                >
                             </button>
                             {#if suggestions.length > 0}
                                 <div class="tag-suggestions">
                                     {#each suggestions as s (s)}
-                                        <button type="button" class="tag-suggestion-item" onclick={() => selectSuggestion(s)}>{s}</button>
+                                        <button
+                                            type="button"
+                                            class="tag-suggestion-item"
+                                            onclick={() => selectSuggestion(s)}>{s}</button
+                                        >
                                     {/each}
                                 </div>
                             {/if}
@@ -261,8 +356,12 @@
             </section>
 
             <div class="form-actions">
-                <Button size="lg" onclick={publish} disabled={submitting}>{submitting ? $t('common.loading') : $t('createJob.publish')}</Button>
-                <Button size="lg" variant="outline" onclick={saveDraft} disabled={submitting}>{$t('createJob.saveDraft')}</Button>
+                <Button size="lg" onclick={publish} disabled={submitting}
+                    >{submitting ? $t('common.loading') : $t('createJob.publish')}</Button
+                >
+                <Button size="lg" variant="outline" onclick={saveDraft} disabled={submitting}
+                    >{$t('createJob.saveDraft')}</Button
+                >
             </div>
         </div>
 
@@ -272,10 +371,20 @@
                 <h4 class="preview-title">{title || $t('createJob.positionName')}</h4>
                 <div class="preview-meta">
                     <Badge>{jobTypeLabel(type)}</Badge>
-                    <Badge variant={format === 'Remote' ? 'success' : format === 'Office' ? 'warning' : 'default'}>{workFormatLabel(format)}</Badge>
+                    <Badge
+                        variant={format === 'Remote'
+                            ? 'success'
+                            : format === 'Office'
+                              ? 'warning'
+                              : 'default'}>{workFormatLabel(format)}</Badge
+                    >
                 </div>
-                <p class="preview-location">{city || $t('createJob.cityPlaceholder')}{address ? `, ${address}` : ''}</p>
-                <p class="preview-salary">{formatSalary(salaryFrom ? +salaryFrom : null, salaryTo ? +salaryTo : null)}</p>
+                <p class="preview-location">
+                    {city || $t('createJob.cityPlaceholder')}{address ? `, ${address}` : ''}
+                </p>
+                <p class="preview-salary">
+                    {formatSalary(salaryFrom ? +salaryFrom : null, salaryTo ? +salaryTo : null)}
+                </p>
                 {#if tags.length > 0}
                     <div class="preview-tags">
                         {#each tags as tag (tag)}
@@ -294,23 +403,77 @@
 </div>
 
 <style>
-    .create-job { display: flex; flex-direction: column; gap: var(--space-6); }
-    .back-link { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--font-sm); color: var(--text-secondary); transition: var(--transition-colors); }
-    .back-link:hover { color: var(--accent); }
-    .page-heading { font-size: var(--font-2xl); font-weight: var(--weight-bold); }
+    .create-job {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-size: var(--font-sm);
+        color: var(--text-secondary);
+        transition: var(--transition-colors);
+    }
+    .back-link:hover {
+        color: var(--accent);
+    }
+    .page-heading {
+        font-size: var(--font-2xl);
+        font-weight: var(--weight-bold);
+    }
 
-    .create-layout { display: grid; grid-template-columns: 1fr 20rem; gap: var(--space-8); align-items: start; }
-    .form-col { display: flex; flex-direction: column; gap: var(--space-6); }
-    .form-section { display: flex; flex-direction: column; gap: var(--space-3); }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
-    .field-label { font-size: var(--font-sm); font-weight: var(--weight-medium); color: var(--text-secondary); }
+    .create-layout {
+        display: grid;
+        grid-template-columns: 1fr 20rem;
+        gap: var(--space-8);
+        align-items: start;
+    }
+    .form-col {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+    }
+    .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+    }
+    .field-label {
+        font-size: var(--font-sm);
+        font-weight: var(--weight-medium);
+        color: var(--text-secondary);
+    }
 
-    .tags-edit { display: flex; flex-direction: column; gap: var(--space-3); }
-    .tags-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-    .tag-add { display: flex; }
-    .tag-input-wrap { position: relative; flex: 1; }
-    .tag-input-wrap :global(.input-group) { width: 100%; }
-    .tag-input-wrap :global(.input) { padding-right: 2.75rem; }
+    .tags-edit {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+    .tags-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+    .tag-add {
+        display: flex;
+    }
+    .tag-input-wrap {
+        position: relative;
+        flex: 1;
+    }
+    .tag-input-wrap :global(.input-group) {
+        width: 100%;
+    }
+    .tag-input-wrap :global(.input) {
+        padding-right: 2.75rem;
+    }
     .tag-add-btn {
         position: absolute;
         right: 0.375rem;
@@ -326,7 +489,10 @@
         transition: var(--transition-colors);
         cursor: pointer;
     }
-    .tag-add-btn:hover { color: var(--accent); background: var(--accent-subtle); }
+    .tag-add-btn:hover {
+        color: var(--accent);
+        background: var(--accent-subtle);
+    }
     .tag-suggestions {
         position: absolute;
         top: 100%;
@@ -350,25 +516,78 @@
         cursor: pointer;
         transition: var(--transition-colors);
     }
-    .tag-suggestion-item:hover { background: var(--bg-tertiary); }
+    .tag-suggestion-item:hover {
+        background: var(--bg-tertiary);
+    }
 
-    .form-actions { display: flex; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border-default); }
+    .form-actions {
+        display: flex;
+        gap: var(--space-3);
+        padding-top: var(--space-4);
+        border-top: 1px solid var(--border-default);
+    }
 
-    .preview-col { position: sticky; top: calc(var(--header-height) + var(--space-4)); }
-    .preview-heading { font-size: var(--font-sm); font-weight: var(--weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3); }
+    .preview-col {
+        position: sticky;
+        top: calc(var(--header-height) + var(--space-4));
+    }
+    .preview-heading {
+        font-size: var(--font-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--space-3);
+    }
 
     .preview-card {
-        display: flex; flex-direction: column; gap: var(--space-3);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
         padding: var(--space-5);
-        background: var(--bg-secondary); border: 1px solid var(--border-default); border-radius: var(--radius-lg);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
     }
-    .preview-title { font-size: var(--font-base); font-weight: var(--weight-semibold); }
-    .preview-meta { display: flex; gap: var(--space-1); }
-    .preview-location { font-size: var(--font-sm); color: var(--text-secondary); }
-    .preview-salary { font-size: var(--font-sm); font-weight: var(--weight-semibold); color: var(--accent); }
-    .preview-tags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
-    .preview-desc { font-size: var(--font-xs); color: var(--text-tertiary); line-height: var(--leading-normal); }
+    .preview-title {
+        font-size: var(--font-base);
+        font-weight: var(--weight-semibold);
+    }
+    .preview-meta {
+        display: flex;
+        gap: var(--space-1);
+    }
+    .preview-location {
+        font-size: var(--font-sm);
+        color: var(--text-secondary);
+    }
+    .preview-salary {
+        font-size: var(--font-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--accent);
+    }
+    .preview-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-1);
+    }
+    .preview-desc {
+        font-size: var(--font-xs);
+        color: var(--text-tertiary);
+        line-height: var(--leading-normal);
+    }
 
-    @media (max-width: 1024px) { .create-layout { grid-template-columns: 1fr; } .preview-col { position: static; } }
-    @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 1024px) {
+        .create-layout {
+            grid-template-columns: 1fr;
+        }
+        .preview-col {
+            position: static;
+        }
+    }
+    @media (max-width: 640px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>

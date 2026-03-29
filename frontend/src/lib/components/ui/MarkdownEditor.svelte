@@ -10,14 +10,7 @@
         oninput?: () => void;
     }
 
-    let {
-        value = $bindable(''),
-        label,
-        placeholder,
-        error,
-        onblur,
-        oninput
-    }: Props = $props();
+    let { value = $bindable(''), label, placeholder, error, onblur, oninput }: Props = $props();
 
     let textareaEl = $state<HTMLTextAreaElement>();
     let backdropEl = $state<HTMLDivElement>();
@@ -30,7 +23,8 @@
         block?: boolean;
     }
 
-    const svg = (d: string) => `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+    const svg = (d: string) =>
+        `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 
     let tools = $derived<ToolbarAction[]>([
         { icon: 'B', title: $t('md.bold'), prefix: '**', suffix: '**' },
@@ -39,18 +33,57 @@
         { icon: 'S', title: $t('md.strikethrough'), prefix: '~~', suffix: '~~' },
         { icon: '||', title: $t('md.spoiler'), prefix: '||', suffix: '||' },
         { icon: '`', title: $t('md.code'), prefix: '`', suffix: '`' },
-        { icon: svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'), title: $t('md.codeblock'), prefix: '```\n', suffix: '\n```', block: true },
-        { icon: svg('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'), title: $t('md.link'), prefix: '[', suffix: '](url)' },
-        { icon: svg('<line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="6" x2="11" y2="6"/><line x1="3" y1="14" x2="15" y2="14"/><line x1="3" y1="18" x2="9" y2="18"/>'), title: $t('md.blockquote'), prefix: '> ', suffix: '', block: true },
-        { icon: svg('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'), title: $t('md.list'), prefix: '- ', suffix: '', block: true },
+        {
+            icon: svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
+            title: $t('md.codeblock'),
+            prefix: '```\n',
+            suffix: '\n```',
+            block: true
+        },
+        {
+            icon: svg(
+                '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'
+            ),
+            title: $t('md.link'),
+            prefix: '[',
+            suffix: '](url)'
+        },
+        {
+            icon: svg(
+                '<line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="6" x2="11" y2="6"/><line x1="3" y1="14" x2="15" y2="14"/><line x1="3" y1="18" x2="9" y2="18"/>'
+            ),
+            title: $t('md.blockquote'),
+            prefix: '> ',
+            suffix: '',
+            block: true
+        },
+        {
+            icon: svg(
+                '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'
+            ),
+            title: $t('md.list'),
+            prefix: '- ',
+            suffix: '',
+            block: true
+        }
     ]);
 
     const admIcons: Record<string, string> = {
-        note: svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'),
-        tip: svg('<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>'),
-        warning: svg('<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
-        danger: svg('<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>'),
-        info: svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'),
+        note: svg(
+            '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+        ),
+        tip: svg(
+            '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>'
+        ),
+        warning: svg(
+            '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'
+        ),
+        danger: svg(
+            '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>'
+        ),
+        info: svg(
+            '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+        )
     };
 
     let admonitions = $derived([
@@ -58,7 +91,7 @@
         { type: 'tip', label: $t('md.admTip'), icon: admIcons.tip },
         { type: 'warning', label: $t('md.admWarning'), icon: admIcons.warning },
         { type: 'danger', label: $t('md.admDanger'), icon: admIcons.danger },
-        { type: 'info', label: $t('md.admInfo'), icon: admIcons.info },
+        { type: 'info', label: $t('md.admInfo'), icon: admIcons.info }
     ]);
 
     let showAdmMenu = $state(false);
@@ -86,9 +119,15 @@
         const after = value.slice(textareaEl.selectionEnd);
         const nl = before.length > 0 && !before.endsWith('\n') ? '\n' : '';
         const alignMap = { left: ':---', center: ':---:', right: '---:' };
-        const headerCells = Array.from({ length: tableCols }, (_, i) => ` ${$t('md.header')} ${i + 1} `);
-        const alignCells = tableAligns.slice(0, tableCols).map(a => ` ${alignMap[a]} `);
-        const bodyRows = Array.from({ length: tableRows }, () => '|' + Array.from({ length: tableCols }, () => '  ').join('|') + '|');
+        const headerCells = Array.from(
+            { length: tableCols },
+            (_, i) => ` ${$t('md.header')} ${i + 1} `
+        );
+        const alignCells = tableAligns.slice(0, tableCols).map((a) => ` ${alignMap[a]} `);
+        const bodyRows = Array.from(
+            { length: tableRows },
+            () => '|' + Array.from({ length: tableCols }, () => '  ').join('|') + '|'
+        );
         const table = `${nl}|${headerCells.join('|')}|\n|${alignCells.join('|')}|\n${bodyRows.join('\n')}\n`;
         value = before + table + after;
         showTableMenu = false;
@@ -173,10 +212,7 @@
     }
 
     function escapeHtml(text: string): string {
-        return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     function findClosing(raw: string, start: number, marker: string): number {
@@ -186,7 +222,8 @@
 
     function findSingleMark(text: string, start: number, ch: string): number {
         for (let i = start; i < text.length; i++) {
-            if (text[i] === ch && text[i + 1] !== ch && (i === start || text[i - 1] !== ch)) return i;
+            if (text[i] === ch && text[i + 1] !== ch && (i === start || text[i - 1] !== ch))
+                return i;
         }
         return -1;
     }
@@ -280,7 +317,8 @@
     }
 
     function renderLivePreview(text: string): string {
-        if (!text) return '<span class="lp-placeholder">' + escapeHtml(placeholder || '') + '</span>';
+        if (!text)
+            return '<span class="lp-placeholder">' + escapeHtml(placeholder || '') + '</span>';
 
         const lines = text.split('\n');
         const out: string[] = [];
@@ -305,7 +343,13 @@
 
             const headingMatch = line.match(/^(#{1,3})\s+(.*)/);
             if (headingMatch) {
-                out.push('<span class="lp-dim">' + escapeHtml(headingMatch[1]) + ' </span><span class="lp-heading">' + parseInlinePreview(headingMatch[2]) + '</span>');
+                out.push(
+                    '<span class="lp-dim">' +
+                        escapeHtml(headingMatch[1]) +
+                        ' </span><span class="lp-heading">' +
+                        parseInlinePreview(headingMatch[2]) +
+                        '</span>'
+                );
                 i++;
                 continue;
             }
@@ -313,21 +357,37 @@
             if (line.startsWith('> ') || line === '>') {
                 const prefix = line.startsWith('> ') ? '> ' : '>';
                 const rest = line.startsWith('> ') ? line.slice(2) : '';
-                out.push('<span class="lp-dim">' + escapeHtml(prefix) + '</span><span class="lp-quote">' + parseInlinePreview(rest) + '</span>');
+                out.push(
+                    '<span class="lp-dim">' +
+                        escapeHtml(prefix) +
+                        '</span><span class="lp-quote">' +
+                        parseInlinePreview(rest) +
+                        '</span>'
+                );
                 i++;
                 continue;
             }
 
             const listMatch = line.match(/^(\s*[-*])\s(.*)/);
             if (listMatch) {
-                out.push('<span class="lp-dim">' + escapeHtml(listMatch[1]) + ' </span>' + parseInlinePreview(listMatch[2]));
+                out.push(
+                    '<span class="lp-dim">' +
+                        escapeHtml(listMatch[1]) +
+                        ' </span>' +
+                        parseInlinePreview(listMatch[2])
+                );
                 i++;
                 continue;
             }
 
             const cbMatch = line.match(/^(\s*\[[ x]\])\s(.*)/);
             if (cbMatch) {
-                out.push('<span class="lp-dim">' + escapeHtml(cbMatch[1]) + ' </span>' + parseInlinePreview(cbMatch[2]));
+                out.push(
+                    '<span class="lp-dim">' +
+                        escapeHtml(cbMatch[1]) +
+                        ' </span>' +
+                        parseInlinePreview(cbMatch[2])
+                );
                 i++;
                 continue;
             }
@@ -374,20 +434,32 @@
                     type="button"
                     title={tool.title}
                     onclick={() => insertFormat(tool)}
-                ><!-- eslint-disable svelte/no-at-html-tags -->{#if tool.icon.startsWith('<svg')}{@html tool.icon}{:else}{tool.icon}{/if}<!-- eslint-enable svelte/no-at-html-tags --></button>
+                    ><!-- eslint-disable svelte/no-at-html-tags -->{#if tool.icon.startsWith('<svg')}{@html tool.icon}{:else}{tool.icon}{/if}<!-- eslint-enable svelte/no-at-html-tags --></button
+                >
             {/each}
 
             <div class="tb-sep"></div>
 
             <div class="tb-adm-wrap">
-                <button class="tb-btn" type="button" title={$t('md.admonition')} onclick={() => showAdmMenu = !showAdmMenu}>
+                <button
+                    class="tb-btn"
+                    type="button"
+                    title={$t('md.admonition')}
+                    onclick={() => (showAdmMenu = !showAdmMenu)}
+                >
                     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    {@html svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>')}
+                    {@html svg(
+                        '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'
+                    )}
                 </button>
                 {#if showAdmMenu}
                     <div class="tb-adm-menu">
                         {#each admonitions as adm (adm.type)}
-                            <button class="tb-adm-item" type="button" onclick={() => insertAdmonition(adm.type)}>
+                            <button
+                                class="tb-adm-item"
+                                type="button"
+                                onclick={() => insertAdmonition(adm.type)}
+                            >
                                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                                 <span class="adm-icon adm-icon--{adm.type}">{@html adm.icon}</span>
                                 {adm.label}
@@ -398,30 +470,84 @@
             </div>
 
             <div class="tb-adm-wrap">
-                <button class="tb-btn" type="button" title={$t('md.table')} onclick={() => { showTableMenu = !showTableMenu; updateTableAligns(); }}>
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                <button
+                    class="tb-btn"
+                    type="button"
+                    title={$t('md.table')}
+                    onclick={() => {
+                        showTableMenu = !showTableMenu;
+                        updateTableAligns();
+                    }}
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><rect x="3" y="3" width="18" height="18" rx="2" /><line
+                            x1="3"
+                            y1="9"
+                            x2="21"
+                            y2="9"
+                        /><line x1="3" y1="15" x2="21" y2="15" /><line
+                            x1="9"
+                            y1="3"
+                            x2="9"
+                            y2="21"
+                        /><line x1="15" y1="3" x2="15" y2="21" /></svg
+                    >
                 </button>
                 {#if showTableMenu}
                     <div class="tb-adm-menu tb-table-menu">
                         <div class="tb-table-row">
                             <span class="tb-table-label">{$t('md.cols')}</span>
-                            <input type="number" class="tb-table-input" min="1" max="10" bind:value={tableCols} oninput={updateTableAligns} />
+                            <input
+                                type="number"
+                                class="tb-table-input"
+                                min="1"
+                                max="10"
+                                bind:value={tableCols}
+                                oninput={updateTableAligns}
+                            />
                         </div>
                         <div class="tb-table-row">
                             <span class="tb-table-label">{$t('md.rows')}</span>
-                            <input type="number" class="tb-table-input" min="1" max="20" bind:value={tableRows} />
+                            <input
+                                type="number"
+                                class="tb-table-input"
+                                min="1"
+                                max="20"
+                                bind:value={tableRows}
+                            />
                         </div>
                         <div class="tb-table-row">
                             <span class="tb-table-label">{$t('md.align')}</span>
                             <div class="tb-align-btns">
                                 {#each Array(tableCols) as _, idx (idx)}
-                                    <button class="tb-align-btn" type="button" onclick={() => cycleAlign(idx)} title="Column {idx + 1}: {tableAligns[idx]}">
-                                        {tableAligns[idx] === 'left' ? '←' : tableAligns[idx] === 'center' ? '↔' : '→'}
+                                    <button
+                                        class="tb-align-btn"
+                                        type="button"
+                                        onclick={() => cycleAlign(idx)}
+                                        title="Column {idx + 1}: {tableAligns[idx]}"
+                                    >
+                                        {tableAligns[idx] === 'left'
+                                            ? '←'
+                                            : tableAligns[idx] === 'center'
+                                              ? '↔'
+                                              : '→'}
                                     </button>
                                 {/each}
                             </div>
                         </div>
-                        <button class="tb-adm-item tb-table-insert" type="button" onclick={insertTable}>{$t('md.insertTable')}</button>
+                        <button
+                            class="tb-adm-item tb-table-insert"
+                            type="button"
+                            onclick={insertTable}>{$t('md.insertTable')}</button
+                        >
                     </div>
                 {/if}
             </div>
@@ -439,7 +565,7 @@
                 {placeholder}
                 rows={8}
                 oninput={handleInput}
-                onblur={onblur}
+                {onblur}
                 onkeydown={handleKeydown}
                 onscroll={syncScroll}
             ></textarea>
@@ -468,7 +594,9 @@
         border: 1px solid var(--border-default);
         border-radius: var(--radius-md);
         overflow: hidden;
-        transition: border-color var(--duration-normal) var(--ease-in-out), box-shadow var(--duration-normal) var(--ease-in-out);
+        transition:
+            border-color var(--duration-normal) var(--ease-in-out),
+            box-shadow var(--duration-normal) var(--ease-in-out);
     }
 
     .editor-wrapper:focus-within {
@@ -510,7 +638,10 @@
         cursor: pointer;
     }
 
-    .tb-btn:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+    .tb-btn:hover {
+        color: var(--text-primary);
+        background: var(--bg-tertiary);
+    }
 
     .tb-sep {
         width: 1px;
@@ -519,7 +650,9 @@
         margin: 0 var(--space-1);
     }
 
-    .tb-adm-wrap { position: relative; }
+    .tb-adm-wrap {
+        position: relative;
+    }
 
     .tb-adm-menu {
         position: absolute;
@@ -551,15 +684,32 @@
         text-align: left;
     }
 
-    .tb-adm-item:hover { background: var(--bg-tertiary); }
+    .tb-adm-item:hover {
+        background: var(--bg-tertiary);
+    }
 
-    .tb-adm-item :global(.adm-icon) { display: inline-flex; flex-shrink: 0; }
-    .tb-adm-item :global(.adm-icon--note) { color: #3B82F6; }
-    .tb-adm-item :global(.adm-icon--tip) { color: #10B981; }
-    .tb-adm-item :global(.adm-icon--warning) { color: #F59E0B; }
-    .tb-adm-item :global(.adm-icon--danger) { color: #EF4444; }
-    .tb-adm-item :global(.adm-icon--info) { color: #06B6D4; }
-    .tb-table-menu { min-width: 12rem; }
+    .tb-adm-item :global(.adm-icon) {
+        display: inline-flex;
+        flex-shrink: 0;
+    }
+    .tb-adm-item :global(.adm-icon--note) {
+        color: #3b82f6;
+    }
+    .tb-adm-item :global(.adm-icon--tip) {
+        color: #10b981;
+    }
+    .tb-adm-item :global(.adm-icon--warning) {
+        color: #f59e0b;
+    }
+    .tb-adm-item :global(.adm-icon--danger) {
+        color: #ef4444;
+    }
+    .tb-adm-item :global(.adm-icon--info) {
+        color: #06b6d4;
+    }
+    .tb-table-menu {
+        min-width: 12rem;
+    }
 
     .tb-table-row {
         display: flex;
@@ -586,7 +736,11 @@
         text-align: center;
     }
 
-    .tb-align-btns { display: flex; gap: 2px; flex-wrap: wrap; }
+    .tb-align-btns {
+        display: flex;
+        gap: 2px;
+        flex-wrap: wrap;
+    }
 
     .tb-align-btn {
         display: flex;
@@ -603,7 +757,10 @@
         transition: var(--transition-colors);
     }
 
-    .tb-align-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tb-align-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
 
     .tb-table-insert {
         margin-top: var(--space-1);
@@ -619,7 +776,14 @@
 
     .editor-backdrop,
     .editor-input {
-        font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif);
+        font-family: var(
+            --font-body,
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            system-ui,
+            sans-serif
+        );
         font-size: var(--font-sm);
         line-height: var(--leading-relaxed);
         letter-spacing: normal;

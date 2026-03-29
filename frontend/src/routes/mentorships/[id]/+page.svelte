@@ -38,12 +38,34 @@
     let applyLoading = $state(false);
     let coverLetterError = $state('');
 
-    let data = $derived(mentorship ?? {
-        id: page.params.id ?? '', employeeId: '', userId: '', title: '...', description: '',
-        address: '', city: '', country: '', street: '', geoLat: '0', geoLon: '0', salaryFrom: undefined, salaryTo: undefined,
-        tags: [], format: 'Remote' as const, createdAt: '', updatedAt: '', deletedAt: undefined, endedAt: undefined, startDate: undefined,
-        isActive: true, views: 0, photos: [], videos: []
-    });
+    let data = $derived(
+        mentorship ?? {
+            id: page.params.id ?? '',
+            employeeId: '',
+            userId: '',
+            title: '...',
+            description: '',
+            address: '',
+            city: '',
+            country: '',
+            street: '',
+            geoLat: '0',
+            geoLon: '0',
+            salaryFrom: undefined,
+            salaryTo: undefined,
+            tags: [],
+            format: 'Remote' as const,
+            createdAt: '',
+            updatedAt: '',
+            deletedAt: undefined,
+            endedAt: undefined,
+            startDate: undefined,
+            isActive: true,
+            views: 0,
+            photos: [],
+            videos: []
+        }
+    );
 
     onMount(async () => {
         try {
@@ -54,18 +76,25 @@
                 if (mentorship?.employeeId) {
                     try {
                         company = await employeesApi.getById(mentorship.employeeId);
-                    } catch { /* ignored */ }
+                    } catch {
+                        /* ignored */
+                    }
                 }
                 try {
                     const allData = await mentorshipsApi.getAll(1, 20);
-                    const currentTags = new Set(mentorship?.tags?.map(t => t.name) || []);
+                    const currentTags = new Set(mentorship?.tags?.map((t) => t.name) || []);
                     similarMentorships = allData.items
-                        .filter(m => m.id !== id)
-                        .map(m => ({ mentorship: m, score: m.tags?.filter(t => currentTags.has(t.name)).length || 0 }))
+                        .filter((m) => m.id !== id)
+                        .map((m) => ({
+                            mentorship: m,
+                            score: m.tags?.filter((t) => currentTags.has(t.name)).length || 0
+                        }))
                         .sort((a, b) => b.score - a.score)
                         .slice(0, 3)
-                        .map(r => r.mentorship);
-                } catch { /* ignored */ }
+                        .map((r) => r.mentorship);
+                } catch {
+                    /* ignored */
+                }
             }
         } catch (err) {
             handleApiError(err);
@@ -79,7 +108,9 @@
         const prev = isFavorite;
         isFavorite = !isFavorite;
         favorites.toggleMentorship(id);
-        toast.success(isFavorite ? $t('mentorship.addToFavorites') : $t('mentorship.removeFromFavorites'));
+        toast.success(
+            isFavorite ? $t('mentorship.addToFavorites') : $t('mentorship.removeFromFavorites')
+        );
 
         try {
             if (isAuth) {
@@ -167,134 +198,210 @@
             </div>
         </div>
     {:else}
-    <div class="mentorship-layout content-fade-in">
-        <main class="mentorship-main">
-            <div class="mentorship-header">
-                <div class="mentorship-header-top">
-                    <a href="/mentorships" class="back-link">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m15 18-6-6 6-6"/>
-                        </svg>
-                        {$t('mentorship.backToMentorships')}
-                    </a>
-                    <div class="header-actions">
-                        <ShareButton title={data.title} />
-                        <button class="fav-btn" class:active={isFavorite} onclick={toggleFavorite} title={isFavorite ? $t('mentorship.removeFromFavorites') : $t('mentorship.addToFavorites')} type="button">
-                            <svg viewBox="0 0 24 24" width="22" height="22" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+        <div class="mentorship-layout content-fade-in">
+            <main class="mentorship-main">
+                <div class="mentorship-header">
+                    <div class="mentorship-header-top">
+                        <a href="/mentorships" class="back-link">
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="m15 18-6-6 6-6" />
                             </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mentorship-title-row">
-                    <Avatar name={data.title} size={56} />
-                    <div class="mentorship-title-info">
-                        <h1 class="mentorship-title">{data.title}</h1>
-                        <p class="mentorship-location">{data.city}{#if data.country}, {data.country}{/if} {#if data.address}&middot; {data.address}{/if}</p>
-                    </div>
-                </div>
-
-                <div class="mentorship-meta">
-                    <Badge variant="warning">{$t('mentorships.badge')}</Badge>
-                    <Badge variant={data.format === 'Remote' ? 'success' : data.format === 'Office' ? 'warning' : 'default'}>{workFormatLabel(data.format)}</Badge>
-                    {#if mentorship?.duration}
-                        <span class="meta-dot">&middot;</span>
-                        <span class="meta-text meta-duration">{mentorship.duration}</span>
-                    {/if}
-                    {#if mentorship?.maxParticipants}
-                        <span class="meta-dot">&middot;</span>
-                        <span class="meta-text">{$t('mentorship.maxParticipants')}: {mentorship.maxParticipants}</span>
-                    {/if}
-                    <span class="meta-dot">&middot;</span>
-                    <span class="meta-text">{timeAgo(data.createdAt)}</span>
-                    <span class="meta-dot">&middot;</span>
-                    <span class="meta-text">{formatViews(data.views)}</span>
-                </div>
-            </div>
-
-            {#if data.tags?.length}
-                <div class="mentorship-tags">
-                    {#each data.tags as tag (tag.name)}
-                        <Tag clickable onclick={() => {}}>{tag.name}</Tag>
-                    {/each}
-                </div>
-            {/if}
-
-            <div class="mentorship-description">
-                <MarkdownRenderer source={data.description} />
-            </div>
-
-            <div class="mentorship-actions">
-                <Button size="lg" onclick={handleApply}>
-                    {isAuth ? $t('mentorships.apply') : $t('job.loginToRespond')}
-                </Button>
-                <Button size="lg" variant="outline" onclick={toggleFavorite}>
-                    {isFavorite ? $t('mentorship.removeFromFavorites') : $t('mentorship.addToFavorites')}
-                </Button>
-            </div>
-
-            <div class="mentorship-footer-info">
-                <span class="footer-item">{$t('job.published')} {formatDate(data.createdAt)}</span>
-                {#if data.endedAt}
-                    <span class="footer-item">&middot; {$t('event.deadline')} {formatDate(data.endedAt)}</span>
-                {/if}
-            </div>
-        </main>
-
-        <aside class="mentorship-sidebar">
-            {#if data.city}
-                <div class="sidebar-card minimap-card">
-                    <h3 class="sidebar-title">{$t('job.location')}</h3>
-                    <div class="minimap-wrap">
-                        <MapView
-                            markers={[{ id: data.id, lat: Number(data.geoLat) || 55.757, lng: Number(data.geoLon) || 37.617, title: data.title, company: company?.name ?? '', type: 'Mentorship' }]}
-                            center={[Number(data.geoLat) || 55.757, Number(data.geoLon) || 37.617]}
-                            zoom={14}
-                            height="12rem"
-                        />
-                    </div>
-                    <p class="minimap-address">{data.address ? `${data.address}, ` : ''}{data.city}{#if data.country}, {data.country}{/if}</p>
-                </div>
-            {/if}
-
-            <div class="sidebar-card">
-                <h3 class="sidebar-title">{$t('mentorship.mentor')}</h3>
-                <div class="sidebar-company">
-                    <Avatar name={company?.name ?? $t('mentorship.mentor')} size={48} />
-                    <div>
-                        <a href="/companies/{data.employeeId}" class="company-link">{company?.name ?? $t('mentorship.mentor')}</a>
-                        <p class="company-activity">{company?.activity ?? ''}</p>
-                    </div>
-                </div>
-                {#if company?.isVerified}
-                    <Badge variant="success">{$t('companies.verified')}</Badge>
-                {/if}
-            </div>
-
-            {#if similarMentorships.length > 0}
-            <div class="sidebar-card">
-                <h3 class="sidebar-title">{$t('mentorship.similarMentorships')}</h3>
-                <div class="similar-list">
-                    {#each similarMentorships as sm (sm.id)}
-                        <a href="/mentorships/{sm.id}" class="similar-item">
-                            <span class="similar-title">{sm.title}</span>
-                            <span class="similar-format">{sm.format === 'Remote' ? $t('events.online') : $t('events.offline')}</span>
-                            {#if sm.tags?.length}
-                                <span class="similar-tags">{sm.tags.slice(0, 3).map(t => t.name).join(', ')}</span>
-                            {/if}
+                            {$t('mentorship.backToMentorships')}
                         </a>
-                    {/each}
+                        <div class="header-actions">
+                            <ShareButton title={data.title} />
+                            <button
+                                class="fav-btn"
+                                class:active={isFavorite}
+                                onclick={toggleFavorite}
+                                title={isFavorite
+                                    ? $t('mentorship.removeFromFavorites')
+                                    : $t('mentorship.addToFavorites')}
+                                type="button"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="22"
+                                    height="22"
+                                    fill={isFavorite ? 'currentColor' : 'none'}
+                                    stroke="currentColor"
+                                    stroke-width="1.75"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path
+                                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mentorship-title-row">
+                        <Avatar name={data.title} size={56} />
+                        <div class="mentorship-title-info">
+                            <h1 class="mentorship-title">{data.title}</h1>
+                            <p class="mentorship-location">
+                                {data.city}{#if data.country}, {data.country}{/if}
+                                {#if data.address}&middot; {data.address}{/if}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mentorship-meta">
+                        <Badge variant="warning">{$t('mentorships.badge')}</Badge>
+                        <Badge
+                            variant={data.format === 'Remote'
+                                ? 'success'
+                                : data.format === 'Office'
+                                  ? 'warning'
+                                  : 'default'}>{workFormatLabel(data.format)}</Badge
+                        >
+                        {#if mentorship?.duration}
+                            <span class="meta-dot">&middot;</span>
+                            <span class="meta-text meta-duration">{mentorship.duration}</span>
+                        {/if}
+                        {#if mentorship?.maxParticipants}
+                            <span class="meta-dot">&middot;</span>
+                            <span class="meta-text"
+                                >{$t('mentorship.maxParticipants')}: {mentorship.maxParticipants}</span
+                            >
+                        {/if}
+                        <span class="meta-dot">&middot;</span>
+                        <span class="meta-text">{timeAgo(data.createdAt)}</span>
+                        <span class="meta-dot">&middot;</span>
+                        <span class="meta-text">{formatViews(data.views)}</span>
+                    </div>
                 </div>
-            </div>
-            {/if}
-        </aside>
-    </div>
+
+                {#if data.tags?.length}
+                    <div class="mentorship-tags">
+                        {#each data.tags as tag (tag.name)}
+                            <Tag clickable onclick={() => {}}>{tag.name}</Tag>
+                        {/each}
+                    </div>
+                {/if}
+
+                <div class="mentorship-description">
+                    <MarkdownRenderer source={data.description} />
+                </div>
+
+                <div class="mentorship-actions">
+                    <Button size="lg" onclick={handleApply}>
+                        {isAuth ? $t('mentorships.apply') : $t('job.loginToRespond')}
+                    </Button>
+                    <Button size="lg" variant="outline" onclick={toggleFavorite}>
+                        {isFavorite
+                            ? $t('mentorship.removeFromFavorites')
+                            : $t('mentorship.addToFavorites')}
+                    </Button>
+                </div>
+
+                <div class="mentorship-footer-info">
+                    <span class="footer-item"
+                        >{$t('job.published')} {formatDate(data.createdAt)}</span
+                    >
+                    {#if data.endedAt}
+                        <span class="footer-item"
+                            >&middot; {$t('event.deadline')} {formatDate(data.endedAt)}</span
+                        >
+                    {/if}
+                </div>
+            </main>
+
+            <aside class="mentorship-sidebar">
+                {#if data.city}
+                    <div class="sidebar-card minimap-card">
+                        <h3 class="sidebar-title">{$t('job.location')}</h3>
+                        <div class="minimap-wrap">
+                            <MapView
+                                markers={[
+                                    {
+                                        id: data.id,
+                                        lat: Number(data.geoLat) || 55.757,
+                                        lng: Number(data.geoLon) || 37.617,
+                                        title: data.title,
+                                        company: company?.name ?? '',
+                                        type: 'Mentorship'
+                                    }
+                                ]}
+                                center={[
+                                    Number(data.geoLat) || 55.757,
+                                    Number(data.geoLon) || 37.617
+                                ]}
+                                zoom={14}
+                                height="12rem"
+                            />
+                        </div>
+                        <p class="minimap-address">
+                            {data.address ? `${data.address}, ` : ''}{data.city}{#if data.country}, {data.country}{/if}
+                        </p>
+                    </div>
+                {/if}
+
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">{$t('mentorship.mentor')}</h3>
+                    <div class="sidebar-company">
+                        <Avatar name={company?.name ?? $t('mentorship.mentor')} size={48} />
+                        <div>
+                            <a href="/companies/{data.employeeId}" class="company-link"
+                                >{company?.name ?? $t('mentorship.mentor')}</a
+                            >
+                            <p class="company-activity">{company?.activity ?? ''}</p>
+                        </div>
+                    </div>
+                    {#if company?.isVerified}
+                        <Badge variant="success">{$t('companies.verified')}</Badge>
+                    {/if}
+                </div>
+
+                {#if similarMentorships.length > 0}
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">{$t('mentorship.similarMentorships')}</h3>
+                        <div class="similar-list">
+                            {#each similarMentorships as sm (sm.id)}
+                                <a href="/mentorships/{sm.id}" class="similar-item">
+                                    <span class="similar-title">{sm.title}</span>
+                                    <span class="similar-format"
+                                        >{sm.format === 'Remote'
+                                            ? $t('events.online')
+                                            : $t('events.offline')}</span
+                                    >
+                                    {#if sm.tags?.length}
+                                        <span class="similar-tags"
+                                            >{sm.tags
+                                                .slice(0, 3)
+                                                .map((t) => t.name)
+                                                .join(', ')}</span
+                                        >
+                                    {/if}
+                                </a>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+            </aside>
+        </div>
     {/if}
 </div>
 
 <Modal bind:open={showApplyModal} title={$t('mentorship.applyTitle')} maxWidth="480px">
-    <form class="apply-form" onsubmit={(e) => { e.preventDefault(); submitApplication(); }}>
+    <form
+        class="apply-form"
+        onsubmit={(e) => {
+            e.preventDefault();
+            submitApplication();
+        }}
+    >
         <p class="apply-hint">{$t('mentorship.applyHint')}</p>
         <Textarea
             label={$t('mentorship.coverLetter')}
@@ -305,7 +412,12 @@
             rows={5}
         />
         <div class="apply-actions">
-            <Button variant="outline" onclick={() => { showApplyModal = false; }}>{$t('common.cancel')}</Button>
+            <Button
+                variant="outline"
+                onclick={() => {
+                    showApplyModal = false;
+                }}>{$t('common.cancel')}</Button
+            >
             <Button type="submit" disabled={applyLoading}>
                 {applyLoading ? $t('common.loading') : $t('mentorship.submitApplication')}
             </Button>
@@ -340,7 +452,8 @@
         gap: var(--space-2);
     }
 
-    .sk-badges-row, .sk-tags-row {
+    .sk-badges-row,
+    .sk-tags-row {
         display: flex;
         gap: var(--space-2);
         flex-wrap: wrap;
@@ -353,7 +466,9 @@
     }
 
     @media (max-width: 1024px) {
-        .mentorship-skeleton { grid-template-columns: 1fr; }
+        .mentorship-skeleton {
+            grid-template-columns: 1fr;
+        }
     }
 
     .mentorship-page {
@@ -417,7 +532,8 @@
         transition: var(--transition-colors);
     }
 
-    .fav-btn:hover, .fav-btn.active {
+    .fav-btn:hover,
+    .fav-btn.active {
         color: var(--color-error);
     }
 
@@ -455,9 +571,17 @@
         flex-wrap: wrap;
     }
 
-    .meta-dot { color: var(--text-tertiary); }
-    .meta-text { font-size: var(--font-sm); color: var(--text-secondary); }
-    .meta-duration { font-weight: var(--weight-medium); color: var(--accent); }
+    .meta-dot {
+        color: var(--text-tertiary);
+    }
+    .meta-text {
+        font-size: var(--font-sm);
+        color: var(--text-secondary);
+    }
+    .meta-duration {
+        font-weight: var(--weight-medium);
+        color: var(--accent);
+    }
 
     .mentorship-tags {
         display: flex;

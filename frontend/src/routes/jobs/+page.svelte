@@ -55,7 +55,11 @@
         return count;
     });
 
-    let filtersLabel = $derived(activeFiltersCount > 0 ? `${$t('jobs.filters')} (${activeFiltersCount})` : $t('jobs.filters'));
+    let filtersLabel = $derived(
+        activeFiltersCount > 0
+            ? `${$t('jobs.filters')} (${activeFiltersCount})`
+            : $t('jobs.filters')
+    );
 
     function buildTypeFilter(): string | undefined {
         const types: string[] = [];
@@ -115,8 +119,18 @@
     let debounceTimer: ReturnType<typeof setTimeout>;
 
     $effect(() => {
-        void search; void typeWork; void typeInternship; void typeMentorship; void typeEvent;
-        void formatRemote; void formatHybrid; void formatOffice; void city; void salaryMin; void salaryMax; void sortBy;
+        void search;
+        void typeWork;
+        void typeInternship;
+        void typeMentorship;
+        void typeEvent;
+        void formatRemote;
+        void formatHybrid;
+        void formatOffice;
+        void city;
+        void salaryMin;
+        void salaryMax;
+        void sortBy;
 
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
@@ -127,16 +141,31 @@
     let displayJobs = $derived.by(() => {
         let list = jobs;
 
-        if (sortBy === 'salary') list = [...list].sort((a, b) => (b.salaryFrom ?? 0) - (a.salaryFrom ?? 0));
-        if (sortBy === 'date') list = [...list].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        if (sortBy === 'salary')
+            list = [...list].sort((a, b) => (b.salaryFrom ?? 0) - (a.salaryFrom ?? 0));
+        if (sortBy === 'date')
+            list = [...list].sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
 
         return list;
     });
 
-    let mapMarkers = $derived(displayJobs.map((j, i) => {
-        const coords = (j.geoLat && j.geoLon) ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
-        return { id: j.id, lat: coords[0], lng: coords[1], title: j.title, company: j.companyName || j.city, salary: formatSalary(j.salaryFrom, j.salaryTo), tags: j.tags?.map(t => typeof t === 'string' ? t : t.name), type: j.type };
-    }));
+    let mapMarkers = $derived(
+        displayJobs.map((j, i) => {
+            const coords = j.geoLat && j.geoLon ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
+            return {
+                id: j.id,
+                lat: coords[0],
+                lng: coords[1],
+                title: j.title,
+                company: j.companyName || j.city,
+                salary: formatSalary(j.salaryFrom, j.salaryTo),
+                tags: j.tags?.map((t) => (typeof t === 'string' ? t : t.name)),
+                type: j.type
+            };
+        })
+    );
 </script>
 
 <svelte:head>
@@ -153,63 +182,110 @@
             <h1 class="jobs-title">{$t('jobs.title')}</h1>
         </div>
         <div class="jobs-controls">
-            <button class="filter-toggle" type="button" onclick={() => (filtersOpen = !filtersOpen)}>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            <button
+                class="filter-toggle"
+                type="button"
+                onclick={() => (filtersOpen = !filtersOpen)}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
                 </svg>
                 {filtersLabel}
             </button>
-            <Select options={sortOptions} bind:value={sortBy} placeholder={$t('jobs.sortPlaceholder')} />
+            <Select
+                options={sortOptions}
+                bind:value={sortBy}
+                placeholder={$t('jobs.sortPlaceholder')}
+            />
             <ViewToggle bind:mode={viewMode} />
-            <button class="split-toggle" class:active={splitView} type="button" onclick={() => splitView = !splitView} title={$t('map.title')}>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <button
+                class="split-toggle"
+                class:active={splitView}
+                type="button"
+                onclick={() => (splitView = !splitView)}
+                title={$t('map.title')}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle
+                        cx="12"
+                        cy="10"
+                        r="3"
+                    /></svg
+                >
             </button>
         </div>
     </div>
 
     <div class="jobs-layout" class:filters-open={filtersOpen}>
         <aside class="filters-panel" class:collapsed={!filtersOpen}>
-                <div class="filters-header">
-                    <h3 class="filters-title">{$t('jobs.filters')}</h3>
-                    <button class="filters-reset" type="button" onclick={resetFilters}>{$t('jobs.resetFilters')}</button>
-                </div>
+            <div class="filters-header">
+                <h3 class="filters-title">{$t('jobs.filters')}</h3>
+                <button class="filters-reset" type="button" onclick={resetFilters}
+                    >{$t('jobs.resetFilters')}</button
+                >
+            </div>
 
-                <div class="filter-group">
-                    <SearchInput placeholder={$t('jobs.searchByTitle')} bind:value={search} />
-                </div>
+            <div class="filter-group">
+                <SearchInput placeholder={$t('jobs.searchByTitle')} bind:value={search} />
+            </div>
 
-                <div class="filter-group">
-                    <span class="filter-label">{$t('jobs.type')}</span>
-                    <Checkbox label={$t('jobs.checkJobs')} bind:checked={typeWork} />
-                    <Checkbox label={$t('jobs.checkInternships')} bind:checked={typeInternship} />
-                    <Checkbox label={$t('jobs.checkMentorship')} bind:checked={typeMentorship} />
-                    <Checkbox label={$t('jobs.checkEvents')} bind:checked={typeEvent} />
-                </div>
+            <div class="filter-group">
+                <span class="filter-label">{$t('jobs.type')}</span>
+                <Checkbox label={$t('jobs.checkJobs')} bind:checked={typeWork} />
+                <Checkbox label={$t('jobs.checkInternships')} bind:checked={typeInternship} />
+                <Checkbox label={$t('jobs.checkMentorship')} bind:checked={typeMentorship} />
+                <Checkbox label={$t('jobs.checkEvents')} bind:checked={typeEvent} />
+            </div>
 
-                <div class="filter-group">
-                    <span class="filter-label">{$t('jobs.format')}</span>
-                    <Checkbox label={$t('jobs.formatRemote')} bind:checked={formatRemote} />
-                    <Checkbox label={$t('jobs.formatHybrid')} bind:checked={formatHybrid} />
-                    <Checkbox label={$t('jobs.formatOffice')} bind:checked={formatOffice} />
-                </div>
+            <div class="filter-group">
+                <span class="filter-label">{$t('jobs.format')}</span>
+                <Checkbox label={$t('jobs.formatRemote')} bind:checked={formatRemote} />
+                <Checkbox label={$t('jobs.formatHybrid')} bind:checked={formatHybrid} />
+                <Checkbox label={$t('jobs.formatOffice')} bind:checked={formatOffice} />
+            </div>
 
-                <div class="filter-group">
-                    <RangeSlider
-                        label={$t('jobs.salary')}
-                        min={0}
-                        max={1500000}
-                        step={10000}
-                        bind:valueMin={salaryMin}
-                        bind:valueMax={salaryMax}
-                        formatValue={(v) => v === 0 ? '0' : v >= 1000000 ? `${(v / 1000000).toFixed(1)}м` : `${(v / 1000).toFixed(0)}к`}
-                    />
-                </div>
+            <div class="filter-group">
+                <RangeSlider
+                    label={$t('jobs.salary')}
+                    min={0}
+                    max={1500000}
+                    step={10000}
+                    bind:valueMin={salaryMin}
+                    bind:valueMax={salaryMax}
+                    formatValue={(v) =>
+                        v === 0
+                            ? '0'
+                            : v >= 1000000
+                              ? `${(v / 1000000).toFixed(1)}м`
+                              : `${(v / 1000).toFixed(0)}к`}
+                />
+            </div>
 
-                <div class="filter-group">
-                    <Input label={$t('jobs.city')} placeholder={$t('jobs.cityPlaceholder')} bind:value={city} />
-                </div>
-
-            </aside>
+            <div class="filter-group">
+                <Input
+                    label={$t('jobs.city')}
+                    placeholder={$t('jobs.cityPlaceholder')}
+                    bind:value={city}
+                />
+            </div>
+        </aside>
 
         <div class="jobs-content" class:split-active={splitView}>
             {#if loading}
@@ -220,16 +296,29 @@
                 </div>
             {:else if displayJobs.length === 0}
                 <div class="jobs-empty">
-                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="48"
+                        height="48"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
                     </svg>
                     <p>{$t('jobs.notFound')}</p>
-                    <Button variant="ghost" onclick={resetFilters}>{$t('jobs.resetFilters')}</Button>
+                    <Button variant="ghost" onclick={resetFilters}>{$t('jobs.resetFilters')}</Button
+                    >
                 </div>
             {:else}
                 <div class="jobs-grid" class:list={viewMode === 'list'}>
                     {#each displayJobs as job, i (job.id)}
-                        <div class="stagger-item job-card-wrap" style="animation-delay: {Math.min(i * 50, 500)}ms">
+                        <div
+                            class="stagger-item job-card-wrap"
+                            style="animation-delay: {Math.min(i * 50, 500)}ms"
+                        >
                             <JobCard {job} mode={viewMode} />
                         </div>
                     {/each}
@@ -241,7 +330,12 @@
 
             {#if splitView}
                 <div class="split-map">
-                    <MapView markers={mapMarkers} center={[55.751, 37.618]} zoom={5} height="100%" />
+                    <MapView
+                        markers={mapMarkers}
+                        center={[55.751, 37.618]}
+                        zoom={5}
+                        height="100%"
+                    />
                 </div>
             {/if}
         </div>
@@ -343,7 +437,8 @@
         overflow: hidden;
         opacity: 1;
         transform: translateX(0);
-        transition: opacity var(--duration-moderate) var(--ease-out),
+        transition:
+            opacity var(--duration-moderate) var(--ease-out),
             transform var(--duration-moderate) var(--ease-out),
             width var(--duration-moderate) var(--ease-out),
             padding var(--duration-moderate) var(--ease-out),
@@ -466,8 +561,15 @@
         flex-shrink: 0;
     }
 
-    .split-toggle:hover { color: var(--text-primary); background: var(--bg-tertiary); }
-    .split-toggle.active { background: var(--accent-subtle); color: var(--accent); border-color: var(--accent); }
+    .split-toggle:hover {
+        color: var(--text-primary);
+        background: var(--bg-tertiary);
+    }
+    .split-toggle.active {
+        background: var(--accent-subtle);
+        color: var(--accent);
+        border-color: var(--accent);
+    }
 
     .jobs-content.split-active {
         display: grid;

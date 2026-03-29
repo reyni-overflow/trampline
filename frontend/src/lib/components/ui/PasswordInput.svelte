@@ -39,16 +39,25 @@
     });
 
     let strengthLabel = $derived(
-        strength === 0 ? '' :
-        strength <= 1 ? $t('ui.passwordWeak') :
-        strength <= 2 ? $t('ui.passwordMedium') :
-        strength <= 3 ? $t('ui.passwordGood') : $t('ui.passwordStrong')
+        strength === 0
+            ? ''
+            : strength <= 1
+              ? $t('ui.passwordWeak')
+              : strength <= 2
+                ? $t('ui.passwordMedium')
+                : strength <= 3
+                  ? $t('ui.passwordGood')
+                  : $t('ui.passwordStrong')
     );
 
     let strengthColor = $derived(
-        strength <= 1 ? 'var(--color-error)' :
-        strength <= 2 ? 'var(--color-warning)' :
-        strength <= 3 ? 'var(--color-info)' : 'var(--color-success)'
+        strength <= 1
+            ? 'var(--color-error)'
+            : strength <= 2
+              ? 'var(--color-warning)'
+              : strength <= 3
+                ? 'var(--color-info)'
+                : 'var(--color-success)'
     );
 
     let confirmError = $derived.by(() => {
@@ -74,16 +83,42 @@
             onblur={() => (focused = false)}
             {...rest}
         />
-        <button class="eye-btn" onclick={() => (showPassword = !showPassword)} tabindex={-1} type="button" aria-label={showPassword ? $t('ui.hidePassword') : $t('ui.showPassword')}>
+        <button
+            class="eye-btn"
+            onclick={() => (showPassword = !showPassword)}
+            tabindex={-1}
+            type="button"
+            aria-label={showPassword ? $t('ui.hidePassword') : $t('ui.showPassword')}
+        >
             {#if showPassword}
-                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                    <line x1="1" y1="1" x2="23" y2="23"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path
+                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                    />
+                    <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
             {:else}
-                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                 </svg>
             {/if}
         </button>
@@ -99,17 +134,33 @@
                     ></span>
                 {/each}
                 {#if strengthLabel}
-                    <span class="strength-label" style="color: {strengthColor}">{strengthLabel}</span>
+                    <span class="strength-label" style="color: {strengthColor}"
+                        >{strengthLabel}</span
+                    >
                 {/if}
             </div>
             <ul class="rules-list">
                 {#each rules as rule (rule.label)}
                     <li class="rule" class:passed={rule.ok}>
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="14"
+                            height="14"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
                             {#if rule.ok}
-                                <polyline points="20 6 9 17 4 12"/>
+                                <polyline points="20 6 9 17 4 12" />
                             {:else}
-                                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                                <circle cx="12" cy="12" r="10" /><line
+                                    x1="15"
+                                    y1="9"
+                                    x2="9"
+                                    y2="15"
+                                /><line x1="9" y1="9" x2="15" y2="15" />
                             {/if}
                         </svg>
                         <span>{rule.label}</span>
@@ -142,8 +193,17 @@
             />
             {#if confirmValue && !confirmError}
                 <span class="match-icon">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--color-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"/>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="var(--color-success)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <polyline points="20 6 9 17 4 12" />
                     </svg>
                 </span>
             {/if}
@@ -182,19 +242,27 @@
         border-radius: var(--radius-md);
         color: var(--text-primary);
         font-size: var(--font-base);
-        transition: var(--transition-colors), border-color var(--duration-normal) var(--ease-in-out),
+        transition:
+            var(--transition-colors),
+            border-color var(--duration-normal) var(--ease-in-out),
             box-shadow var(--duration-normal) var(--ease-in-out);
     }
 
-    .input::placeholder { color: var(--text-tertiary); }
-    .input:hover:not(:focus) { border-color: var(--border-hover); }
+    .input::placeholder {
+        color: var(--text-tertiary);
+    }
+    .input:hover:not(:focus) {
+        border-color: var(--border-hover);
+    }
     .input:focus {
         border-color: var(--accent);
         box-shadow: 0 0 0 0.1875rem var(--accent-subtle);
         outline: none;
     }
 
-    .has-error .input { border-color: var(--color-error); }
+    .has-error .input {
+        border-color: var(--color-error);
+    }
     .has-error .input:focus {
         box-shadow: 0 0 0 0.1875rem var(--color-error-subtle);
     }
@@ -273,6 +341,11 @@
         color: var(--color-success);
     }
 
-    .message { font-size: var(--font-xs); animation: slide-down var(--duration-fast) var(--ease-out); }
-    .error-message { color: var(--color-error); }
+    .message {
+        font-size: var(--font-xs);
+        animation: slide-down var(--duration-fast) var(--ease-out);
+    }
+    .error-message {
+        color: var(--color-error);
+    }
 </style>

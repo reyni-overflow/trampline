@@ -24,7 +24,11 @@ const DURATIONS: Record<ToastType, number> = {
 function createToastStore() {
     const { subscribe, update } = writable<ToastItem[]>([]);
 
-    function add(type: ToastType, message: string, options?: { persistent?: boolean; duration?: number }) {
+    function add(
+        type: ToastType,
+        message: string,
+        options?: { persistent?: boolean; duration?: number }
+    ) {
         const persistent = options?.persistent ?? type === 'danger';
         const duration = options?.duration ?? DURATIONS[type];
 

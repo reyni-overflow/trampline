@@ -23,15 +23,7 @@ const DEFAULT_CATEGORIES: CookieCategories = {
     marketing: false
 };
 
-const ALLOWED_PATHS = [
-    '/',
-    '/privacy',
-    '/terms',
-    '/help',
-    '/about',
-    '/contacts',
-    '/mobile-app'
-];
+const ALLOWED_PATHS = ['/', '/privacy', '/terms', '/help', '/about', '/contacts', '/mobile-app'];
 
 function loadState(): CookieConsentState {
     if (!browser) return { status: 'pending', categories: DEFAULT_CATEGORIES, shaking: false };
@@ -40,19 +32,29 @@ function loadState(): CookieConsentState {
         if (raw) {
             const parsed = JSON.parse(raw);
             if (parsed.status === 'accepted') {
-                return { status: 'accepted', categories: parsed.categories || DEFAULT_CATEGORIES, shaking: false };
+                return {
+                    status: 'accepted',
+                    categories: parsed.categories || DEFAULT_CATEGORIES,
+                    shaking: false
+                };
             }
             if (parsed.status === 'declined') {
                 return { status: 'declined', categories: DEFAULT_CATEGORIES, shaking: false };
             }
         }
-    } catch { /* ignored */ }
+    } catch {
+        /* ignored */
+    }
     return { status: 'pending', categories: DEFAULT_CATEGORIES, shaking: false };
 }
 
 function saveState(status: ConsentStatus, categories: CookieCategories) {
     if (!browser) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ status, categories })); } catch { /* ignored */ }
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ status, categories }));
+    } catch {
+        /* ignored */
+    }
 }
 
 const store = writable<CookieConsentState>(loadState());
@@ -75,15 +77,19 @@ export const cookieConsent = {
 
     reconsider() {
         if (!browser) return;
-        try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignored */ }
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+        } catch {
+            /* ignored */
+        }
         store.set({ status: 'pending', categories: DEFAULT_CATEGORIES, shaking: false });
     },
 
     shake() {
         if (shakeTimer) clearTimeout(shakeTimer);
-        store.update(s => ({ ...s, shaking: true }));
+        store.update((s) => ({ ...s, shaking: true }));
         shakeTimer = setTimeout(() => {
-            store.update(s => ({ ...s, shaking: false }));
+            store.update((s) => ({ ...s, shaking: false }));
             shakeTimer = null;
         }, 500);
     },
@@ -94,7 +100,7 @@ export const cookieConsent = {
 
     isPathAllowed(path: string): boolean {
         if (get(store).status === 'accepted') return true;
-        return ALLOWED_PATHS.some(p => path === p || path.startsWith(p + '/'));
+        return ALLOWED_PATHS.some((p) => path === p || path.startsWith(p + '/'));
     },
 
     requestAccess(path?: string): boolean {
@@ -103,6 +109,5 @@ export const cookieConsent = {
         if (path && this.isPathAllowed(path)) return true;
         this.shake();
         return false;
-    },
-
+    }
 };

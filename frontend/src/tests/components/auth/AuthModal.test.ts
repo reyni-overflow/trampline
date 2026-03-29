@@ -34,7 +34,9 @@ describe('AuthModal', () => {
 
     it('shows choose view by default', () => {
         const { container } = render(AuthModal);
-        const _roleOptions = container.querySelectorAll('.role-card, .option, .auth-choose__option');
+        const _roleOptions = container.querySelectorAll(
+            '.role-card, .option, .auth-choose__option'
+        );
         // Should have role choice
         expect(container).toBeInTheDocument();
     });

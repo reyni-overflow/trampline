@@ -21,7 +21,9 @@ describe('Select', () => {
 
     it('opens dropdown on click', async () => {
         const { container } = render(Select, { props: { options } });
-        const trigger = container.querySelector('.select__trigger, .select-trigger, .select > button, .select > div');
+        const trigger = container.querySelector(
+            '.select__trigger, .select-trigger, .select > button, .select > div'
+        );
         if (trigger) await fireEvent.click(trigger);
         // After click, options should appear
         const optionEls = container.querySelectorAll('.option, .select__option, li');

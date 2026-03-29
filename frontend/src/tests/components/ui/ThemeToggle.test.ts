@@ -4,7 +4,10 @@ import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
 
 vi.mock('$lib/stores/theme', () => ({
     theme: {
-        subscribe: vi.fn((fn: (value: string) => void) => { fn('dark'); return () => {}; }),
+        subscribe: vi.fn((fn: (value: string) => void) => {
+            fn('dark');
+            return () => {};
+        }),
         toggle: vi.fn(),
         set: vi.fn()
     }

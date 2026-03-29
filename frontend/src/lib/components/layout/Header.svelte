@@ -26,19 +26,28 @@
     let mobileMenuOpen = $state(false);
 
     let isAuthenticated = $state(false);
-    let currentUser = $state<{ nickname: string; avatar: string | null; role: string }>({ nickname: '', avatar: null, role: '' });
+    let currentUser = $state<{ nickname: string; avatar: string | null; role: string }>({
+        nickname: '',
+        avatar: null,
+        role: ''
+    });
 
     const unsubAuth = isAuthStore.subscribe((v) => (isAuthenticated = v));
     const unsubUser = userStore.subscribe((v) => {
         if (v) currentUser = { nickname: v.nickname, avatar: v.avatar, role: v.role };
     });
 
-    onDestroy(() => { unsubAuth(); unsubUser(); });
+    onDestroy(() => {
+        unsubAuth();
+        unsubUser();
+    });
 
     async function handleLogout() {
         try {
             await authApi.logout();
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
 
         stopConnection();
         userStore.clear();
@@ -76,8 +85,20 @@
         <a href="/" class="logo-link" aria-label={$t('header.logoAria')}>
             <span class="logo-icon" aria-hidden="true">
                 <svg viewBox="0 0 200 200" width="32" height="32">
-                    <path d="M 90 160 L 90 80" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" />
-                    <path d="M 30 100 L 135 65" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" />
+                    <path
+                        d="M 90 160 L 90 80"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="20"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M 30 100 L 135 65"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="20"
+                        stroke-linecap="round"
+                    />
                     <circle cx="165" cy="55" r="14" fill="currentColor" />
                 </svg>
             </span>
@@ -86,14 +107,30 @@
 
         <nav class="nav-desktop" aria-label={$t('header.mainNav')}>
             {#each navLinks as link (link.href)}
-                <a href={link.href} class="nav-link" onclick={(e) => guardNav(e, link.href)}>{link.label}</a>
+                <a href={link.href} class="nav-link" onclick={(e) => guardNav(e, link.href)}
+                    >{link.label}</a
+                >
             {/each}
         </nav>
 
         <div class="actions">
-            <button class="search-trigger" onclick={() => onOpenCommandPalette?.()} aria-label={$t('header.searchAria')} title={$t('header.searchAria')}>
-                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <button
+                class="search-trigger"
+                onclick={() => onOpenCommandPalette?.()}
+                aria-label={$t('header.searchAria')}
+                title={$t('header.searchAria')}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
                 <kbd class="search-kbd">⌘K</kbd>
             </button>
@@ -105,25 +142,47 @@
                 <NotificationBell />
                 <Dropdown align="right">
                     {#snippet trigger()}
-                        <Avatar src={currentUser.avatar} name={currentUser.nickname} size={36} clickable />
+                        <Avatar
+                            src={currentUser.avatar}
+                            name={currentUser.nickname}
+                            size={36}
+                            clickable
+                        />
                     {/snippet}
-                        <div class="user-dropdown">
-                            <div class="user-info">
-                                <span class="user-name">{currentUser.nickname}</span>
-                                <span class="user-role">{currentUser.role === 'Worker' ? $t('roles.worker') : currentUser.role === 'Employee' ? $t('roles.employee') : currentUser.role === 'Admin' ? $t('roles.admin') : currentUser.role}</span>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a href="/dashboard" class="dropdown-item">{$t('header.myProfile')}</a>
-                            <a href="/settings" class="dropdown-item">{$t('header.settings')}</a>
-                            <div class="dropdown-divider"></div>
-                            <button class="dropdown-item danger" type="button" onclick={handleLogout}>{$t('auth.logout')}</button>
+                    <div class="user-dropdown">
+                        <div class="user-info">
+                            <span class="user-name">{currentUser.nickname}</span>
+                            <span class="user-role"
+                                >{currentUser.role === 'Worker'
+                                    ? $t('roles.worker')
+                                    : currentUser.role === 'Employee'
+                                      ? $t('roles.employee')
+                                      : currentUser.role === 'Admin'
+                                        ? $t('roles.admin')
+                                        : currentUser.role}</span
+                            >
                         </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/dashboard" class="dropdown-item">{$t('header.myProfile')}</a>
+                        <a href="/settings" class="dropdown-item">{$t('header.settings')}</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item danger" type="button" onclick={handleLogout}
+                            >{$t('auth.logout')}</button
+                        >
+                    </div>
                 </Dropdown>
             {:else}
-                <button class="login-btn" type="button" onclick={() => authModal.open()}>{$t('auth.login')}</button>
+                <button class="login-btn" type="button" onclick={() => authModal.open()}
+                    >{$t('auth.login')}</button
+                >
             {/if}
 
-            <button class="burger" onclick={() => (mobileMenuOpen = !mobileMenuOpen)} aria-label={$t('header.menuAria')} aria-expanded={mobileMenuOpen}>
+            <button
+                class="burger"
+                onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+                aria-label={$t('header.menuAria')}
+                aria-expanded={mobileMenuOpen}
+            >
                 <span class="burger-line" class:open={mobileMenuOpen}></span>
                 <span class="burger-line" class:open={mobileMenuOpen}></span>
                 <span class="burger-line" class:open={mobileMenuOpen}></span>
@@ -137,10 +196,28 @@
         <div class="mobile-overlay" onclick={() => (mobileMenuOpen = false)}></div>
         <nav class="mobile-menu" aria-label={$t('header.mobileNav')}>
             {#each navLinks as link (link.href)}
-                <a href={link.href} class="mobile-link" onclick={(e) => { if (!cookieConsent.isPathAllowed(link.href)) { e.preventDefault(); cookieConsent.shake(); return; } mobileMenuOpen = false; }}>{link.label}</a>
+                <a
+                    href={link.href}
+                    class="mobile-link"
+                    onclick={(e) => {
+                        if (!cookieConsent.isPathAllowed(link.href)) {
+                            e.preventDefault();
+                            cookieConsent.shake();
+                            return;
+                        }
+                        mobileMenuOpen = false;
+                    }}>{link.label}</a
+                >
             {/each}
             {#if !isAuthenticated}
-                <button class="mobile-link login" type="button" onclick={() => { mobileMenuOpen = false; authModal.open(); }}>{$t('auth.login')}</button>
+                <button
+                    class="mobile-link login"
+                    type="button"
+                    onclick={() => {
+                        mobileMenuOpen = false;
+                        authModal.open();
+                    }}>{$t('auth.login')}</button
+                >
             {/if}
         </nav>
     {/if}
@@ -155,7 +232,8 @@
         backdrop-filter: blur(0.75rem);
         -webkit-backdrop-filter: blur(0.75rem);
         border-bottom: 1px solid var(--border-subtle);
-        transition: height var(--duration-normal) var(--ease-out),
+        transition:
+            height var(--duration-normal) var(--ease-out),
             border-color var(--duration-normal) var(--ease-in-out);
     }
 
@@ -340,13 +418,20 @@
         height: 2px;
         background: var(--text-primary);
         border-radius: 1px;
-        transition: transform var(--duration-moderate) var(--ease-spring),
+        transition:
+            transform var(--duration-moderate) var(--ease-spring),
             opacity var(--duration-fast) var(--ease-in-out);
     }
 
-    .burger-line.open:nth-child(1) { transform: translateY(0.4375rem) rotate(45deg); }
-    .burger-line.open:nth-child(2) { opacity: 0; }
-    .burger-line.open:nth-child(3) { transform: translateY(-0.4375rem) rotate(-45deg); }
+    .burger-line.open:nth-child(1) {
+        transform: translateY(0.4375rem) rotate(45deg);
+    }
+    .burger-line.open:nth-child(2) {
+        opacity: 0;
+    }
+    .burger-line.open:nth-child(3) {
+        transform: translateY(-0.4375rem) rotate(-45deg);
+    }
 
     .mobile-overlay {
         position: fixed;
@@ -397,14 +482,27 @@
     }
 
     @media (max-width: 768px) {
-        .nav-desktop { display: none; }
-        .login-btn { display: none; }
-        .search-trigger { display: none; }
-        .burger { display: flex; }
+        .nav-desktop {
+            display: none;
+        }
+        .login-btn {
+            display: none;
+        }
+        .search-trigger {
+            display: none;
+        }
+        .burger {
+            display: flex;
+        }
     }
 
     @media (min-width: 769px) {
-        .burger { display: none; }
-        .mobile-overlay, .mobile-menu { display: none; }
+        .burger {
+            display: none;
+        }
+        .mobile-overlay,
+        .mobile-menu {
+            display: none;
+        }
     }
 </style>

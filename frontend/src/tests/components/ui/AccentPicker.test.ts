@@ -4,7 +4,10 @@ import AccentPicker from '$lib/components/ui/AccentPicker.svelte';
 
 vi.mock('$lib/stores/theme', () => ({
     accent: {
-        subscribe: vi.fn((fn: (value: string) => void) => { fn('neutral'); return () => {}; }),
+        subscribe: vi.fn((fn: (value: string) => void) => {
+            fn('neutral');
+            return () => {};
+        }),
         set: vi.fn()
     },
     ACCENT_COLORS: [

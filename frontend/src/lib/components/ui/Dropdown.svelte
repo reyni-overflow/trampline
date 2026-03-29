@@ -28,7 +28,12 @@
         role="button"
         tabindex={0}
         onclick={() => (open = !open)}
-        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open = !open; } }}
+        onkeydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                open = !open;
+            }
+        }}
     >
         {@render trigger()}
     </div>
@@ -62,6 +67,10 @@
         animation: scale-in var(--duration-fast) var(--ease-out);
     }
 
-    .dropdown--left { left: 0; }
-    .dropdown--right { right: 0; }
+    .dropdown--left {
+        left: 0;
+    }
+    .dropdown--right {
+        right: 0;
+    }
 </style>

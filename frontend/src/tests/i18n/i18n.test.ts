@@ -39,7 +39,7 @@ describe('i18n system', () => {
         });
 
         it('contains ru, en, zh, pirate', () => {
-            const ids = LOCALES.map(l => l.id);
+            const ids = LOCALES.map((l) => l.id);
             expect(ids).toContain('ru');
             expect(ids).toContain('en');
             expect(ids).toContain('zh');

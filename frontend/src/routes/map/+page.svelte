@@ -46,36 +46,58 @@
             ]);
 
             const jobMarkers: MapItem[] = (jobsData.items || []).map((j, i) => {
-                const coords = (j.geoLat && j.geoLon) ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
+                const coords =
+                    j.geoLat && j.geoLon ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
                 return {
-                    id: j.id, lat: coords[0], lng: coords[1], title: j.title, company: j.companyName || j.city,
+                    id: j.id,
+                    lat: coords[0],
+                    lng: coords[1],
+                    title: j.title,
+                    company: j.companyName || j.city,
                     salary: formatSalary(j.salaryFrom, j.salaryTo),
-                    tags: j.tags?.map(t => typeof t === 'string' ? t : t.name),
-                    type: j.type, isFavorite: favorites.isJobFavorite(j.id)
+                    tags: j.tags?.map((t) => (typeof t === 'string' ? t : t.name)),
+                    type: j.type,
+                    isFavorite: favorites.isJobFavorite(j.id)
                 };
             });
 
             const eventMarkers: MapItem[] = (eventsData.items || []).map((e, i) => {
-                const coords = (e.geoLat && e.geoLon) ? [e.geoLat, e.geoLon] : getCityCoords(e.city, i);
+                const coords =
+                    e.geoLat && e.geoLon ? [e.geoLat, e.geoLon] : getCityCoords(e.city, i);
                 return {
-                    id: e.id, lat: coords[0], lng: coords[1], title: e.title, company: e.companyName || e.city,
-                    tags: (e.tags || []).map(t => t.name), type: 'Event',
+                    id: e.id,
+                    lat: coords[0],
+                    lng: coords[1],
+                    title: e.title,
+                    company: e.companyName || e.city,
+                    tags: (e.tags || []).map((t) => t.name),
+                    type: 'Event',
                     isFavorite: favorites.isEventFavorite(e.id)
                 };
             });
 
             const mentorshipMarkers: MapItem[] = (mentorshipsData.items || []).map((m, i) => {
-                const coords = (m.geoLat && m.geoLon) ? [Number(m.geoLat), Number(m.geoLon)] : getCityCoords(m.city, i);
+                const coords =
+                    m.geoLat && m.geoLon
+                        ? [Number(m.geoLat), Number(m.geoLon)]
+                        : getCityCoords(m.city, i);
                 return {
-                    id: m.id, lat: coords[0], lng: coords[1], title: m.title, company: m.companyName || m.city,
+                    id: m.id,
+                    lat: coords[0],
+                    lng: coords[1],
+                    title: m.title,
+                    company: m.companyName || m.city,
                     salary: formatSalary(m.salaryFrom ?? null, m.salaryTo ?? null),
-                    tags: (m.tags || []).map(t => t.name), type: 'Mentorship',
+                    tags: (m.tags || []).map((t) => t.name),
+                    type: 'Mentorship',
                     isFavorite: favorites.isMentorshipFavorite(m.id)
                 };
             });
 
             allMarkers = [...jobMarkers, ...eventMarkers, ...mentorshipMarkers];
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
     });
 
     let filtered = $derived.by(() => {
@@ -86,7 +108,9 @@
         if (!showMentorship) list = list.filter((m) => m.type !== 'Mentorship');
         if (search) {
             const q = search.toLowerCase();
-            list = list.filter((m) => m.title.toLowerCase().includes(q) || m.company.toLowerCase().includes(q));
+            list = list.filter(
+                (m) => m.title.toLowerCase().includes(q) || m.company.toLowerCase().includes(q)
+            );
         }
         return list;
     });
@@ -107,7 +131,9 @@
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 geoLoading = false;
-                const event = new CustomEvent('flyto', { detail: { lat: pos.coords.latitude, lng: pos.coords.longitude } });
+                const event = new CustomEvent('flyto', {
+                    detail: { lat: pos.coords.latitude, lng: pos.coords.longitude }
+                });
                 document.dispatchEvent(event);
             },
             (err) => {
@@ -131,8 +157,22 @@
     <div class="map-sidebar" class:collapsed={!filtersOpen}>
         <div class="sidebar-header">
             <h2 class="sidebar-title">{$t('map.title')}</h2>
-            <button class="sidebar-close" type="button" onclick={() => (filtersOpen = false)} title={$t('map.hide')}>
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <button
+                class="sidebar-close"
+                type="button"
+                onclick={() => (filtersOpen = false)}
+                title={$t('map.hide')}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
+                >
             </button>
         </div>
 
@@ -150,10 +190,22 @@
 
         <div class="sidebar-legend">
             <span class="filter-label">{$t('map.legend')}</span>
-            <div class="legend-item"><span class="legend-dot" style="background: #3B82F6"></span> {$t('map.legendJob')}</div>
-            <div class="legend-item"><span class="legend-dot" style="background: #10B981"></span> {$t('map.legendMentorship')}</div>
-            <div class="legend-item"><span class="legend-dot" style="background: #8B5CF6"></span> {$t('map.legendEvent')}</div>
-            <div class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span> {$t('map.legendFavorite')}</div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: #3B82F6"></span>
+                {$t('map.legendJob')}
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: #10B981"></span>
+                {$t('map.legendMentorship')}
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: #8B5CF6"></span>
+                {$t('map.legendEvent')}
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: var(--accent)"></span>
+                {$t('map.legendFavorite')}
+            </div>
         </div>
 
         <div class="sidebar-count">
@@ -165,8 +217,27 @@
             <div class="sidebar-selected">
                 <div class="selected-header">
                     <h3 class="selected-title">{selectedItem.title}</h3>
-                    <button class="selected-close" type="button" aria-label={$t('common.close')} onclick={() => (selectedId = null)}>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <button
+                        class="selected-close"
+                        type="button"
+                        aria-label={$t('common.close')}
+                        onclick={() => (selectedId = null)}
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="16"
+                            height="16"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            ><line x1="18" y1="6" x2="6" y2="18" /><line
+                                x1="6"
+                                y1="6"
+                                x2="18"
+                                y2="18"
+                            /></svg
+                        >
                     </button>
                 </div>
                 <span class="selected-company">{selectedItem.company}</span>
@@ -180,14 +251,35 @@
                         {/each}
                     </div>
                 {/if}
-                <Button size="sm" href={selectedItem.type === 'Event' ? `/events/${selectedItem.id}` : selectedItem.type === 'Mentorship' ? `/mentorships/${selectedItem.id}` : `/jobs/${selectedItem.id}`}>{$t('map.details')}</Button>
+                <Button
+                    size="sm"
+                    href={selectedItem.type === 'Event'
+                        ? `/events/${selectedItem.id}`
+                        : selectedItem.type === 'Mentorship'
+                          ? `/mentorships/${selectedItem.id}`
+                          : `/jobs/${selectedItem.id}`}>{$t('map.details')}</Button
+                >
             </div>
         {/if}
     </div>
 
     {#if !filtersOpen}
-        <button class="sidebar-open" type="button" onclick={() => (filtersOpen = true)} title={$t('map.showPanel')}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <button
+            class="sidebar-open"
+            type="button"
+            onclick={() => (filtersOpen = true)}
+            title={$t('map.showPanel')}
+        >
+            <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg
+            >
         </button>
     {/if}
 
@@ -199,11 +291,38 @@
             rounded={false}
             onmarkerclick={handleMarkerClick}
         />
-        <button class="geo-btn" type="button" onclick={handleGeolocate} disabled={geoLoading} title={$t('map.myLocation')}>
+        <button
+            class="geo-btn"
+            type="button"
+            onclick={handleGeolocate}
+            disabled={geoLoading}
+            title={$t('map.myLocation')}
+        >
             {#if geoLoading}
-                <svg class="geo-spin" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                <svg
+                    class="geo-spin"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg
+                >
             {:else}
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg>
+                <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><circle cx="12" cy="12" r="3" /><path
+                        d="M12 2v4m0 12v4m10-10h-4M6 12H2"
+                    /></svg
+                >
             {/if}
         </button>
     </div>
@@ -226,7 +345,8 @@
         background: var(--bg-secondary);
         border-right: 1px solid var(--border-default);
         overflow-y: auto;
-        transition: width var(--duration-moderate) var(--ease-out),
+        transition:
+            width var(--duration-moderate) var(--ease-out),
             padding var(--duration-moderate) var(--ease-out),
             opacity var(--duration-moderate) var(--ease-out);
     }
@@ -364,7 +484,9 @@
         flex-shrink: 0;
     }
 
-    .selected-close:hover { color: var(--text-primary); }
+    .selected-close:hover {
+        color: var(--text-primary);
+    }
 
     .selected-company {
         font-size: var(--font-xs);
@@ -415,9 +537,17 @@
         cursor: pointer;
     }
 
-    .geo-btn:hover { color: var(--accent); background: var(--bg-tertiary); }
-    .geo-btn:disabled { opacity: 0.6; cursor: wait; }
-    .geo-spin { animation: spin 1s linear infinite; }
+    .geo-btn:hover {
+        color: var(--accent);
+        background: var(--bg-tertiary);
+    }
+    .geo-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+    .geo-spin {
+        animation: spin 1s linear infinite;
+    }
 
     @media (max-width: 768px) {
         .map-sidebar {

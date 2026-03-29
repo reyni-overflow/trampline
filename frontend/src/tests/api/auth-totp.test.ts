@@ -20,10 +20,7 @@ describe('authApi TOTP', () => {
     it('totpVerify sends POST /auth/totp/verify', async () => {
         const { authApi } = await import('$lib/api/auth');
         await authApi.totpVerify('challenge-123', '654321');
-        expect(api.post).toHaveBeenCalledWith(
-            '/auth/totp/verify',
-            expect.any(Object)
-        );
+        expect(api.post).toHaveBeenCalledWith('/auth/totp/verify', expect.any(Object));
     });
 
     it('totpVerify sends challengeId (not userId) in the body', async () => {

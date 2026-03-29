@@ -22,7 +22,17 @@
 
 <div class="mobile-app-page container--narrow">
     <div class="redirect-card">
-        <svg class="redirect-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+            class="redirect-icon"
+            viewBox="0 0 24 24"
+            width="48"
+            height="48"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
             <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
             <line x1="12" y1="18" x2="12.01" y2="18" />
         </svg>
@@ -31,7 +41,15 @@
         <p class="redirect-desc">{$t('mobileApp.description')}</p>
 
         <div class="spinner-wrap">
-            <svg class="spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+                class="spinner"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
                 <circle cx="12" cy="12" r="10" opacity="0.25" />
                 <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round" />
             </svg>
@@ -97,7 +115,9 @@
     }
 
     @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .redirect-fallback {

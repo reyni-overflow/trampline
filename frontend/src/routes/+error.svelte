@@ -44,11 +44,13 @@
     const status = $derived(page.status);
     const msg = $derived(page.error?.message || '');
 
-    const info = $derived(errors[status] || {
-        title: $t('errors.fallbackTitle'),
-        description: msg || $t('errors.fallbackDesc'),
-        icon: '<circle cx="12" cy="12" r="10"/><path d="M12 16v.01"/><path d="M12 8v4"/>'
-    });
+    const info = $derived(
+        errors[status] || {
+            title: $t('errors.fallbackTitle'),
+            description: msg || $t('errors.fallbackDesc'),
+            icon: '<circle cx="12" cy="12" r="10"/><path d="M12 16v.01"/><path d="M12 8v4"/>'
+        }
+    );
 
     function goBack() {
         if (window.history.length > 1) {
@@ -66,7 +68,16 @@
 <div class="error-page">
     <div class="error-content">
         <div class="error-icon">
-            <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+                viewBox="0 0 24 24"
+                width="64"
+                height="64"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html info.icon}
             </svg>

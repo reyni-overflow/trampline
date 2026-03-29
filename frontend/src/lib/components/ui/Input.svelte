@@ -8,18 +8,13 @@
         hint?: string;
     }
 
-    let {
-        label,
-        error,
-        hint,
-        type = 'text',
-        value = $bindable(''),
-        ...rest
-    }: Props = $props();
+    let { label, error, hint, type = 'text', value = $bindable(''), ...rest }: Props = $props();
 
     let showPassword = $state(false);
     let isNumber = $derived(type === 'number');
-    let inputType = $derived(type === 'password' && showPassword ? 'text' : isNumber ? 'text' : type);
+    let inputType = $derived(
+        type === 'password' && showPassword ? 'text' : isNumber ? 'text' : type
+    );
     let displayValue = $state('');
     let focused = $state(false);
 
@@ -85,8 +80,21 @@
     {/if}
     <div class="input-wrapper">
         {#if isNumber}
-            <button class="stepper stepper--minus" onclick={decrement} tabindex={-1} type="button" aria-label={$t('ui.decrease')}>
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button
+                class="stepper stepper--minus"
+                onclick={decrement}
+                tabindex={-1}
+                type="button"
+                aria-label={$t('ui.decrease')}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"><line x1="5" y1="12" x2="19" y2="12" /></svg
+                >
             </button>
         {/if}
         {#if isNumber}
@@ -110,23 +118,68 @@
             />
         {/if}
         {#if type === 'password'}
-            <button class="eye-btn" onclick={() => showPassword = !showPassword} tabindex={-1} type="button" aria-label={showPassword ? $t('ui.hidePassword') : $t('ui.showPassword')}>
+            <button
+                class="eye-btn"
+                onclick={() => (showPassword = !showPassword)}
+                tabindex={-1}
+                type="button"
+                aria-label={showPassword ? $t('ui.hidePassword') : $t('ui.showPassword')}
+            >
                 {#if showPassword}
-                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                        />
+                        <line x1="1" y1="1" x2="23" y2="23" />
                     </svg>
                 {:else}
-                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                     </svg>
                 {/if}
             </button>
         {/if}
         {#if isNumber}
-            <button class="stepper stepper--plus" onclick={increment} tabindex={-1} type="button" aria-label={$t('ui.increase')}>
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button
+                class="stepper stepper--plus"
+                onclick={increment}
+                tabindex={-1}
+                type="button"
+                aria-label={$t('ui.increase')}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    ><line x1="12" y1="5" x2="12" y2="19" /><line
+                        x1="5"
+                        y1="12"
+                        x2="19"
+                        y2="12"
+                    /></svg
+                >
             </button>
         {/if}
     </div>
@@ -165,7 +218,9 @@
         border-radius: var(--radius-md);
         color: var(--text-primary);
         font-size: var(--font-base);
-        transition: var(--transition-colors), border-color var(--duration-normal) var(--ease-in-out),
+        transition:
+            var(--transition-colors),
+            border-color var(--duration-normal) var(--ease-in-out),
             box-shadow var(--duration-normal) var(--ease-in-out);
     }
 
@@ -215,8 +270,12 @@
         background: var(--bg-tertiary);
     }
 
-    .stepper--minus { left: 0.25rem; }
-    .stepper--plus { right: 0.25rem; }
+    .stepper--minus {
+        left: 0.25rem;
+    }
+    .stepper--plus {
+        right: 0.25rem;
+    }
 
     .input.has-eye {
         padding-right: 2.75rem;
@@ -245,6 +304,10 @@
         animation: slide-down var(--duration-fast) var(--ease-out);
     }
 
-    .error-message { color: var(--color-error); }
-    .hint-message { color: var(--text-tertiary); }
+    .error-message {
+        color: var(--color-error);
+    }
+    .hint-message {
+        color: var(--text-tertiary);
+    }
 </style>

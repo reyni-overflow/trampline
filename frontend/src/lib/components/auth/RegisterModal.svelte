@@ -28,10 +28,12 @@
         errors = {};
         if (!name.trim()) errors.name = $t('auth.enterName');
         if (!email.trim()) errors.contact = $t('auth.enterEmail');
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.contact = $t('auth.invalidEmail');
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+            errors.contact = $t('auth.invalidEmail');
         if (!password) errors.password = $t('auth.enterPassword');
         else if (password.length < 8) errors.password = $t('auth.minChars');
-        else if (!/[A-ZА-ЯЁ]/.test(password) || !/[a-zа-яё]/.test(password) || !/\d/.test(password)) errors.password = $t('auth.passwordRequirements');
+        else if (!/[A-ZА-ЯЁ]/.test(password) || !/[a-zа-яё]/.test(password) || !/\d/.test(password))
+            errors.password = $t('auth.passwordRequirements');
         if (password !== confirmPassword) errors.confirmPassword = $t('auth.passwordsMismatch');
         return Object.keys(errors).length === 0;
     }
@@ -58,9 +60,23 @@
 </script>
 
 <div class="auth-form">
-    <button class="back-btn" type="button" onclick={() => authModal.goBack()} aria-label={$t('common.back')}>
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15 18-6-6 6-6"/>
+    <button
+        class="back-btn"
+        type="button"
+        onclick={() => authModal.goBack()}
+        aria-label={$t('common.back')}
+    >
+        <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="m15 18-6-6 6-6" />
         </svg>
     </button>
 
@@ -75,7 +91,9 @@
         <div class="fields">
             <Input
                 label={role === 'Worker' ? $t('auth.nameLabel') : $t('auth.companyNameLabel')}
-                placeholder={role === 'Worker' ? $t('auth.namePlaceholder') : $t('auth.companyNamePlaceholder')}
+                placeholder={role === 'Worker'
+                    ? $t('auth.namePlaceholder')
+                    : $t('auth.companyNamePlaceholder')}
                 bind:value={name}
                 error={errors.name}
                 autocomplete="name"

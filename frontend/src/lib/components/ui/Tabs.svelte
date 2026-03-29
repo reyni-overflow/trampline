@@ -83,7 +83,8 @@
         height: 2px;
         background: var(--accent);
         border-radius: 1px;
-        transition: left var(--duration-moderate) var(--ease-spring),
+        transition:
+            left var(--duration-moderate) var(--ease-spring),
             width var(--duration-moderate) var(--ease-spring);
     }
 </style>

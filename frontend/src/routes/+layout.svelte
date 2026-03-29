@@ -32,7 +32,12 @@
         const u = await user.fetchUser();
         if (u) startConnection();
 
-        if (browser && 'serviceWorker' in navigator && location.hostname !== 'localhost' && !location.hostname.endsWith('.localhost')) {
+        if (
+            browser &&
+            'serviceWorker' in navigator &&
+            location.hostname !== 'localhost' &&
+            !location.hostname.endsWith('.localhost')
+        ) {
             navigator.serviceWorker.register('/sw.js');
         }
     });
@@ -55,7 +60,11 @@
 <a href="#main-content" class="skip-link">{$t('a11y.skipToContent')}</a>
 
 <div class="app">
-    <Header onOpenCommandPalette={() => { commandPaletteOpen = true; }} />
+    <Header
+        onOpenCommandPalette={() => {
+            commandPaletteOpen = true;
+        }}
+    />
     <main id="main-content" class="main">
         {@render children()}
     </main>
@@ -78,7 +87,6 @@
     .main {
         flex: 1;
     }
-
 
     :global(.skip-link) {
         position: fixed;

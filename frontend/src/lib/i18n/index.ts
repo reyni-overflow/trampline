@@ -50,7 +50,7 @@ function createLocaleStore() {
     const { subscribe, set: rawSet } = writable<Locale>(initialLocale);
 
     if (initialLocale !== 'ru') {
-        loadDictionary(initialLocale).then(dict => dictStore.set(dict));
+        loadDictionary(initialLocale).then((dict) => dictStore.set(dict));
     }
 
     return {
@@ -58,15 +58,21 @@ function createLocaleStore() {
         set(value: Locale) {
             rawSet(value);
             if (browser) {
-                try { localStorage.setItem(LOCALE_KEY, value); } catch { /* ignored */ }
-                document.documentElement.lang = value === 'zh' ? 'zh-CN' : value === 'pirate' ? 'ru' : value;
+                try {
+                    localStorage.setItem(LOCALE_KEY, value);
+                } catch {
+                    /* ignored */
+                }
+                document.documentElement.lang =
+                    value === 'zh' ? 'zh-CN' : value === 'pirate' ? 'ru' : value;
             }
-            loadDictionary(value).then(dict => dictStore.set(dict));
+            loadDictionary(value).then((dict) => dictStore.set(dict));
         },
         init() {
             const loc = getInitialLocale();
             if (browser) {
-                document.documentElement.lang = loc === 'zh' ? 'zh-CN' : loc === 'pirate' ? 'ru' : loc;
+                document.documentElement.lang =
+                    loc === 'zh' ? 'zh-CN' : loc === 'pirate' ? 'ru' : loc;
             }
         }
     };
@@ -90,7 +96,6 @@ export const t = derived(dictStore, ($dict) => {
     };
 });
 
-
 export function tGet(key: string, params?: Record<string, string | number>): string {
     return get(t)(key, params);
 }
@@ -98,7 +103,6 @@ export function tGet(key: string, params?: Record<string, string | number>): str
 export function getLocale(): Locale {
     return get(locale);
 }
-
 
 export function getLocaleDateString(): string {
     const loc = get(locale);
@@ -110,8 +114,13 @@ export function getLocaleDateString(): string {
     return 'ru-RU';
 }
 
-
-export function pluralForm(n: number, one: string, few: string, many: string, other?: string): string {
+export function pluralForm(
+    n: number,
+    one: string,
+    few: string,
+    many: string,
+    other?: string
+): string {
     const loc = get(locale);
 
     if (loc === 'zh') {

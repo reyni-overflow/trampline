@@ -20,7 +20,9 @@ describe('mentorshipsApi', () => {
     it('getAll sends GET /mentorship with query params', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.getAll(1, 10, { city: 'Moscow', search: 'react' });
-        expect(api.get).toHaveBeenCalledWith(expect.stringMatching(/^\/mentorship\?.*city=Moscow.*search=react/));
+        expect(api.get).toHaveBeenCalledWith(
+            expect.stringMatching(/^\/mentorship\?.*city=Moscow.*search=react/)
+        );
     });
 
     it('getAll uses default pagination', async () => {
@@ -51,7 +53,10 @@ describe('mentorshipsApi', () => {
     it('create sends POST /mentorship', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.create({ title: 'Mentor', description: 'Desc', address: 'Moscow' });
-        expect(api.post).toHaveBeenCalledWith('/mentorship', expect.objectContaining({ title: 'Mentor' }));
+        expect(api.post).toHaveBeenCalledWith(
+            '/mentorship',
+            expect.objectContaining({ title: 'Mentor' })
+        );
     });
 
     it('update sends PUT /mentorship/:id', async () => {
@@ -89,13 +94,19 @@ describe('mentorshipsApi', () => {
     it('apply sends POST /mentorship/application-mentorship', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.apply('m-1', 'Cover letter text');
-        expect(api.post).toHaveBeenCalledWith('/mentorship/application-mentorship', { mentorshipId: 'm-1', coverLetter: 'Cover letter text' });
+        expect(api.post).toHaveBeenCalledWith('/mentorship/application-mentorship', {
+            mentorshipId: 'm-1',
+            coverLetter: 'Cover letter text'
+        });
     });
 
     it('apply uses empty string as default cover letter', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.apply('m-1');
-        expect(api.post).toHaveBeenCalledWith('/mentorship/application-mentorship', { mentorshipId: 'm-1', coverLetter: '' });
+        expect(api.post).toHaveBeenCalledWith('/mentorship/application-mentorship', {
+            mentorshipId: 'm-1',
+            coverLetter: ''
+        });
     });
 
     it('getResponses sends GET /mentorship/:id/responses', async () => {
@@ -107,7 +118,9 @@ describe('mentorshipsApi', () => {
     it('updateApplicationStatus sends PUT', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.updateApplicationStatus('app-1', 'Viewed');
-        expect(api.put).toHaveBeenCalledWith('/mentorship/application/app-1/status', { status: 'Viewed' });
+        expect(api.put).toHaveBeenCalledWith('/mentorship/application/app-1/status', {
+            status: 'Viewed'
+        });
     });
 
     it('uploadPhotos sends upload to /mentorship/:id/photo', async () => {
@@ -127,12 +140,16 @@ describe('mentorshipsApi', () => {
     it('deletePhoto sends DELETE with encoded path', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.deletePhoto('m-1', '/files/photos/test.jpg');
-        expect(api.delete).toHaveBeenCalledWith(`/mentorship/m-1/photo?path=${encodeURIComponent('/files/photos/test.jpg')}`);
+        expect(api.delete).toHaveBeenCalledWith(
+            `/mentorship/m-1/photo?path=${encodeURIComponent('/files/photos/test.jpg')}`
+        );
     });
 
     it('deleteVideo sends DELETE with encoded path', async () => {
         const { mentorshipsApi } = await import('$lib/api/mentorships');
         await mentorshipsApi.deleteVideo('m-1', '/files/videos/test.mp4');
-        expect(api.delete).toHaveBeenCalledWith(`/mentorship/m-1/video?path=${encodeURIComponent('/files/videos/test.mp4')}`);
+        expect(api.delete).toHaveBeenCalledWith(
+            `/mentorship/m-1/video?path=${encodeURIComponent('/files/videos/test.mp4')}`
+        );
     });
 });

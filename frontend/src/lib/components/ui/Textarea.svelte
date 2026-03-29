@@ -33,12 +33,7 @@
     {#if label}
         <label class="label" for={rest.id}>{label}</label>
     {/if}
-    <textarea
-        class="textarea"
-        {value}
-        oninput={handleInput}
-        {...rest}
-    ></textarea>
+    <textarea class="textarea" {value} oninput={handleInput} {...rest}></textarea>
     {#if error}
         <p class="message error-message">{error}</p>
     {:else if hint}
@@ -71,21 +66,38 @@
         font-size: var(--font-base);
         line-height: var(--leading-normal);
         resize: vertical;
-        transition: var(--transition-colors), border-color var(--duration-normal) var(--ease-in-out),
+        transition:
+            var(--transition-colors),
+            border-color var(--duration-normal) var(--ease-in-out),
             box-shadow var(--duration-normal) var(--ease-in-out);
     }
 
-    .textarea::placeholder { color: var(--text-tertiary); }
-    .textarea:hover:not(:focus) { border-color: var(--border-hover); }
+    .textarea::placeholder {
+        color: var(--text-tertiary);
+    }
+    .textarea:hover:not(:focus) {
+        border-color: var(--border-hover);
+    }
     .textarea:focus {
         border-color: var(--accent);
         box-shadow: 0 0 0 0.1875rem var(--accent-subtle);
     }
 
-    .has-error .textarea { border-color: var(--color-error); }
-    .has-error .textarea:focus { box-shadow: 0 0 0 0.1875rem var(--color-error-subtle); }
+    .has-error .textarea {
+        border-color: var(--color-error);
+    }
+    .has-error .textarea:focus {
+        box-shadow: 0 0 0 0.1875rem var(--color-error-subtle);
+    }
 
-    .message { font-size: var(--font-xs); animation: slide-down var(--duration-fast) var(--ease-out); }
-    .error-message { color: var(--color-error); }
-    .hint-message { color: var(--text-tertiary); }
+    .message {
+        font-size: var(--font-xs);
+        animation: slide-down var(--duration-fast) var(--ease-out);
+    }
+    .error-message {
+        color: var(--color-error);
+    }
+    .hint-message {
+        color: var(--text-tertiary);
+    }
 </style>

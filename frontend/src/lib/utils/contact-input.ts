@@ -26,7 +26,11 @@ export function formatPhone(raw: string): string {
         normalized = '7' + digits.slice(1);
     }
 
-    if (normalized.startsWith('7') || normalized.startsWith('375') || normalized.startsWith('998')) {
+    if (
+        normalized.startsWith('7') ||
+        normalized.startsWith('375') ||
+        normalized.startsWith('998')
+    ) {
         let code: string;
         let rest: string;
 
@@ -80,4 +84,3 @@ export function validateEmail(value: string): string | null {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return tGet('contactInput.invalidEmail');
     return null;
 }
-

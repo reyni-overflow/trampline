@@ -26,7 +26,7 @@ describe('Tabs', () => {
         const onchange = vi.fn();
         const { container } = render(Tabs, { props: { tabs, active: 'tab1', onchange } });
         const buttons = container.querySelectorAll('button');
-        const tab2 = Array.from(buttons).find(b => b.textContent?.includes('Tab 2'));
+        const tab2 = Array.from(buttons).find((b) => b.textContent?.includes('Tab 2'));
         if (tab2) await fireEvent.click(tab2);
         expect(onchange).toHaveBeenCalledWith('tab2');
     });

@@ -21,7 +21,9 @@ describe('MarkdownRenderer', () => {
     });
 
     it('renders links', () => {
-        const { container } = render(MarkdownRenderer, { props: { source: '[link](https://example.com)' } });
+        const { container } = render(MarkdownRenderer, {
+            props: { source: '[link](https://example.com)' }
+        });
         const link = container.querySelector('a');
         expect(link).toBeTruthy();
     });
@@ -39,7 +41,9 @@ describe('MarkdownRenderer', () => {
     });
 
     it('sanitizes script tags', () => {
-        const { container } = render(MarkdownRenderer, { props: { source: '<script>alert("xss")</script>' } });
+        const { container } = render(MarkdownRenderer, {
+            props: { source: '<script>alert("xss")</script>' }
+        });
         const script = container.querySelector('script');
         expect(script).toBeNull();
     });
@@ -50,12 +54,16 @@ describe('MarkdownRenderer', () => {
     });
 
     it('renders headings', () => {
-        const { container } = render(MarkdownRenderer, { props: { source: '## Heading 2\n\nSome text' } });
+        const { container } = render(MarkdownRenderer, {
+            props: { source: '## Heading 2\n\nSome text' }
+        });
         expect(container.textContent).toContain('Heading 2');
     });
 
     it('renders paragraphs', () => {
-        const { container } = render(MarkdownRenderer, { props: { source: 'Simple text paragraph' } });
+        const { container } = render(MarkdownRenderer, {
+            props: { source: 'Simple text paragraph' }
+        });
         expect(container.textContent).toContain('Simple text paragraph');
     });
 });

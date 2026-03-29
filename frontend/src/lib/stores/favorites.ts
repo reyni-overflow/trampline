@@ -18,15 +18,26 @@ function loadFromStorage(): FavoritesState {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
             const parsed = JSON.parse(raw);
-            return { jobs: parsed.jobs || [], companies: parsed.companies || [], events: parsed.events || [], mentorships: parsed.mentorships || [] };
+            return {
+                jobs: parsed.jobs || [],
+                companies: parsed.companies || [],
+                events: parsed.events || [],
+                mentorships: parsed.mentorships || []
+            };
         }
-    } catch { /* ignored */ }
+    } catch {
+        /* ignored */
+    }
     return { jobs: [], companies: [], events: [], mentorships: [] };
 }
 
 function saveToStorage(state: FavoritesState) {
     if (!browser) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { /* ignored */ }
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+        /* ignored */
+    }
 }
 
 function isLoggedIn(): boolean {
@@ -64,13 +75,17 @@ export const favorites = {
     toggleCompany(id: string) {
         persist((s) => ({
             ...s,
-            companies: s.companies.includes(id) ? s.companies.filter((c) => c !== id) : [...s.companies, id]
+            companies: s.companies.includes(id)
+                ? s.companies.filter((c) => c !== id)
+                : [...s.companies, id]
         }));
         if (isLoggedIn()) {
             favoritesApi.toggle(id, 'Company').catch(() => {
                 persist((s) => ({
                     ...s,
-                    companies: s.companies.includes(id) ? s.companies.filter((c) => c !== id) : [...s.companies, id]
+                    companies: s.companies.includes(id)
+                        ? s.companies.filter((c) => c !== id)
+                        : [...s.companies, id]
                 }));
             });
         }
@@ -85,7 +100,9 @@ export const favorites = {
             favoritesApi.toggle(id, 'Event').catch(() => {
                 persist((s) => ({
                     ...s,
-                    events: s.events.includes(id) ? s.events.filter((e) => e !== id) : [...s.events, id]
+                    events: s.events.includes(id)
+                        ? s.events.filter((e) => e !== id)
+                        : [...s.events, id]
                 }));
             });
         }
@@ -94,13 +111,17 @@ export const favorites = {
     toggleMentorship(id: string) {
         persist((s) => ({
             ...s,
-            mentorships: s.mentorships.includes(id) ? s.mentorships.filter((m) => m !== id) : [...s.mentorships, id]
+            mentorships: s.mentorships.includes(id)
+                ? s.mentorships.filter((m) => m !== id)
+                : [...s.mentorships, id]
         }));
         if (isLoggedIn()) {
             favoritesApi.toggle(id, 'Mentorship').catch(() => {
                 persist((s) => ({
                     ...s,
-                    mentorships: s.mentorships.includes(id) ? s.mentorships.filter((m) => m !== id) : [...s.mentorships, id]
+                    mentorships: s.mentorships.includes(id)
+                        ? s.mentorships.filter((m) => m !== id)
+                        : [...s.mentorships, id]
                 }));
             });
         }
@@ -136,21 +157,45 @@ export async function syncWithServer() {
         const serverFavs = await favoritesApi.getAll();
         const local = loadFromStorage();
 
-        const serverJobs = new Set(serverFavs.filter(f => f.type === 'Job').map(f => f.targetId));
-        const serverCompanies = new Set(serverFavs.filter(f => f.type === 'Company').map(f => f.targetId));
-        const serverEvents = new Set(serverFavs.filter(f => f.type === 'Event').map(f => f.targetId));
-        const serverMentorships = new Set(serverFavs.filter(f => f.type === 'Mentorship').map(f => f.targetId));
+        const serverJobs = new Set(
+            serverFavs.filter((f) => f.type === 'Job').map((f) => f.targetId)
+        );
+        const serverCompanies = new Set(
+            serverFavs.filter((f) => f.type === 'Company').map((f) => f.targetId)
+        );
+        const serverEvents = new Set(
+            serverFavs.filter((f) => f.type === 'Event').map((f) => f.targetId)
+        );
+        const serverMentorships = new Set(
+            serverFavs.filter((f) => f.type === 'Mentorship').map((f) => f.targetId)
+        );
 
-        const localOnlyJobs = local.jobs.filter(id => !serverJobs.has(id));
-        const localOnlyCompanies = local.companies.filter(id => !serverCompanies.has(id));
-        const localOnlyEvents = local.events.filter(id => !serverEvents.has(id));
-        const localOnlyMentorships = local.mentorships.filter(id => !serverMentorships.has(id));
+        const localOnlyJobs = local.jobs.filter((id) => !serverJobs.has(id));
+        const localOnlyCompanies = local.companies.filter((id) => !serverCompanies.has(id));
+        const localOnlyEvents = local.events.filter((id) => !serverEvents.has(id));
+        const localOnlyMentorships = local.mentorships.filter((id) => !serverMentorships.has(id));
 
         await Promise.all([
-            ...localOnlyJobs.map(id => favoritesApi.toggle(id, 'Job').catch(() => { /* best-effort sync */ })),
-            ...localOnlyCompanies.map(id => favoritesApi.toggle(id, 'Company').catch(() => { /* best-effort sync */ })),
-            ...localOnlyEvents.map(id => favoritesApi.toggle(id, 'Event').catch(() => { /* best-effort sync */ })),
-            ...localOnlyMentorships.map(id => favoritesApi.toggle(id, 'Mentorship').catch(() => { /* best-effort sync */ }))
+            ...localOnlyJobs.map((id) =>
+                favoritesApi.toggle(id, 'Job').catch(() => {
+                    /* best-effort sync */
+                })
+            ),
+            ...localOnlyCompanies.map((id) =>
+                favoritesApi.toggle(id, 'Company').catch(() => {
+                    /* best-effort sync */
+                })
+            ),
+            ...localOnlyEvents.map((id) =>
+                favoritesApi.toggle(id, 'Event').catch(() => {
+                    /* best-effort sync */
+                })
+            ),
+            ...localOnlyMentorships.map((id) =>
+                favoritesApi.toggle(id, 'Mentorship').catch(() => {
+                    /* best-effort sync */
+                })
+            )
         ]);
 
         const merged: FavoritesState = {
@@ -161,5 +206,7 @@ export async function syncWithServer() {
         };
         saveToStorage(merged);
         store.set(merged);
-    } catch { /* ignored */ }
+    } catch {
+        /* ignored */
+    }
 }

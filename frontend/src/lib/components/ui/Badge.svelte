@@ -24,13 +24,37 @@
         white-space: nowrap;
     }
 
-    .badge--sm { padding: 2px 0.5rem; font-size: var(--font-xs); }
-    .badge--md { padding: 0.25rem 0.75rem; font-size: var(--font-sm); }
+    .badge--sm {
+        padding: 2px 0.5rem;
+        font-size: var(--font-xs);
+    }
+    .badge--md {
+        padding: 0.25rem 0.75rem;
+        font-size: var(--font-sm);
+    }
 
-    .badge--default { background: var(--bg-tertiary); color: var(--text-secondary); }
-    .badge--success { background: var(--color-success-subtle); color: var(--color-success); }
-    .badge--warning { background: var(--color-warning-subtle); color: var(--color-warning); }
-    .badge--error { background: var(--color-error-subtle); color: var(--color-error); }
-    .badge--info { background: var(--color-info-subtle); color: var(--color-info); }
-    .badge--accent { background: var(--accent-subtle); color: var(--accent); }
+    .badge--default {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+    }
+    .badge--success {
+        background: var(--color-success-subtle);
+        color: var(--color-success);
+    }
+    .badge--warning {
+        background: var(--color-warning-subtle);
+        color: var(--color-warning);
+    }
+    .badge--error {
+        background: var(--color-error-subtle);
+        color: var(--color-error);
+    }
+    .badge--info {
+        background: var(--color-info-subtle);
+        color: var(--color-info);
+    }
+    .badge--accent {
+        background: var(--accent-subtle);
+        color: var(--accent);
+    }
 </style>

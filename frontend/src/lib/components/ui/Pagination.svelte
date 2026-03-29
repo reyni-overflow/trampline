@@ -34,8 +34,23 @@
 
 {#if totalPages > 1}
     <nav class="pagination" aria-label={$t('ui.paginationLabel')}>
-        <button class="page-btn nav-btn" disabled={page === 1} onclick={() => go(page - 1)} type="button" aria-label={$t('ui.paginationPrev')}>
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <button
+            class="page-btn nav-btn"
+            disabled={page === 1}
+            onclick={() => go(page - 1)}
+            type="button"
+            aria-label={$t('ui.paginationPrev')}
+        >
+            <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg
+            >
         </button>
 
         <div class="pages">
@@ -49,14 +64,29 @@
                         onclick={() => go(p)}
                         type="button"
                         aria-label="{$t('ui.paginationPage')} {p}"
-                        aria-current={p === page ? 'page' : undefined}
-                    >{p}</button>
+                        aria-current={p === page ? 'page' : undefined}>{p}</button
+                    >
                 {/if}
             {/each}
         </div>
 
-        <button class="page-btn nav-btn" disabled={page === totalPages} onclick={() => go(page + 1)} type="button" aria-label={$t('ui.paginationNext')}>
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <button
+            class="page-btn nav-btn"
+            disabled={page === totalPages}
+            onclick={() => go(page + 1)}
+            type="button"
+            aria-label={$t('ui.paginationNext')}
+        >
+            <svg
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg
+            >
         </button>
     </nav>
 {/if}
@@ -109,6 +139,8 @@
     }
 
     @media (max-width: 640px) {
-        .pages { display: none; }
+        .pages {
+            display: none;
+        }
     }
 </style>

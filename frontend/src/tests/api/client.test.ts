@@ -139,7 +139,10 @@ describe('API client', () => {
             let callCount = 0;
             globalThis.fetch = vi.fn().mockImplementation((url: string) => {
                 if (url.includes('/auth/refresh')) {
-                    return Promise.resolve({ ok: true, text: () => Promise.resolve(JSON.stringify({})) });
+                    return Promise.resolve({
+                        ok: true,
+                        text: () => Promise.resolve(JSON.stringify({}))
+                    });
                 }
                 callCount++;
                 if (callCount === 1) {

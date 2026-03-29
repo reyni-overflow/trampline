@@ -43,7 +43,7 @@ describe('comparison store', () => {
         comparison.add(mockJob('3'));
         comparison.add(mockJob('4'));
         expect(get(comparison)).toHaveLength(3);
-        expect(get(comparison).map(j => j.id)).not.toContain('4');
+        expect(get(comparison).map((j) => j.id)).not.toContain('4');
     });
 
     it('removes a job by id', () => {
