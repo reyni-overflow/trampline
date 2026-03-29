@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
@@ -35,7 +34,7 @@ var devOrigins = new[] { "http://localhost:5173", "http://localhost:4173", "http
 
 var configuredOrigins = builder.Configuration["CORS_ORIGINS"]?
     .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-    ?? (builder.Environment.IsDevelopment() ? [..defaultOrigins, ..devOrigins] : defaultOrigins);
+    ?? (builder.Environment.IsDevelopment() ? [.. defaultOrigins, .. devOrigins] : defaultOrigins);
 
 var corsOrigins = configuredOrigins
     .Concat(configuredOrigins
@@ -202,6 +201,20 @@ builder.Services.AddRateLimiter(options =>
         opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         opt.QueueLimit = 0;
     });
+    options.AddFixedWindowLimiter("files", opt =>
+    {
+        opt.PermitLimit = 120;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+    options.AddFixedWindowLimiter("health", opt =>
+    {
+        opt.PermitLimit = 30;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
     options.RejectionStatusCode = 429;
 });
 
@@ -296,7 +309,7 @@ app.MapGet("/files/{**path}", async (HttpContext ctx, string path, Trampline.Cor
     };
 
     return Results.File(stream, contentType);
-});
+}).RequireRateLimiting("files");
 
 app.UseRateLimiter();
 
@@ -334,7 +347,7 @@ app.MapGet("/health", async (AppDbContext db, IDistributedCache cache) =>
         timestamp = DateTime.UtcNow,
         checks
     }, statusCode: isHealthy ? 200 : 503);
-});
+}).RequireRateLimiting("health");
 
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapControllers();
