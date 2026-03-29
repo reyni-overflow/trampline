@@ -14,6 +14,7 @@ services:
             - --providers.file.watch=true
             - --entrypoints.web.address=:80
             - --entrypoints.websecure.address=:443
+            - --accesslog=false
         ports:
             - "80:80"
             - "443:443"
