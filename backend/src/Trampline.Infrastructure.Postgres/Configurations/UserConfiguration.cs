@@ -18,7 +18,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.IsBlocked).HasDefaultValue(false);
 
-        builder.Property(u => u.TotpSecret).HasMaxLength(64);
+        builder.Property(u => u.TotpSecret)
+            .HasMaxLength(256)
+            .HasConversion(
+                v => TotpEncryption.Encrypt(v),
+                v => TotpEncryption.Decrypt(v));
         builder.Property(u => u.IsTotpEnabled).HasDefaultValue(false);
         builder.Property(u => u.MustChangePassword).HasDefaultValue(false);
 

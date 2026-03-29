@@ -18,6 +18,7 @@ using Trampline.Infrastructure.Postgres.Extensions;
 using Microsoft.Extensions.Caching.Distributed;
 using Trampline.Web;
 using Trampline.Web.Hubs;
+using Trampline.Core.Models;
 using Trampline.Web.Middlewares;
 using Trampline.Web.Services;
 
@@ -237,6 +238,8 @@ builder.Services.ConfigureOptions(builder.Configuration);
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "";
 if (jwtKey.Length < 32)
     throw new InvalidOperationException("JWT key must be at least 32 characters long. Check the 'Jwt:Key' configuration value.");
+
+TotpEncryption.Initialize(jwtKey);
 
 var app = builder.Build();
 
