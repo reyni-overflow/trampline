@@ -70,7 +70,7 @@ services:
             - "7103:8080"
         restart: unless-stopped
         environment:
-            - ASPNETCORE_ENVIRONMENT=Production
+            - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Development}
             - ASPNETCORE_URLS=http://+:8080
             - ConnectionStrings__DefaultConnection=Host=postgres;Database=trampline;Username=admin;Password=${POSTGRES_PASSWORD}
             - ConnectionStrings__Redis=valkey:6379,password=${REDIS_PASSWORD}
