@@ -50,7 +50,7 @@ public class CsrfHeaderMiddleware(RequestDelegate next, IConfiguration configura
         var configured = configuration["CORS_ORIGINS"]?
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        var origins = configured ?? (env.IsDevelopment() ? [..defaults, ..dev] : defaults);
+        var origins = configured ?? (env.IsDevelopment() ? [.. defaults, .. dev] : defaults);
 
         var set = new HashSet<string>(origins, StringComparer.OrdinalIgnoreCase);
         foreach (var o in origins.Where(o => o.StartsWith("http://")))
