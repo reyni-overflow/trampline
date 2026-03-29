@@ -1,9 +1,6 @@
 import { writable, derived, get } from 'svelte/store';
 import { browser } from '$app/environment';
 import { ru } from './ru';
-import { en } from './en';
-import { zh } from './zh';
-import { pirate } from './pirate';
 
 export type Locale = 'ru' | 'en' | 'zh' | 'pirate';
 
@@ -15,13 +12,29 @@ export const LOCALES: { id: Locale; label: string; flag: string }[] = [
 ];
 
 const LOCALE_KEY = 'trampline-locale';
-const dictionaries: Record<Locale, Record<string, string>> = { ru, en, zh, pirate };
+const VALID_LOCALES: Locale[] = ['ru', 'en', 'zh', 'pirate'];
+
+const loadedDictionaries: Partial<Record<Locale, Record<string, string>>> = { ru };
+
+const loaders: Record<Locale, () => Promise<Record<string, string>>> = {
+    ru: async () => ru,
+    en: async () => (await import('./en')).en,
+    zh: async () => (await import('./zh')).zh,
+    pirate: async () => (await import('./pirate')).pirate
+};
+
+async function loadDictionary(loc: Locale): Promise<Record<string, string>> {
+    if (loadedDictionaries[loc]) return loadedDictionaries[loc]!;
+    const dict = await loaders[loc]();
+    loadedDictionaries[loc] = dict;
+    return dict;
+}
 
 function getInitialLocale(): Locale {
     if (!browser) return 'ru';
     const saved = localStorage.getItem(LOCALE_KEY) as Locale;
 
-    if (saved && dictionaries[saved]) return saved;
+    if (saved && VALID_LOCALES.includes(saved)) return saved;
     const lang = navigator.language.slice(0, 2);
 
     if (lang === 'zh') return 'zh';
@@ -30,17 +43,25 @@ function getInitialLocale(): Locale {
     return 'ru';
 }
 
+const dictStore = writable<Record<string, string>>(ru);
+
 function createLocaleStore() {
-    const { subscribe, set } = writable<Locale>(getInitialLocale());
+    const initialLocale = getInitialLocale();
+    const { subscribe, set: rawSet } = writable<Locale>(initialLocale);
+
+    if (initialLocale !== 'ru') {
+        loadDictionary(initialLocale).then(dict => dictStore.set(dict));
+    }
 
     return {
         subscribe,
         set(value: Locale) {
-            set(value);
+            rawSet(value);
             if (browser) {
                 try { localStorage.setItem(LOCALE_KEY, value); } catch { /* ignored */ }
                 document.documentElement.lang = value === 'zh' ? 'zh-CN' : value === 'pirate' ? 'ru' : value;
             }
+            loadDictionary(value).then(dict => dictStore.set(dict));
         },
         init() {
             const loc = getInitialLocale();
@@ -53,12 +74,11 @@ function createLocaleStore() {
 
 export const locale = createLocaleStore();
 
-export const t = derived(locale, ($locale) => {
-    const dict = dictionaries[$locale];
-    const fallback = dictionaries['ru'];
+export const t = derived(dictStore, ($dict) => {
+    const fallback = ru;
 
     return (key: string, params?: Record<string, string | number>): string => {
-        let text = dict[key] ?? fallback[key] ?? key;
+        let text = $dict[key] ?? fallback[key] ?? key;
 
         if (params) {
             for (const [k, v] of Object.entries(params)) {
