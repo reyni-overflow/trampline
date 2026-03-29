@@ -18,6 +18,8 @@ public record UserResponse
 
     public bool IsSuperAdmin { get; init; }
 
+    public bool MustChangePassword { get; init; }
+
     public WorkerProfileResponse? WorkerProfile { get; init; }
 
     public EmployeeProfileResponse? EmployeeProfile { get; init; }

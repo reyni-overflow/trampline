@@ -30,6 +30,7 @@ export interface UserResponse {
     role: 'Worker' | 'Employee' | 'Admin';
     isTotpEnabled?: boolean;
     isSuperAdmin?: boolean;
+    mustChangePassword?: boolean;
     workerProfile: WorkerProfileResponse | null;
     employeeProfile: EmployeeProfileResponse | null;
 }
@@ -108,7 +109,9 @@ export const authApi = {
     },
 
     forgotPassword(email: string) {
-        return api.post<{ message: string; debugCode?: string }>('/auth/forgot-password', { email });
+        return api.post<{ message: string; debugCode?: string }>('/auth/forgot-password', {
+            email
+        });
     },
 
     resetPassword(email: string, code: string, newPassword: string) {

@@ -74,6 +74,7 @@ export const zh: Record<string, string> = {
     'auth.haveAccount': '已有账户？',
     'auth.loggedOut': '您已退出',
     'auth.welcomeBack': '欢迎回来，{name}！',
+    'auth.mustChangePassword': '请先更改密码才能继续',
     'auth.socialUnavailable': '该服务暂不支持登录',
     'auth.socialDivider': '或通过以下方式登录',
     'auth.enterContact': '请输入邮箱或手机号',
@@ -162,7 +163,8 @@ export const zh: Record<string, string> = {
     'landing.findInField': '在您的领域寻找机会',
     'landing.userReviews': '用户评价',
     'landing.companiesOnPlatform': '平台上的公司',
-    'landing.companiesDisclaimer': '* 所有公司均为虚构。与真实组织的任何相似之处纯属巧合。请勿申请商标。',
+    'landing.companiesDisclaimer':
+        '* 所有公司均为虚构。与真实组织的任何相似之处纯属巧合。请勿申请商标。',
     'landing.readyToStart': '准备开始了吗？',
     'landing.joinThousands': '加入跳板上成千上万的学生和公司',
     'landing.createAccount': '创建账户',
@@ -174,7 +176,8 @@ export const zh: Record<string, string> = {
     'landing.review0Text': '投了47个职位。46个没有回复。但那一个……也没回复。不过界面很漂亮。',
     'landing.review1Name': '叶莲娜 M.',
     'landing.review1Role': 'HR，3人创业公司',
-    'landing.review1Text': '想招一个4万的高级工程师。找到了一个要12万的初级工程师。跳板是有效的，只是不是我们期望的方式。',
+    'landing.review1Text':
+        '想招一个4万的高级工程师。找到了一个要12万的初级工程师。跳板是有效的，只是不是我们期望的方式。',
     'landing.review2Name': '德米特里 V.',
     'landing.review2Role': '永远的学生',
     'landing.review2Text': '来看看薪资水平。看了。关了。回去继续刷算法题。',
@@ -189,7 +192,8 @@ export const zh: Record<string, string> = {
     'landing.review5Text': '在跳板上发现了一个bug。他们给了我一个实习机会。系统运作正常。',
     'landing.review6Name': '谢尔盖 L.',
     'landing.review6Role': '永远的初级工程师',
-    'landing.review6Text': '三年经验，但所有职位都要求五年。两年后我再回来--那时我将是完美的候选人。',
+    'landing.review6Text':
+        '三年经验，但所有职位都要求五年。两年后我再回来--那时我将是完美的候选人。',
     'landing.review7Name': '奥尔加 R.',
     'landing.review7Role': '没有项目的PM',
     'landing.review7Text': '为了准备面试，自己跟自己开了个站会。录用了自己。解雇了。又重新录用。',
@@ -875,23 +879,28 @@ export const zh: Record<string, string> = {
     'about.pageTitle': '关于 · 跳板',
     'about.subtitle': '一个（总有一天会）改变实习市场的职业平台',
     'about.whyTitle': '为什么要做这个？',
-    'about.whyText1': '现有的求职平台要么太正式，要么不考虑第一份工作的特殊性。当你20岁时，你没有"5年生产经验"--但你有Django课程项目和闪亮的眼神。跳板就是为这样的人而生的。',
-    'about.whyText2': '我们将学生和毕业生与重视潜力而非简历上"高级"头衔的雇主连接起来。实习、导师指导、黑客马拉松、初级职位--一切都在一个地方，有地图，而且不要求在一个3年前才发布的技术上有10年经验。',
+    'about.whyText1':
+        '现有的求职平台要么太正式，要么不考虑第一份工作的特殊性。当你20岁时，你没有"5年生产经验"--但你有Django课程项目和闪亮的眼神。跳板就是为这样的人而生的。',
+    'about.whyText2':
+        '我们将学生和毕业生与重视潜力而非简历上"高级"头衔的雇主连接起来。实习、导师指导、黑客马拉松、初级职位--一切都在一个地方，有地图，而且不要求在一个3年前才发布的技术上有10年经验。',
     'about.howTitle': '如何运作？',
     'about.seekersTitle': '求职者',
     'about.seekersText': '创建包含技能、简历和GitHub链接的个人档案。申请职位，参加活动，建立人脉。',
     'about.employersTitle': '雇主',
     'about.employersText': '通过认证，发布职位和活动，查看申请。找到那些愿意学习和成长的人。',
     'about.mapTitle': '地图',
-    'about.mapText': '所有职位和活动都在互动地图上。远程工作关联到雇主所在城市，办公室关联到具体地址。',
+    'about.mapText':
+        '所有职位和活动都在互动地图上。远程工作关联到雇主所在城市，办公室关联到具体地址。',
     'about.stackTitle': '技术栈',
     'about.stackSubtitle': '给那些好奇这是用什么搭建的人（我们知道你很好奇）：',
     'about.stackMap': '地图',
     'about.stackVerification': 'DaData（认证）',
     'about.teamTitle': '团队',
-    'about.teamText': '本项目是为"IT-Planet 2026"奥林匹克竞赛"应用编程 if...else"项目而创建。我们是一支小型热情团队，相信好代码和一点幽默可以让世界变得更好。至少更有趣。',
+    'about.teamText':
+        '本项目是为"IT-Planet 2026"奥林匹克竞赛"应用编程 if...else"项目而创建。我们是一支小型热情团队，相信好代码和一点幽默可以让世界变得更好。至少更有趣。',
     'about.licenseTitle': '许可证与源代码',
-    'about.licenseText1': '跳板是一个开源项目，采用 GNU Affero 通用公共许可证 v3.0 (AGPL-3.0) 分发。',
+    'about.licenseText1':
+        '跳板是一个开源项目，采用 GNU Affero 通用公共许可证 v3.0 (AGPL-3.0) 分发。',
     'about.licenseText2': '源代码可在 GitHub 上获取。',
     'about.licenseName': '许可证',
     'about.licenseCopyright': '作者',
@@ -935,31 +944,43 @@ export const zh: Record<string, string> = {
     'help.group2': '雇主',
     'help.group3': '技术问题',
     'help.q0': '什么是跳板？',
-    'help.a0': '跳板是一个职业平台，帮助学生和毕业生在IT领域找到实习、工作和导师。雇主则可以找到还没有对职业失望的新鲜人才。',
+    'help.a0':
+        '跳板是一个职业平台，帮助学生和毕业生在IT领域找到实习、工作和导师。雇主则可以找到还没有对职业失望的新鲜人才。',
     'help.q1': '平台免费吗？',
-    'help.a1': '是的，对所有用户完全免费。我们靠热情和对IT教育美好未来的信念运营。（其实这是一个竞赛项目，但说出来挺好听的对吧？）',
+    'help.a1':
+        '是的，对所有用户完全免费。我们靠热情和对IT教育美好未来的信念运营。（其实这是一个竞赛项目，但说出来挺好听的对吧？）',
     'help.q2': '我发现了一个bug。在哪里报告？',
     'help.a2': '发送至 support@trampline.org。如果bug足够精彩--我们可能会给您一个实习机会。',
     'help.q3': '如何在平台上创建简历？',
-    'help.a3': '注册后，进入控制面板→"我的资料"。填写姓名、技能、项目经验，上传PDF或DOCX格式的简历。越详细越好。"会HTML"不是技能，是对任何使用互联网的人的基本期望。',
+    'help.a3':
+        '注册后，进入控制面板→"我的资料"。填写姓名、技能、项目经验，上传PDF或DOCX格式的简历。越详细越好。"会HTML"不是技能，是对任何使用互联网的人的基本期望。',
     'help.q4': '如何申请职位？',
-    'help.a4': '打开职位卡片，点击"申请"。雇主会看到您的资料并可以更改申请状态。建议：如果您是前端开发者，不要申请要求"量子计算知识"的职位。',
+    'help.a4':
+        '打开职位卡片，点击"申请"。雇主会看到您的资料并可以更改申请状态。建议：如果您是前端开发者，不要申请要求"量子计算知识"的职位。',
     'help.q5': '什么是"联系人"和社交功能？',
-    'help.a5': '您可以将其他求职者添加为联系人--就像"朋友"，但对职业有用。联系人可以看到您的职业兴趣并推荐您参加职位。LinkedIn，但没有励志帖子。',
+    'help.a5':
+        '您可以将其他求职者添加为联系人--就像"朋友"，但对职业有用。联系人可以看到您的职业兴趣并推荐您参加职位。LinkedIn，但没有励志帖子。',
     'help.q6': '我可以隐藏我的个人资料吗？',
-    'help.a6': '可以。在隐私设置中，您可以对其他求职者隐藏您的申请、简历和个人资料。如果您申请了雇主的职位，雇主仍然可以看到您--否则有什么意义呢。',
+    'help.a6':
+        '可以。在隐私设置中，您可以对其他求职者隐藏您的申请、简历和个人资料。如果您申请了雇主的职位，雇主仍然可以看到您--否则有什么意义呢。',
     'help.q7': '如何发布职位？',
-    'help.a7': '注册为雇主，完成公司认证，然后在控制面板中创建职位卡片。注明要求、薪资范围（请注明薪资--"面议"会让求职者产生存在危机）和技能标签。',
+    'help.a7':
+        '注册为雇主，完成公司认证，然后在控制面板中创建职位卡片。注明要求、薪资范围（请注明薪资--"面议"会让求职者产生存在危机）和技能标签。',
     'help.q8': '什么是认证？',
-    'help.a8': '认证确认您的公司确实存在，而不是两个车库里的学生（虽然我们对车库里的学生没有意见）。通过DaData的税号进行验证。没有认证不能发布职位。',
+    'help.a8':
+        '认证确认您的公司确实存在，而不是两个车库里的学生（虽然我们对车库里的学生没有意见）。通过DaData的税号进行验证。没有认证不能发布职位。',
     'help.q9': '申请如何运作？',
-    'help.a9': '当求职者申请时，您会在"申请"部分看到他们。您可以查看他们的资料、简历，并更改状态：已通过、已拒绝、储备中。建议回复--沉默不是企业文化。',
+    'help.a9':
+        '当求职者申请时，您会在"申请"部分看到他们。您可以查看他们的资料、简历，并更改状态：已通过、已拒绝、储备中。建议回复--沉默不是企业文化。',
     'help.q10': '支持哪些浏览器？',
-    'help.a10': '所有现代浏览器：Chrome、Firefox、Safari、Edge。不支持 Internet Explorer，我们不会为此道歉。',
+    'help.a10':
+        '所有现代浏览器：Chrome、Firefox、Safari、Edge。不支持 Internet Explorer，我们不会为此道歉。',
     'help.q11': '有移动应用吗？',
-    'help.a11': '暂时没有，但网站是响应式的，可以在移动设备上使用。移动应用在计划中。页脚的二维码指向……一个视频演示。总得放在某个地方。',
+    'help.a11':
+        '暂时没有，但网站是响应式的，可以在移动设备上使用。移动应用在计划中。页脚的二维码指向……一个视频演示。总得放在某个地方。',
     'help.q12': '我的数据安全吗？',
-    'help.a12': '我们使用密码哈希（PBKDF2-SHA256）、HttpOnly cookies管理会话和HTTPS。您的数据不会被出售或分享给第三方。更多详情请参阅隐私政策（您可能没有读过，但它确实存在）。',
+    'help.a12':
+        '我们使用密码哈希（PBKDF2-SHA256）、HttpOnly cookies管理会话和HTTPS。您的数据不会被出售或分享给第三方。更多详情请参阅隐私政策（您可能没有读过，但它确实存在）。',
 
     // === Privacy page ===
     'privacy.title': '隐私政策',
@@ -967,14 +988,19 @@ export const zh: Record<string, string> = {
     'privacy.lastUpdate': '2026年3月26日',
     'privacy.lastUpdateLabel': '最后更新：{date}',
     'privacy.s1Title': '1. 一般条款',
-    'privacy.s1p1': '本隐私政策（以下简称"政策"，"这份没人读但所有人都同意的文件"）规定了"跳板"平台（以下简称"平台"，"职业生涯开始、拖延症结束的地方"）用户个人数据的处理和保护程序。',
-    'privacy.s1p2': '使用平台即表示您同意本政策。如果不同意--好吧，您已经在这里了，而且已经阅读了超过97%用户的阅读量。',
+    'privacy.s1p1':
+        '本隐私政策（以下简称"政策"，"这份没人读但所有人都同意的文件"）规定了"跳板"平台（以下简称"平台"，"职业生涯开始、拖延症结束的地方"）用户个人数据的处理和保护程序。',
+    'privacy.s1p2':
+        '使用平台即表示您同意本政策。如果不同意--好吧，您已经在这里了，而且已经阅读了超过97%用户的阅读量。',
     'privacy.s2Title': '2. 我们收集哪些数据',
     'privacy.s2p1': '我们可能收集以下类别的数据：',
-    'privacy.s2li1': '<strong>注册数据：</strong>姓名、邮箱、密码（以哈希形式存储--我们不知道您的密码，坦白说也不想知道）。',
-    'privacy.s2li2': '<strong>个人资料数据：</strong>全名、大学、技能、简历、代码仓库链接（我们不会评判您的代码，承诺）。',
+    'privacy.s2li1':
+        '<strong>注册数据：</strong>姓名、邮箱、密码（以哈希形式存储--我们不知道您的密码，坦白说也不想知道）。',
+    'privacy.s2li2':
+        '<strong>个人资料数据：</strong>全名、大学、技能、简历、代码仓库链接（我们不会评判您的代码，承诺）。',
     'privacy.s2li3': '<strong>公司数据：</strong>名称、税号、描述、联系方式。',
-    'privacy.s2li4': '<strong>技术数据：</strong>IP地址、User-Agent、会话数据（是为了让您能登录，不是为了监视--我们没有这个预算）。',
+    'privacy.s2li4':
+        '<strong>技术数据：</strong>IP地址、User-Agent、会话数据（是为了让您能登录，不是为了监视--我们没有这个预算）。',
     'privacy.s2li5': '<strong>Cookies：</strong>用于身份验证。不是巧克力曲奇那种。',
     'privacy.s3Title': '3. 我们如何使用数据',
     'privacy.s3p1': '收集的数据用于：',
@@ -989,7 +1015,8 @@ export const zh: Record<string, string> = {
     'privacy.s4li2': '会话令牌--HttpOnly cookies（JavaScript访问不了）。',
     'privacy.s4li3': '所有连接使用HTTPS。',
     'privacy.s4li4': '通过DaData进行公司认证。',
-    'privacy.s4p2': '我们不会将您的数据出售给第三方。主要是因为没人出价，但我们原则上也不会这样做。',
+    'privacy.s4p2':
+        '我们不会将您的数据出售给第三方。主要是因为没人出价，但我们原则上也不会这样做。',
     'privacy.s5Title': '5. 您的权利',
     'privacy.s5p1': '您有权：',
     'privacy.s5li1': '请求访问您的个人数据。',
@@ -998,9 +1025,11 @@ export const zh: Record<string, string> = {
     'privacy.s5li4': '配置个人资料隐私（对其他求职者隐藏或开放社交功能）。',
     'privacy.s5li5': '如果有问题，给我们发一封愤怒的邮件（support@trampline.org）。',
     'privacy.s6Title': '6. Cookies',
-    'privacy.s6p1': '我们仅使用必要的cookies进行身份验证。我们不使用广告或分析追踪器。您的浏览器是安全的--至少不会被我们威胁。',
+    'privacy.s6p1':
+        '我们仅使用必要的cookies进行身份验证。我们不使用广告或分析追踪器。您的浏览器是安全的--至少不会被我们威胁。',
     'privacy.s7Title': '7. 政策变更',
-    'privacy.s7p1': '我们保留更新本政策的权利。如有重大变更，我们将通过平台通知用户。最后更新日期在文档开头--以防您真的读到了这里（干得好）。',
+    'privacy.s7p1':
+        '我们保留更新本政策的权利。如有重大变更，我们将通过平台通知用户。最后更新日期在文档开头--以防您真的读到了这里（干得好）。',
     'privacy.s8Title': '8. 联系方式',
     'privacy.s8p1': '有关个人数据处理的问题，请联系：',
 
@@ -1012,16 +1041,20 @@ export const zh: Record<string, string> = {
     'terms.s1Title': '1. 术语和定义',
     'terms.s1p1': '"平台"--"跳板"网络应用程序，位于您显然已经知道的地址，因为您正在阅读这个。',
     'terms.s1p2': '"用户"--在平台上注册并同意本条款的个人或法人实体（也就是您）。',
-    'terms.s1p3': '"内容"--用户发布的任何信息，包括但不限于：简历、职位描述，以及"善于沟通、抗压能力强、团队合作精神"之类的短语。',
+    'terms.s1p3':
+        '"内容"--用户发布的任何信息，包括但不限于：简历、职位描述，以及"善于沟通、抗压能力强、团队合作精神"之类的短语。',
     'terms.s2Title': '2. 接受条款',
     'terms.s2p1': '在平台注册即表示您确认：',
     'terms.s2li1': '您已满14岁（或者您是一个非常厉害的13岁开发者，但我们不会知道）。',
     'terms.s2li2': '您提供的数据是真实的（不需要在一个3年前才发布的技术上填写10年经验）。',
     'terms.s2li3': '您善意地按预期目的使用平台。',
     'terms.s3Title': '3. 用户角色',
-    'terms.s3p1': '<strong>求职者</strong>--寻找工作、实习或导师指导。可以创建个人档案、申请职位、添加联系人。不能发布职位（很合理）。',
-    'terms.s3p2': '<strong>雇主</strong>--代表公司。可以发布职位和活动、查看申请。需要通过认证（我们要确认您没有虚构公司--虽然有些创业公司确实很难和虚构区分开来）。',
-    'terms.s3p3': '<strong>管理员</strong>--平台版主。维护秩序、认证公司、审核内容。没有披风的超级英雄。',
+    'terms.s3p1':
+        '<strong>求职者</strong>--寻找工作、实习或导师指导。可以创建个人档案、申请职位、添加联系人。不能发布职位（很合理）。',
+    'terms.s3p2':
+        '<strong>雇主</strong>--代表公司。可以发布职位和活动、查看申请。需要通过认证（我们要确认您没有虚构公司--虽然有些创业公司确实很难和虚构区分开来）。',
+    'terms.s3p3':
+        '<strong>管理员</strong>--平台版主。维护秩序、认证公司、审核内容。没有披风的超级英雄。',
     'terms.s4Title': '4. 内容规则',
     'terms.s4p1': '禁止发布：',
     'terms.s4li1': '虚假或误导性信息（一个"初级，0经验"却要求"5年生产经验"的职位--这是欺骗）。',
@@ -1031,7 +1064,8 @@ export const zh: Record<string, string> = {
     'terms.s4li5': '以"经验和知识"作为报酬的职位（这不是报酬）。',
     'terms.s4p2': '版主保留在不事先通知的情况下删除违规内容的权利。能力越大，审核责任越大。',
     'terms.s5Title': '5. 公司认证',
-    'terms.s5p1': '发布职位前，公司必须通过认证。认证确认公司的存在，但不保证工作条件、办公室零食或团队负责人的理智程度。',
+    'terms.s5p1':
+        '发布职位前，公司必须通过认证。认证确认公司的存在，但不保证工作条件、办公室零食或团队负责人的理智程度。',
     'terms.s6Title': '6. 知识产权',
     'terms.s6p1': '用户发布的内容仍然是其知识产权。平台获得在服务范围内显示该内容的非独占许可。',
     'terms.s6p2': '平台的设计和代码是开发团队的财产。请不要复制--不如雇用我们。',
@@ -1042,7 +1076,8 @@ export const zh: Record<string, string> = {
     'terms.s7li3': '服务临时不可用（即使Google也有宕机的时候）。',
     'terms.s7li4': '基于平台信息做出的决定。',
     'terms.s8Title': '8. 终止使用',
-    'terms.s8p1': '您可以随时通过设置删除您的账户。我们可能会因违反条款而封禁账户。两种情况--不要记恨。',
+    'terms.s8p1':
+        '您可以随时通过设置删除您的账户。我们可能会因违反条款而封禁账户。两种情况--不要记恨。',
     'terms.s9Title': '9. 条款变更',
     'terms.s9p1': '我们可能会随着平台的发展更新条款。在变更后继续使用即表示您同意新版本。',
     'terms.s10Title': '10. 联系方式',
@@ -1261,7 +1296,8 @@ export const zh: Record<string, string> = {
     'seo.mapDesc': '您所在城市的职位、实习和活动互动地图。',
 
     'cookie.title': 'Cookie 设置',
-    'cookie.message': '我们使用Cookie来确保平台正常运行、进行分析和内容个性化。您可以自定义类别或全部接受。',
+    'cookie.message':
+        '我们使用Cookie来确保平台正常运行、进行分析和内容个性化。您可以自定义类别或全部接受。',
     'cookie.accept': '接受',
     'cookie.acceptAll': '全部接受',
     'cookie.acceptSelected': '接受所选',
@@ -1276,7 +1312,8 @@ export const zh: Record<string, string> = {
     'cookie.catMarketing': '营销',
     'cookie.catMarketingDesc': '用于展示相关推荐和职业机会。',
     'cookie.declinedTitle': '需要Cookie',
-    'cookie.declinedMessage': '没有Cookie，平台无法提供身份验证、保存设置或个性化求职。您可以更改您的决定。',
+    'cookie.declinedMessage':
+        '没有Cookie，平台无法提供身份验证、保存设置或个性化求职。您可以更改您的决定。',
     'cookie.reconsider': '配置Cookie',
 
     'a11y.skipToContent': '跳转到内容',

@@ -33,6 +33,8 @@ public class User
 
     public bool IsSuperAdmin { get; private set; } = false;
 
+    public bool MustChangePassword { get; private set; } = false;
+
     public DateTime? DeletedAt { get; private set; }
 
     public ICollection<UserSession> Sessions { get; private set; } = new List<UserSession>();
@@ -74,7 +76,7 @@ public class User
         return Result<User>.Success(user);
     }
 
-    public static User CreateSeed(Guid id, string email, string nickname, string passwordHash, Role role, bool isSuperAdmin = false)
+    public static User CreateSeed(Guid id, string email, string nickname, string passwordHash, Role role, bool isSuperAdmin = false, bool mustChangePassword = false)
     {
         return new User
         {
@@ -83,7 +85,8 @@ public class User
             Nickname = nickname,
             PasswordHash = passwordHash,
             Role = role,
-            IsSuperAdmin = isSuperAdmin
+            IsSuperAdmin = isSuperAdmin,
+            MustChangePassword = mustChangePassword
         };
     }
 
@@ -135,7 +138,11 @@ public class User
 
     public void ChangeRole(Role role) => Role = role;
 
-    public void ChangePassword(string newPasswordHash) => PasswordHash = newPasswordHash;
+    public void ChangePassword(string newPasswordHash)
+    {
+        PasswordHash = newPasswordHash;
+        MustChangePassword = false;
+    }
 
     public void SetTotpSecret(string? secret) => TotpSecret = secret;
 

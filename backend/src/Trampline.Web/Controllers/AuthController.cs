@@ -27,7 +27,8 @@ public class AuthController(
     IUserSessionRepository userSessionRepository,
     IMediaService mediaService,
     ITotpService totpService,
-    IDistributedCache cache) : ControllerBase
+    IDistributedCache cache,
+    IWebHostEnvironment environment) : ControllerBase
 {
     private CookieOptions CreateCookieOptions(TimeSpan expiry)
     {
@@ -174,6 +175,7 @@ public class AuthController(
                 Avatar = user.Avatar,
                 Role = user.Role,
                 IsTotpEnabled = user.IsTotpEnabled,
+                MustChangePassword = user.MustChangePassword,
                 EmployeeProfile = user.EmployeeProfile != null
                     ? new EmployeeProfileResponse
                     {
@@ -204,6 +206,7 @@ public class AuthController(
                 Avatar = user.Avatar,
                 Role = user.Role,
                 IsTotpEnabled = user.IsTotpEnabled,
+                MustChangePassword = user.MustChangePassword,
                 WorkerProfile = user.WorkerProfile != null
                     ? new WorkerProfileResponse()
                     {
@@ -230,6 +233,7 @@ public class AuthController(
                 Avatar = user.Avatar,
                 Role = user.Role,
                 IsTotpEnabled = user.IsTotpEnabled,
+                MustChangePassword = user.MustChangePassword,
                 IsSuperAdmin = user.IsSuperAdmin,
             }, cancellationToken);
         }
@@ -569,7 +573,7 @@ public class AuthController(
         logger.LogInformation("Password reset requested");
 
         var code = result.Value;
-        if (code != null && code.Length == 6 && code.All(char.IsDigit))
+        if (environment.IsDevelopment() && code != null && code.Length == 6 && code.All(char.IsDigit))
             return Ok(new { message = "If the email exists, a reset code has been sent", debugCode = code });
 
         return Ok(new { message = "If the email exists, a reset code has been sent" });

@@ -74,6 +74,7 @@ export const en: Record<string, string> = {
     'auth.haveAccount': 'Already have an account?',
     'auth.loggedOut': 'You have been signed out',
     'auth.welcomeBack': 'Welcome back, {name}!',
+    'auth.mustChangePassword': 'You must change your password before continuing',
     'auth.socialUnavailable': 'Sign-in via this service is not yet available',
     'auth.socialDivider': 'or sign in with',
     'auth.enterContact': 'Enter email or phone number',
@@ -141,7 +142,8 @@ export const en: Record<string, string> = {
 
     // === Landing ===
     'landing.heroTitle': 'Your career is closer\nthan you think',
-    'landing.heroSubtitle': 'A platform for students and graduates where internships and jobs find you',
+    'landing.heroSubtitle':
+        'A platform for students and graduates where internships and jobs find you',
     'landing.findOpportunities': 'Find Opportunities',
     'landing.imEmployer': "I'm an Employer",
     'landing.howItWorks': 'How It Works',
@@ -162,7 +164,8 @@ export const en: Record<string, string> = {
     'landing.findInField': 'Find opportunities in your field',
     'landing.userReviews': 'What Our Users Say',
     'landing.companiesOnPlatform': 'Companies on the Platform',
-    'landing.companiesDisclaimer': '* All companies are fictitious. Any resemblance to real organizations is coincidental. Please do not file for trademark.',
+    'landing.companiesDisclaimer':
+        '* All companies are fictitious. Any resemblance to real organizations is coincidental. Please do not file for trademark.',
     'landing.readyToStart': 'Ready to Start?',
     'landing.joinThousands': 'Join thousands of students and companies on Trampline',
     'landing.createAccount': 'Create Account',
@@ -171,34 +174,44 @@ export const en: Record<string, string> = {
     // Landing reviews
     'landing.review0Name': 'Alex K.',
     'landing.review0Role': 'Student, 4th year',
-    'landing.review0Text': 'Applied to 47 jobs. 46 didn\'t respond. But that one... also didn\'t respond. But the interface is beautiful.',
+    'landing.review0Text':
+        "Applied to 47 jobs. 46 didn't respond. But that one... also didn't respond. But the interface is beautiful.",
     'landing.review1Name': 'Elena M.',
     'landing.review1Role': 'HR, startup of 3 people',
-    'landing.review1Text': 'Looking for a senior for 40k. Found a junior for 120k. Trampline works, just not as we expected.',
+    'landing.review1Text':
+        'Looking for a senior for 40k. Found a junior for 120k. Trampline works, just not as we expected.',
     'landing.review2Name': 'Dmitry V.',
     'landing.review2Role': 'Eternal student',
-    'landing.review2Text': 'Came to check salaries. Checked. Closed. Went back to study algorithms.',
+    'landing.review2Text':
+        'Came to check salaries. Checked. Closed. Went back to study algorithms.',
     'landing.review3Name': 'Maria S.',
     'landing.review3Role': 'Fullstack on a budget',
-    'landing.review3Text': 'Listed "know 15 frameworks" on my resume. I know them. Can\'t use them, but I know them.',
+    'landing.review3Text':
+        'Listed "know 15 frameworks" on my resume. I know them. Can\'t use them, but I know them.',
     'landing.review4Name': 'Ivan P.',
     'landing.review4Role': 'DevOps enthusiast',
-    'landing.review4Text': 'Set up CI/CD for my resume. Now it auto-updates every time I get rejected.',
+    'landing.review4Text':
+        'Set up CI/CD for my resume. Now it auto-updates every time I get rejected.',
     'landing.review5Name': 'Anna T.',
     'landing.review5Role': 'QA by nature',
-    'landing.review5Text': 'Found a bug in Trampline. They offered me an internship. The system works.',
+    'landing.review5Text':
+        'Found a bug in Trampline. They offered me an internship. The system works.',
     'landing.review6Name': 'Sergey L.',
     'landing.review6Role': 'Junior forever',
-    'landing.review6Text': 'Three years of experience, but all jobs require five. I\'ll come back in two years - I\'ll be the perfect candidate.',
+    'landing.review6Text':
+        "Three years of experience, but all jobs require five. I'll come back in two years - I'll be the perfect candidate.",
     'landing.review7Name': 'Olga R.',
     'landing.review7Role': 'PM without a project',
-    'landing.review7Text': 'Held a standup with myself to prepare for an interview. Hired myself. Fired myself. Hired back.',
+    'landing.review7Text':
+        'Held a standup with myself to prepare for an interview. Hired myself. Fired myself. Hired back.',
     'landing.review8Name': 'Max D.',
     'landing.review8Role': 'Mass applicant',
-    'landing.review8Text': 'My record - 12 applications in 4 minutes. Trampline survived. I didn\'t.',
+    'landing.review8Text':
+        "My record - 12 applications in 4 minutes. Trampline survived. I didn't.",
     'landing.review9Name': 'Kirill N.',
     'landing.review9Role': 'Backend dreamer',
-    'landing.review9Text': 'Listed "stress resistance" as a skill. Test - try applying to a job with salary "negotiable".',
+    'landing.review9Text':
+        'Listed "stress resistance" as a skill. Test - try applying to a job with salary "negotiable".',
 
     // Landing companies
     'landing.company0': 'TechnoSphere',
@@ -212,7 +225,8 @@ export const en: Record<string, string> = {
 
     // === Errors ===
     'errors.400Title': 'Bad Request',
-    'errors.400Desc': 'The server could not process your request. Check the data entered and try again.',
+    'errors.400Desc':
+        'The server could not process your request. Check the data entered and try again.',
     'errors.401Title': 'Authorization Required',
     'errors.401Desc': 'You need to sign in to access this page.',
     'errors.403Title': 'Access Denied',
@@ -462,7 +476,7 @@ export const en: Record<string, string> = {
     'dashApps.pageTitle': 'My Applications · Trampline',
     'dashApps.allStatuses': 'All statuses',
     'dashApps.emptyStatus': 'No applications with this status',
-    'dashApps.emptyHint': 'You haven\'t applied to any jobs yet',
+    'dashApps.emptyHint': "You haven't applied to any jobs yet",
     'dashApps.browseJobs': 'Browse jobs',
     'dashApps.vacancy': 'Vacancy',
     'dashApps.company': 'Company',
@@ -473,7 +487,7 @@ export const en: Record<string, string> = {
     'dashApps.event': 'Event',
     'dashApps.city': 'City',
     'dashApps.emptyEventsStatus': 'No event applications',
-    'dashApps.emptyEventsHint': 'You haven\'t applied to any events yet',
+    'dashApps.emptyEventsHint': "You haven't applied to any events yet",
     'dashApps.browseEvents': 'Browse events',
 
     // === Dashboard favorites ===
@@ -482,14 +496,14 @@ export const en: Record<string, string> = {
     'dashFavs.jobs': 'Jobs',
     'dashFavs.companies': 'Companies',
     'dashFavs.noJobs': 'No favorite jobs',
-    'dashFavs.noJobsHint': 'Save jobs you\'re interested in to find them later',
+    'dashFavs.noJobsHint': "Save jobs you're interested in to find them later",
     'dashFavs.noCompanies': 'No favorite companies',
     'dashFavs.noCompaniesHint': 'Save companies to stay updated on their vacancies',
     'dashFavs.browseJobs': 'Browse jobs',
     'dashFavs.browseCompanies': 'Browse companies',
     'dashFavs.events': 'Events',
     'dashFavs.noEvents': 'No favorite events',
-    'dashFavs.noEventsHint': 'Save events you\'re interested in so you don\'t miss them',
+    'dashFavs.noEventsHint': "Save events you're interested in so you don't miss them",
     'dashFavs.browseEvents': 'Browse events',
 
     // === Dashboard contacts ===
@@ -521,7 +535,7 @@ export const en: Record<string, string> = {
     'dashJobs.noClosed': 'No closed vacancies',
     'dashJobs.noClosedHint': 'Closed vacancies will appear here',
     'dashJobs.noDrafts': 'No drafts',
-    'dashJobs.noDraftsHint': 'Draft vacancies you haven\'t published yet will appear here',
+    'dashJobs.noDraftsHint': "Draft vacancies you haven't published yet will appear here",
     'dashJobs.createFirst': 'Create first',
     'dashJobs.internship': 'Internship',
     'dashJobs.vacancy': 'Vacancy',
@@ -602,7 +616,7 @@ export const en: Record<string, string> = {
     'dashEvents.noClosed': 'No closed events',
     'dashEvents.noClosedHint': 'Closed events will appear here',
     'dashEvents.noDrafts': 'No drafts',
-    'dashEvents.noDraftsHint': 'Draft events you haven\'t published yet will appear here',
+    'dashEvents.noDraftsHint': "Draft events you haven't published yet will appear here",
     'dashEvents.createFirst': 'Create first',
     'dashEvents.createEvent': 'Create event',
     'dashEvents.responses': 'responses',
@@ -914,7 +928,8 @@ export const en: Record<string, string> = {
     'settings.terminate': 'Terminate',
     'settings.terminateAll': 'Terminate All Sessions',
     'settings.dangerZone': 'Danger Zone',
-    'settings.dangerText': 'Deleting your account is irreversible. All your data, applications, and contacts will be deleted.',
+    'settings.dangerText':
+        'Deleting your account is irreversible. All your data, applications, and contacts will be deleted.',
     'settings.deleteAccount': 'Delete Account',
     'settings.accountSaved': 'Account data saved',
     'settings.privacySaved': 'Privacy settings updated',
@@ -926,11 +941,13 @@ export const en: Record<string, string> = {
     'settings.passwordTooShort': 'New password must be at least 8 characters',
     'settings.confirmDeletePassword': 'Enter password to confirm account deletion:',
     'settings.twoFactor': 'Two-Factor Authentication',
-    'settings.totpDesc': 'Add an extra layer of security with an authenticator app (Google Authenticator, Authy, etc.)',
+    'settings.totpDesc':
+        'Add an extra layer of security with an authenticator app (Google Authenticator, Authy, etc.)',
     'settings.totpEnableBtn': 'Enable 2FA',
     'settings.totpDisableBtn': 'Disable 2FA',
     'settings.totpActive': 'Active',
-    'settings.totpActiveDesc': 'Two-factor authentication is enabled. Enter a code from your app to disable it.',
+    'settings.totpActiveDesc':
+        'Two-factor authentication is enabled. Enter a code from your app to disable it.',
     'settings.totpScanQR': 'Scan the QR code with your authenticator app or enter the key manually',
     'settings.totpManualKey': 'Manual entry key',
     'settings.totpVerifyCode': 'Code from app',
@@ -944,23 +961,31 @@ export const en: Record<string, string> = {
     'about.pageTitle': 'About · Trampline',
     'about.subtitle': 'A career platform that will (someday) change the internship market',
     'about.whyTitle': 'Why All This?',
-    'about.whyText1': 'Existing job search platforms are either too formal or ignore the specifics of finding your first job. When you\'re 20, you don\'t have "5 years of production experience" - but you have a Django course project and bright eyes. Trampline is made for people like you.',
-    'about.whyText2': 'We connect students and graduates with employers who value potential over "Senior" in a resume. Internships, mentorship, hackathons, junior positions - all in one place, with a map and without requiring 10 years of experience in a technology that came out 3 years ago.',
+    'about.whyText1':
+        'Existing job search platforms are either too formal or ignore the specifics of finding your first job. When you\'re 20, you don\'t have "5 years of production experience" - but you have a Django course project and bright eyes. Trampline is made for people like you.',
+    'about.whyText2':
+        'We connect students and graduates with employers who value potential over "Senior" in a resume. Internships, mentorship, hackathons, junior positions - all in one place, with a map and without requiring 10 years of experience in a technology that came out 3 years ago.',
     'about.howTitle': 'How Does It Work?',
     'about.seekersTitle': 'Job Seekers',
-    'about.seekersText': 'Create a profile with skills, resume, and GitHub links. Apply for jobs, participate in events, build a network.',
+    'about.seekersText':
+        'Create a profile with skills, resume, and GitHub links. Apply for jobs, participate in events, build a network.',
     'about.employersTitle': 'Employers',
-    'about.employersText': 'Get verified, post vacancies and events, review applications. Find those who are ready to learn and grow.',
+    'about.employersText':
+        'Get verified, post vacancies and events, review applications. Find those who are ready to learn and grow.',
     'about.mapTitle': 'Map',
-    'about.mapText': 'All vacancies and events on an interactive map. Remote work is tied to the employer\'s city, office - to the exact address.',
+    'about.mapText':
+        "All vacancies and events on an interactive map. Remote work is tied to the employer's city, office - to the exact address.",
     'about.stackTitle': 'Tech Stack',
-    'about.stackSubtitle': 'For those curious about what it\'s built with (and we know you\'re curious):',
+    'about.stackSubtitle':
+        "For those curious about what it's built with (and we know you're curious):",
     'about.stackMap': 'Map',
     'about.stackVerification': 'DaData (verification)',
     'about.teamTitle': 'Team',
-    'about.teamText': 'The project was created for the "IT-Planet 2026" olympiad, "Applied Programming if...else" competition. We are a small team of enthusiasts who believe that good code and a bit of irony can make the world a better place. Or at least funnier.',
+    'about.teamText':
+        'The project was created for the "IT-Planet 2026" olympiad, "Applied Programming if...else" competition. We are a small team of enthusiasts who believe that good code and a bit of irony can make the world a better place. Or at least funnier.',
     'about.licenseTitle': 'License & Source Code',
-    'about.licenseText1': 'Trampline is an open-source project distributed under the GNU Affero General Public License v3.0 (AGPL-3.0).',
+    'about.licenseText1':
+        'Trampline is an open-source project distributed under the GNU Affero General Public License v3.0 (AGPL-3.0).',
     'about.licenseText2': 'Source code is available on GitHub.',
     'about.licenseName': 'License',
     'about.licenseCopyright': 'Authors',
@@ -976,20 +1001,21 @@ export const en: Record<string, string> = {
     'contacts.subtitle': 'Our office is located in one of the most mysterious places on the planet',
     'contacts.addressTitle': 'Address',
     'contacts.addressText': 'Bermuda Triangle, Lost Ships St., 404',
-    'contacts.addressNote': 'Landmark: if your GPS stopped working - you\'re almost there',
+    'contacts.addressNote': "Landmark: if your GPS stopped working - you're almost there",
     'contacts.emailTitle': 'Email',
-    'contacts.emailNote': 'We\'ll respond within 1-3 business days (or 1-3 business weeks, depends on the Moon phase)',
+    'contacts.emailNote':
+        "We'll respond within 1-3 business days (or 1-3 business weeks, depends on the Moon phase)",
     'contacts.phoneTitle': 'Phone',
     'contacts.phoneRevealed': '+7 (????) ???-??-??',
     'contacts.phoneNote': 'Unfortunately, reception in the Bermuda Triangle is unreliable',
     'contacts.revealPhone': 'Reveal Number',
-    'contacts.revealNote': 'Click if you\'re sure you want to know',
+    'contacts.revealNote': "Click if you're sure you want to know",
     'contacts.hoursTitle': 'Working Hours',
     'contacts.hoursText': 'Mon-Fri: when we wake up - when we fall asleep',
     'contacts.hoursNote': 'Time zone: UTC ± mood',
     'contacts.ctaText': 'Prefer written communication? Good choice.',
     'contacts.writeUs': 'Write to Us',
-    'contacts.phoneToast': 'We\'re not sure anyone will answer, but it\'s worth a try',
+    'contacts.phoneToast': "We're not sure anyone will answer, but it's worth a try",
     'contacts.hqTitle': 'Trampline Headquarters',
     'contacts.hqCompany': 'Trampline',
     'contacts.hqTag': 'Headquarters',
@@ -997,38 +1023,51 @@ export const en: Record<string, string> = {
     // === Help page ===
     'help.title': 'Help',
     'help.pageTitle': 'Help · Trampline',
-    'help.subtitle': 'Answers to frequently asked questions. If yours isn\'t here - write to us.',
-    'help.noAnswer': 'Didn\'t find an answer?',
+    'help.subtitle': "Answers to frequently asked questions. If yours isn't here - write to us.",
+    'help.noAnswer': "Didn't find an answer?",
     'help.group0': 'General Questions',
     'help.group1': 'For Job Seekers',
     'help.group2': 'For Employers',
     'help.group3': 'Technical Questions',
     'help.q0': 'What is Trampline?',
-    'help.a0': 'Trampline is a career platform that helps students and graduates find internships, jobs, and mentors in IT. Employers, in turn, find fresh talent that hasn\'t yet become disillusioned with the profession.',
+    'help.a0':
+        "Trampline is a career platform that helps students and graduates find internships, jobs, and mentors in IT. Employers, in turn, find fresh talent that hasn't yet become disillusioned with the profession.",
     'help.q1': 'Is the platform free?',
-    'help.a1': 'Yes, completely free for all users. We earn on enthusiasm and belief in a bright future for IT education. (Actually, it\'s a competition project, but it sounds good, right?)',
+    'help.a1':
+        "Yes, completely free for all users. We earn on enthusiasm and belief in a bright future for IT education. (Actually, it's a competition project, but it sounds good, right?)",
     'help.q2': 'I found a bug. Where do I report it?',
-    'help.a2': 'At support@trampline.org. If the bug is impressive enough, we might offer you an internship.',
+    'help.a2':
+        'At support@trampline.org. If the bug is impressive enough, we might offer you an internship.',
     'help.q3': 'How do I create a resume on the Platform?',
-    'help.a3': 'After registration, go to your dashboard → "My Profile". Fill in your name, skills, project experience, and upload your resume in PDF or DOCX format. The more detailed - the better. "Know HTML" is not a skill, it\'s an expectation from anyone who uses the internet.',
+    'help.a3':
+        'After registration, go to your dashboard → "My Profile". Fill in your name, skills, project experience, and upload your resume in PDF or DOCX format. The more detailed - the better. "Know HTML" is not a skill, it\'s an expectation from anyone who uses the internet.',
     'help.q4': 'How do I apply for a job?',
-    'help.a4': 'Open the job card and click "Apply". The employer will see your profile and can change the application status. Tip: don\'t apply for jobs requiring "quantum computing knowledge" if you\'re a frontend developer.',
+    'help.a4':
+        'Open the job card and click "Apply". The employer will see your profile and can change the application status. Tip: don\'t apply for jobs requiring "quantum computing knowledge" if you\'re a frontend developer.',
     'help.q5': 'What are "contacts" and networking?',
-    'help.a5': 'You can add other job seekers to contacts - it\'s like "friends" but useful for your career. Contacts can see your career interests and recommend you for jobs. LinkedIn, but without motivational posts.',
+    'help.a5':
+        'You can add other job seekers to contacts - it\'s like "friends" but useful for your career. Contacts can see your career interests and recommend you for jobs. LinkedIn, but without motivational posts.',
     'help.q6': 'Can I hide my profile?',
-    'help.a6': 'Yes. In privacy settings, you can hide your applications, resume, and profile from other job seekers. Employers will still see you if you applied to their vacancy - otherwise, what\'s the point.',
+    'help.a6':
+        "Yes. In privacy settings, you can hide your applications, resume, and profile from other job seekers. Employers will still see you if you applied to their vacancy - otherwise, what's the point.",
     'help.q7': 'How do I post a vacancy?',
-    'help.a7': 'Register as an employer, verify your company, and create a job card in your dashboard. Specify requirements, salary range (please specify the salary - "negotiable" causes an existential crisis for job seekers) and skill tags.',
+    'help.a7':
+        'Register as an employer, verify your company, and create a job card in your dashboard. Specify requirements, salary range (please specify the salary - "negotiable" causes an existential crisis for job seekers) and skill tags.',
     'help.q8': 'What is verification?',
-    'help.a8': 'Verification confirms that your company exists and it\'s not two students in a garage (though we have nothing against students in a garage). Verification is done by Tax ID via DaData. Without verification, you cannot post vacancies.',
+    'help.a8':
+        "Verification confirms that your company exists and it's not two students in a garage (though we have nothing against students in a garage). Verification is done by Tax ID via DaData. Without verification, you cannot post vacancies.",
     'help.q9': 'How do applications work?',
-    'help.a9': 'When a job seeker applies, you\'ll see them in the "Responses" section. You can view their profile, resume, and change the status: accepted, rejected, in reserve. We recommend responding - silence is not a corporate culture.',
+    'help.a9':
+        'When a job seeker applies, you\'ll see them in the "Responses" section. You can view their profile, resume, and change the status: accepted, rejected, in reserve. We recommend responding - silence is not a corporate culture.',
     'help.q10': 'Which browsers are supported?',
-    'help.a10': 'All modern ones: Chrome, Firefox, Safari, Edge. Internet Explorer is not supported, and we will not apologize for that.',
+    'help.a10':
+        'All modern ones: Chrome, Firefox, Safari, Edge. Internet Explorer is not supported, and we will not apologize for that.',
     'help.q11': 'Is there a mobile app?',
-    'help.a11': 'Not yet, but the site is responsive and works on mobile devices. A mobile app is planned. The QR code in the footer leads to... a video presentation. We had to put it somewhere.',
+    'help.a11':
+        'Not yet, but the site is responsive and works on mobile devices. A mobile app is planned. The QR code in the footer leads to... a video presentation. We had to put it somewhere.',
     'help.q12': 'Is my data safe?',
-    'help.a12': 'We use password hashing (PBKDF2-SHA256), HttpOnly cookies for sessions, and HTTPS. Your data is not sold or shared with third parties. More details in the Privacy Policy (which you probably haven\'t read, but it exists).',
+    'help.a12':
+        "We use password hashing (PBKDF2-SHA256), HttpOnly cookies for sessions, and HTTPS. Your data is not sold or shared with third parties. More details in the Privacy Policy (which you probably haven't read, but it exists).",
 
     // === Privacy page ===
     'privacy.title': 'Privacy Policy',
@@ -1036,29 +1075,39 @@ export const en: Record<string, string> = {
     'privacy.lastUpdate': 'March 26, 2026',
     'privacy.lastUpdateLabel': 'Last updated: {date}',
     'privacy.s1Title': '1. General Provisions',
-    'privacy.s1p1': 'This Privacy Policy (hereinafter - the "Policy", "this document that nobody reads but everyone agrees to") defines the procedure for processing and protecting personal data of users of the "Trampline" platform (hereinafter - the "Platform", "the place where careers begin and procrastination ends").',
-    'privacy.s1p2': 'By using the Platform, you agree to this Policy. If you don\'t agree - well, you\'re already here and have read more than 97% of users.',
+    'privacy.s1p1':
+        'This Privacy Policy (hereinafter - the "Policy", "this document that nobody reads but everyone agrees to") defines the procedure for processing and protecting personal data of users of the "Trampline" platform (hereinafter - the "Platform", "the place where careers begin and procrastination ends").',
+    'privacy.s1p2':
+        "By using the Platform, you agree to this Policy. If you don't agree - well, you're already here and have read more than 97% of users.",
     'privacy.s2Title': '2. What Data We Collect',
     'privacy.s2p1': 'We may collect the following categories of data:',
-    'privacy.s2li1': '<strong>Registration data:</strong> name, email, password (in hashed form - we don\'t know your password, and frankly, we don\'t want to).',
-    'privacy.s2li2': '<strong>Profile data:</strong> full name, university, skills, resume, repository links (we won\'t judge your code, promise).',
-    'privacy.s2li3': '<strong>Company data:</strong> name, Tax ID, description, contact information.',
-    'privacy.s2li4': '<strong>Technical data:</strong> IP address, User-Agent, session data (so you can log in, not for surveillance - we don\'t have the budget for that).',
-    'privacy.s2li5': '<strong>Cookies:</strong> used for authentication. No, not the chocolate chip kind.',
+    'privacy.s2li1':
+        "<strong>Registration data:</strong> name, email, password (in hashed form - we don't know your password, and frankly, we don't want to).",
+    'privacy.s2li2':
+        "<strong>Profile data:</strong> full name, university, skills, resume, repository links (we won't judge your code, promise).",
+    'privacy.s2li3':
+        '<strong>Company data:</strong> name, Tax ID, description, contact information.',
+    'privacy.s2li4':
+        "<strong>Technical data:</strong> IP address, User-Agent, session data (so you can log in, not for surveillance - we don't have the budget for that).",
+    'privacy.s2li5':
+        '<strong>Cookies:</strong> used for authentication. No, not the chocolate chip kind.',
     'privacy.s3Title': '3. How We Use Data',
     'privacy.s3p1': 'Collected data is used for:',
     'privacy.s3li1': 'Ensuring the Platform works (the main purpose, believe it or not).',
     'privacy.s3li2': 'User authentication and authorization.',
     'privacy.s3li3': 'Connecting job seekers with employers (the whole point, really).',
     'privacy.s3li4': 'Improving the service and user experience.',
-    'privacy.s3li5': 'Content moderation (so nobody posts a job listing for "Looking for a senior with 40 years of Swift experience").',
+    'privacy.s3li5':
+        'Content moderation (so nobody posts a job listing for "Looking for a senior with 40 years of Swift experience").',
     'privacy.s4Title': '4. Data Protection',
     'privacy.s4p1': 'We take reasonable measures to protect your data:',
-    'privacy.s4li1': 'Passwords are stored as hashes (PBKDF2-SHA256, 100,000 iterations - more serious than it sounds).',
-    'privacy.s4li2': 'Session tokens - HttpOnly cookies (JavaScript can\'t reach them).',
+    'privacy.s4li1':
+        'Passwords are stored as hashes (PBKDF2-SHA256, 100,000 iterations - more serious than it sounds).',
+    'privacy.s4li2': "Session tokens - HttpOnly cookies (JavaScript can't reach them).",
     'privacy.s4li3': 'HTTPS for all connections.',
     'privacy.s4li4': 'Company verification via DaData.',
-    'privacy.s4p2': 'We don\'t sell your data to third parties. Mostly because nobody offered, but we wouldn\'t anyway.',
+    'privacy.s4p2':
+        "We don't sell your data to third parties. Mostly because nobody offered, but we wouldn't anyway.",
     'privacy.s5Title': '5. Your Rights',
     'privacy.s5p1': 'You have the right to:',
     'privacy.s5li1': 'Request access to your personal data.',
@@ -1067,9 +1116,11 @@ export const en: Record<string, string> = {
     'privacy.s5li4': 'Configure profile privacy (hide from other seekers or open for networking).',
     'privacy.s5li5': 'Send us an angry email if something is wrong (support@trampline.org).',
     'privacy.s6Title': '6. Cookies',
-    'privacy.s6p1': 'We use strictly necessary cookies for authentication. We don\'t use advertising or analytics trackers. Your browser is safe - at least from us.',
+    'privacy.s6p1':
+        "We use strictly necessary cookies for authentication. We don't use advertising or analytics trackers. Your browser is safe - at least from us.",
     'privacy.s7Title': '7. Policy Changes',
-    'privacy.s7p1': 'We reserve the right to update this Policy. In case of significant changes, we will notify users via the Platform. The last update date is at the beginning of the document - in case you read all the way to here (good for you).',
+    'privacy.s7p1':
+        'We reserve the right to update this Policy. In case of significant changes, we will notify users via the Platform. The last update date is at the beginning of the document - in case you read all the way to here (good for you).',
     'privacy.s8Title': '8. Contacts',
     'privacy.s8p1': 'For questions related to personal data processing, contact:',
 
@@ -1079,41 +1130,59 @@ export const en: Record<string, string> = {
     'terms.lastUpdate': 'March 26, 2026',
     'terms.lastUpdateLabel': 'Last updated: {date}',
     'terms.s1Title': '1. Terms and Definitions',
-    'terms.s1p1': '"Platform" - the "Trampline" web application, located at the address you apparently already know, since you\'re reading this.',
-    'terms.s1p2': '"User" - an individual or legal entity registered on the Platform and having agreed to these terms (that is, you).',
-    'terms.s1p3': '"Content" - any information posted by the User, including but not limited to: resumes, job descriptions, and phrases like "communicative, stress-resistant, team player".',
+    'terms.s1p1':
+        '"Platform" - the "Trampline" web application, located at the address you apparently already know, since you\'re reading this.',
+    'terms.s1p2':
+        '"User" - an individual or legal entity registered on the Platform and having agreed to these terms (that is, you).',
+    'terms.s1p3':
+        '"Content" - any information posted by the User, including but not limited to: resumes, job descriptions, and phrases like "communicative, stress-resistant, team player".',
     'terms.s2Title': '2. Acceptance of Terms',
     'terms.s2p1': 'By registering on the Platform, you confirm that:',
-    'terms.s2li1': 'You are at least 14 years old (or a very advanced thirteen-year-old developer, but we won\'t know).',
-    'terms.s2li2': 'The data you provide is accurate (no need to list 10 years of experience in a technology that came out 3 years ago).',
+    'terms.s2li1':
+        "You are at least 14 years old (or a very advanced thirteen-year-old developer, but we won't know).",
+    'terms.s2li2':
+        'The data you provide is accurate (no need to list 10 years of experience in a technology that came out 3 years ago).',
     'terms.s2li3': 'You use the Platform in good faith and for its intended purpose.',
     'terms.s3Title': '3. User Roles',
-    'terms.s3p1': '<strong>Job Seeker</strong> - looking for a job, internship, or mentorship. Can create a profile, apply for jobs, add contacts. Cannot post vacancies (obviously).',
-    'terms.s3p2': '<strong>Employer</strong> - represents a company. Can post vacancies and events, review applications. Undergoes verification (we check that you didn\'t invent your company - though some startups are hard to distinguish from fiction).',
-    'terms.s3p3': '<strong>Curator</strong> - Platform moderator. Maintains order, verifies companies, moderates content. Superhero without a cape.',
+    'terms.s3p1':
+        '<strong>Job Seeker</strong> - looking for a job, internship, or mentorship. Can create a profile, apply for jobs, add contacts. Cannot post vacancies (obviously).',
+    'terms.s3p2':
+        "<strong>Employer</strong> - represents a company. Can post vacancies and events, review applications. Undergoes verification (we check that you didn't invent your company - though some startups are hard to distinguish from fiction).",
+    'terms.s3p3':
+        '<strong>Curator</strong> - Platform moderator. Maintains order, verifies companies, moderates content. Superhero without a cape.',
     'terms.s4Title': '4. Content Rules',
     'terms.s4p1': 'The following is prohibited:',
-    'terms.s4li1': 'False or misleading information (a "Junior, 0 experience" job requiring "5 years in production" - that\'s deception).',
+    'terms.s4li1':
+        'False or misleading information (a "Junior, 0 experience" job requiring "5 years in production" - that\'s deception).',
     'terms.s4li2': 'Content that violates applicable laws.',
     'terms.s4li3': 'Offensive, discriminatory, or unethical materials.',
     'terms.s4li4': 'Spam and advertising unrelated to IT careers.',
-    'terms.s4li5': 'Jobs with compensation being "experience and knowledge" (that\'s not compensation).',
-    'terms.s4p2': 'Moderators reserve the right to remove content that violates the rules without prior notice. With great power comes great moderation.',
+    'terms.s4li5':
+        'Jobs with compensation being "experience and knowledge" (that\'s not compensation).',
+    'terms.s4p2':
+        'Moderators reserve the right to remove content that violates the rules without prior notice. With great power comes great moderation.',
     'terms.s5Title': '5. Company Verification',
-    'terms.s5p1': 'To post vacancies, a company must pass verification. Verification confirms the company\'s existence but does not guarantee working conditions, office cookies, or team lead\'s sanity.',
+    'terms.s5p1':
+        "To post vacancies, a company must pass verification. Verification confirms the company's existence but does not guarantee working conditions, office cookies, or team lead's sanity.",
     'terms.s6Title': '6. Intellectual Property',
-    'terms.s6p1': 'Content posted by users remains their intellectual property. The Platform receives a non-exclusive license to display this content within the service.',
-    'terms.s6p2': 'The Platform\'s design and code are the property of the development team. Please don\'t copy - hire us instead.',
+    'terms.s6p1':
+        'Content posted by users remains their intellectual property. The Platform receives a non-exclusive license to display this content within the service.',
+    'terms.s6p2':
+        "The Platform's design and code are the property of the development team. Please don't copy - hire us instead.",
     'terms.s7Title': '7. Limitation of Liability',
-    'terms.s7p1': 'The Platform is provided "as is". We try to keep everything working, but we are not liable for:',
-    'terms.s7li1': 'Interview results (if you didn\'t get hired - it\'s not our fault, though we\'re genuinely sorry).',
+    'terms.s7p1':
+        'The Platform is provided "as is". We try to keep everything working, but we are not liable for:',
+    'terms.s7li1':
+        "Interview results (if you didn't get hired - it's not our fault, though we're genuinely sorry).",
     'terms.s7li2': 'Accuracy of information provided by employers.',
     'terms.s7li3': 'Temporary service unavailability (even Google has downtime).',
     'terms.s7li4': 'Decisions made based on information from the Platform.',
     'terms.s8Title': '8. Termination of Use',
-    'terms.s8p1': 'You can delete your account at any time through settings. We may block an account for violating these terms. In both cases - no hard feelings.',
+    'terms.s8p1':
+        'You can delete your account at any time through settings. We may block an account for violating these terms. In both cases - no hard feelings.',
     'terms.s9Title': '9. Changes to Terms',
-    'terms.s9p1': 'We may update the terms as the Platform evolves. By continuing to use after changes, you agree to the new version.',
+    'terms.s9p1':
+        'We may update the terms as the Platform evolves. By continuing to use after changes, you agree to the new version.',
     'terms.s10Title': '10. Contacts',
     'terms.s10p1': 'Questions, suggestions, and thanks should be directed to:',
 
@@ -1319,18 +1388,22 @@ export const en: Record<string, string> = {
     'map.locationDenied': 'Location access denied',
 
     'seo.landingTitle': 'Trampline · career platform for students and graduates',
-    'seo.landingDesc': 'Find internships, jobs and career events. A platform for IT students and graduates.',
+    'seo.landingDesc':
+        'Find internships, jobs and career events. A platform for IT students and graduates.',
     'seo.jobsTitle': 'Jobs & Internships · Trampline',
-    'seo.jobsDesc': 'Browse jobs and internships for junior IT specialists. Filter by skills, format and salary.',
+    'seo.jobsDesc':
+        'Browse jobs and internships for junior IT specialists. Filter by skills, format and salary.',
     'seo.companiesTitle': 'Companies · Trampline',
     'seo.companiesDesc': 'Verified IT company profiles with jobs and internships.',
     'seo.eventsTitle': 'Career Events · Trampline',
-    'seo.eventsDesc': 'Hackathons, meetups, open days and webinars for students and junior IT professionals.',
+    'seo.eventsDesc':
+        'Hackathons, meetups, open days and webinars for students and junior IT professionals.',
     'seo.mapTitle': 'Job Map · Trampline',
     'seo.mapDesc': 'Interactive map of jobs, internships and events in your city.',
 
     'cookie.title': 'Cookie Settings',
-    'cookie.message': 'We use cookies for the platform to work properly, for analytics and content personalization. You can customize categories or accept all.',
+    'cookie.message':
+        'We use cookies for the platform to work properly, for analytics and content personalization. You can customize categories or accept all.',
     'cookie.accept': 'Accept',
     'cookie.acceptAll': 'Accept All',
     'cookie.acceptSelected': 'Accept Selected',
@@ -1339,13 +1412,16 @@ export const en: Record<string, string> = {
     'cookie.showSettings': 'Customize',
     'cookie.hideSettings': 'Hide settings',
     'cookie.catRequired': 'Essential',
-    'cookie.catRequiredDesc': 'Required for the site to function: authentication, security, saving preferences.',
+    'cookie.catRequiredDesc':
+        'Required for the site to function: authentication, security, saving preferences.',
     'cookie.catAnalytics': 'Analytics',
-    'cookie.catAnalyticsDesc': 'Help us understand how you use the platform to improve functionality.',
+    'cookie.catAnalyticsDesc':
+        'Help us understand how you use the platform to improve functionality.',
     'cookie.catMarketing': 'Marketing',
     'cookie.catMarketingDesc': 'Used to show relevant recommendations and career opportunities.',
     'cookie.declinedTitle': 'Cookies Are Required',
-    'cookie.declinedMessage': 'Without cookies, the platform cannot provide authentication, save preferences, or personalize job search. You can change your decision.',
+    'cookie.declinedMessage':
+        'Without cookies, the platform cannot provide authentication, save preferences, or personalize job search. You can change your decision.',
     'cookie.reconsider': 'Configure Cookies',
 
     'a11y.skipToContent': 'Skip to content',
@@ -1362,7 +1438,8 @@ export const en: Record<string, string> = {
     'events.sortByDate': 'By date',
     'events.sortByName': 'By name',
     'events.registered': 'You are registered for "{title}"',
-    'events.months': 'January,February,March,April,May,June,July,August,September,October,November,December',
+    'events.months':
+        'January,February,March,April,May,June,July,August,September,October,November,December',
     'events.weekdays': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
     'events.calendarView': 'Calendar',
     'events.listView': 'List',
@@ -1466,7 +1543,8 @@ export const en: Record<string, string> = {
     // === Dashboard contacts recommendations ===
     'dashContacts.recommendations': 'Recommendations',
     'dashContacts.noRecommendations': 'No recommendations',
-    'dashContacts.noRecommendationsHint': 'When someone recommends a job to you, it will appear here',
+    'dashContacts.noRecommendationsHint':
+        'When someone recommends a job to you, it will appear here',
     'dashContacts.recommendedBy': 'Recommended by:',
     'dashContacts.viewJob': 'View Job',
 

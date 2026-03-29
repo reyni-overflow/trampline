@@ -20,6 +20,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.TotpSecret).HasMaxLength(64);
         builder.Property(u => u.IsTotpEnabled).HasDefaultValue(false);
+        builder.Property(u => u.MustChangePassword).HasDefaultValue(false);
 
         builder.HasMany(u => u.Sessions)
             .WithOne(s => s.User)
@@ -42,7 +43,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             "Администратор",
             "3rljPMTphm1R5ozPxwb7ig==:W5meEqj/maKtTM0RxeTVlcs61YIPpPnj6yZu3Z0Eh2o=",
             Role.Admin,
-            isSuperAdmin: true));
+            isSuperAdmin: true,
+            mustChangePassword: true));
 
         builder.HasIndex(u => u.Email).IsUnique();
 

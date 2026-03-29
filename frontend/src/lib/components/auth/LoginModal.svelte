@@ -27,8 +27,14 @@
 
     function validate(): boolean {
         let valid = true;
-        if (!contact.trim()) { contactError = $t('auth.enterContact'); valid = false; }
-        if (!password) { passwordError = $t('auth.enterPassword'); valid = false; }
+        if (!contact.trim()) {
+            contactError = $t('auth.enterContact');
+            valid = false;
+        }
+        if (!password) {
+            passwordError = $t('auth.enterPassword');
+            valid = false;
+        }
         return valid;
     }
 
@@ -48,9 +54,14 @@
             user.setUser(me);
             syncWithServer();
             startConnection();
-            toast.success($t('auth.welcomeBack', { name: me.nickname }));
             authModal.close();
-            goto(me.role === 'Admin' ? '/admin' : '/dashboard');
+            if (me.mustChangePassword) {
+                toast.warning($t('auth.mustChangePassword'));
+                goto('/settings');
+            } else {
+                toast.success($t('auth.welcomeBack', { name: me.nickname }));
+                goto(me.role === 'Admin' ? '/admin' : '/dashboard');
+            }
         } catch (err) {
             handleApiError(err);
         } finally {
@@ -60,7 +71,10 @@
 
     async function handleTotpSubmit(e: SubmitEvent) {
         e.preventDefault();
-        if (totpCode.length !== 6) { totpError = $t('auth.totpInvalid'); return; }
+        if (totpCode.length !== 6) {
+            totpError = $t('auth.totpInvalid');
+            return;
+        }
         loading = true;
         try {
             await authApi.totpVerify(totpChallengeId, totpCode);
@@ -68,9 +82,14 @@
             user.setUser(me);
             syncWithServer();
             startConnection();
-            toast.success($t('auth.welcomeBack', { name: me.nickname }));
             authModal.close();
-            goto(me.role === 'Admin' ? '/admin' : '/dashboard');
+            if (me.mustChangePassword) {
+                toast.warning($t('auth.mustChangePassword'));
+                goto('/settings');
+            } else {
+                toast.success($t('auth.welcomeBack', { name: me.nickname }));
+                goto(me.role === 'Admin' ? '/admin' : '/dashboard');
+            }
         } catch {
             totpError = $t('auth.totpInvalid');
         } finally {
@@ -80,9 +99,23 @@
 </script>
 
 <div class="auth-form">
-    <button class="back-btn" type="button" onclick={() => authModal.goBack()} aria-label={$t('common.back')}>
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15 18-6-6 6-6"/>
+    <button
+        class="back-btn"
+        type="button"
+        onclick={() => authModal.goBack()}
+        aria-label={$t('common.back')}
+    >
+        <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="m15 18-6-6 6-6" />
         </svg>
     </button>
 
@@ -92,57 +125,63 @@
     </div>
 
     {#if !totpRequired}
-    <form onsubmit={handleSubmit}>
-        <div class="fields">
-            <ContactInput
-                bind:value={contact}
-                bind:error={contactError}
-            />
-            <PasswordInput
-                bind:value={password}
-                error={passwordError}
-                placeholder={$t('auth.yourPassword')}
-                autocomplete="current-password"
-            />
-        </div>
+        <form onsubmit={handleSubmit}>
+            <div class="fields">
+                <ContactInput bind:value={contact} bind:error={contactError} />
+                <PasswordInput
+                    bind:value={password}
+                    error={passwordError}
+                    placeholder={$t('auth.yourPassword')}
+                    autocomplete="current-password"
+                />
+            </div>
 
-        <div class="password-extras">
-            <button class="forgot-link" type="button" onclick={() => { authModal.close(); forgotPasswordModal.open(); }}>
-                {$t('forgotPassword.link')}
+            <div class="password-extras">
+                <button
+                    class="forgot-link"
+                    type="button"
+                    onclick={() => {
+                        authModal.close();
+                        forgotPasswordModal.open();
+                    }}
+                >
+                    {$t('forgotPassword.link')}
+                </button>
+            </div>
+
+            <Button type="submit" size="lg" {loading} disabled={loading}>
+                {loading ? $t('auth.loggingIn') : $t('auth.login')}
+            </Button>
+        </form>
+
+        <SocialLogin />
+
+        <div class="auth-footer">
+            <span class="auth-footer-text">{$t('auth.noAccount')}</span>
+            <button class="auth-link" type="button" onclick={() => authModal.goToRegister()}>
+                {$t('auth.register')}
             </button>
         </div>
-
-        <Button type="submit" size="lg" {loading} disabled={loading}>
-            {loading ? $t('auth.loggingIn') : $t('auth.login')}
-        </Button>
-    </form>
-
-    <SocialLogin />
-
-    <div class="auth-footer">
-        <span class="auth-footer-text">{$t('auth.noAccount')}</span>
-        <button class="auth-link" type="button" onclick={() => authModal.goToRegister()}>
-            {$t('auth.register')}
-        </button>
-    </div>
     {:else}
-    <form onsubmit={handleTotpSubmit}>
-        <div class="fields">
-            <p class="totp-hint">{$t('auth.totpHint')}</p>
-            <Input
-                label={$t('auth.totpCode')}
-                bind:value={totpCode}
-                error={totpError}
-                placeholder="000000"
-                maxlength={6}
-                autocomplete="one-time-code"
-                oninput={() => { totpError = ''; }}
-            />
-        </div>
-        <Button type="submit" size="lg" {loading} disabled={loading || totpCode.length !== 6}>
-            {loading ? $t('auth.verifying') : $t('auth.verify')}
-        </Button>
-    </form>
+        <form onsubmit={handleTotpSubmit}>
+            <div class="fields">
+                <p class="totp-hint">{$t('auth.totpHint')}</p>
+                <Input
+                    label={$t('auth.totpCode')}
+                    bind:value={totpCode}
+                    error={totpError}
+                    placeholder="000000"
+                    maxlength={6}
+                    autocomplete="one-time-code"
+                    oninput={() => {
+                        totpError = '';
+                    }}
+                />
+            </div>
+            <Button type="submit" size="lg" {loading} disabled={loading || totpCode.length !== 6}>
+                {loading ? $t('auth.verifying') : $t('auth.verify')}
+            </Button>
+        </form>
     {/if}
 </div>
 
