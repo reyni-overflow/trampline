@@ -58,6 +58,17 @@ public class AuthService(
         var contact = request.Contact.Trim();
         var isPhone = contact.StartsWith("+") || (contact.Length >= 10 && contact.All(char.IsDigit));
 
+        var attemptsKey = $"login_attempts:{contact.ToLowerInvariant()}";
+        var attemptsStr = await cache.GetStringAsync(attemptsKey, cancellationToken);
+        var attempts = int.TryParse(attemptsStr, out var a) ? a : 0;
+
+        if (attempts >= 10)
+        {
+            logger.LogWarning("Login locked due to too many attempts for {Contact}", contact);
+            return Result<AuthResponse>.Failure(new ErrorDetail(nameof(request.Contact),
+                "Too many failed login attempts. Try again in 15 minutes.", 429));
+        }
+
         User? find;
         if (isPhone)
             find = await userService.GetByPhoneAsync(contact, cancellationToken);
@@ -66,7 +77,9 @@ public class AuthService(
 
         if (find == null)
         {
-            logger.LogWarning("Failed login attempt for {Contact}", contact);
+            await cache.SetStringAsync(attemptsKey, (attempts + 1).ToString(),
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) }, cancellationToken);
+            logger.LogWarning("Failed login attempt for {Contact}, attempt {Attempt}", contact, attempts + 1);
             return Result<AuthResponse>.Failure(new ErrorDetail(nameof(request.Contact), "Invalid credentials", 401));
         }
 
@@ -74,7 +87,9 @@ public class AuthService(
 
         if (!isPassword)
         {
-            logger.LogWarning("Failed login attempt for {Contact}", contact);
+            await cache.SetStringAsync(attemptsKey, (attempts + 1).ToString(),
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) }, cancellationToken);
+            logger.LogWarning("Failed login attempt for {Contact}, attempt {Attempt}", contact, attempts + 1);
             return Result<AuthResponse>.Failure(new ErrorDetail(nameof(request.Password), "Invalid credentials", 401));
         }
 
@@ -83,6 +98,8 @@ public class AuthService(
             logger.LogWarning("Blocked user login attempt for {Contact}", contact);
             return Result<AuthResponse>.Failure(new ErrorDetail(nameof(request.Contact), "Account is blocked", 403));
         }
+
+        await cache.RemoveAsync(attemptsKey, cancellationToken);
 
         var accessToken = tokenService.GenerateJwtToken(find);
         var refreshToken = await tokenService.GenerateToken(find, agent, cancellationToken);
@@ -121,10 +138,12 @@ public class AuthService(
             return Result<AuthResponse>.Failure(new ErrorDetail("refresh token", "Account is blocked", 403));
         }
 
+        await tokenService.DisableTokenAsync(find.Value!.Token, cancellationToken);
+
         var newRefresh = await tokenService.GenerateToken(findUser.Value!, agent, cancellationToken);
         var accessToken = tokenService.GenerateJwtToken(findUser.Value!);
 
-        logger.LogDebug("Token refreshed for {UserId}", findUser.Value!.Id);
+        logger.LogDebug("Token refreshed for {UserId}, old token revoked", findUser.Value!.Id);
 
         return Result<AuthResponse>.Success(new AuthResponse()
         {
