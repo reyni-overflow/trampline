@@ -35,7 +35,7 @@ public class AdminController(
     IMentorshipService mentorshipService) : ControllerBase
 {
     [HttpGet("users")]
-    public async Task<IActionResult> GetUsersAsync(CancellationToken ct, [FromQuery(Name = "size")] int pageSize = 20, [FromQuery(Name = "page")] int pageNumber = 1)
+    public async Task<IActionResult> GetUsersAsync(CancellationToken ct, int pageSize = 20, int pageNumber = 1)
     {
         pageSize = Math.Clamp(pageSize, 1, 100);
         pageNumber = Math.Max(pageNumber, 1);
@@ -58,15 +58,15 @@ public class AdminController(
     [HttpGet("audit")]
     public async Task<IActionResult> GetAuditLogsAsync(
         CancellationToken ct,
-        [FromQuery(Name = "page")] int page = 1,
-        [FromQuery(Name = "size")] int size = 20,
-        [FromQuery(Name = "action")] string? action = null,
-        [FromQuery(Name = "entityType")] string? entityType = null,
-        [FromQuery(Name = "userId")] Guid? userId = null)
+        int pageNumber = 1,
+        int pageSize = 20,
+        string? action = null,
+        string? entityType = null,
+        Guid? userId = null)
     {
-        size = Math.Clamp(size, 1, 100);
-        page = Math.Max(page, 1);
-        var (items, total) = await auditLogRepository.GetPaginatedAsync(page, size, action, entityType, userId, ct);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        pageNumber = Math.Max(pageNumber, 1);
+        var (items, total) = await auditLogRepository.GetPaginatedAsync(pageNumber, pageSize, action, entityType, userId, ct);
 
         return Ok(new { items, total });
     }

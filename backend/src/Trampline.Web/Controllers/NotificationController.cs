@@ -23,14 +23,14 @@ public class NotificationController(AppDbContext dbContext) : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetNotificationsAsync(CancellationToken ct,
-        [FromQuery(Name = "page")] int page = 1,
-        [FromQuery(Name = "size")] int size = 20)
+        int pageNumber = 1,
+        int pageSize = 20)
     {
         var userId = GetUserId();
         if (userId == null) return BadRequest();
 
-        size = Math.Clamp(size, 1, 50);
-        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 50);
+        pageNumber = Math.Max(pageNumber, 1);
 
         var query = dbContext.Notifications
             .Where(n => n.UserId == userId.Value)
@@ -38,8 +38,8 @@ public class NotificationController(AppDbContext dbContext) : ControllerBase
 
         var total = await query.CountAsync(ct);
         var items = await query
-            .Skip((page - 1) * size)
-            .Take(size)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(n => new
             {
                 n.Id,

@@ -16,8 +16,8 @@ export interface NotificationsResponse {
 }
 
 export const notificationsApi = {
-    async getAll(page = 1, size = 20): Promise<NotificationsResponse> {
-        return api.get<NotificationsResponse>(`/notification?page=${page}&size=${size}`);
+    async getAll(pageNumber = 1, pageSize = 20): Promise<NotificationsResponse> {
+        return api.get<NotificationsResponse>(`/notification?pageNumber=${pageNumber}&pageSize=${pageSize}`);
     },
 
     async getUnreadCount(): Promise<{ count: number }> {

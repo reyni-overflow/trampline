@@ -60,16 +60,16 @@ export interface AuditLogEntry {
 }
 
 export const adminApi = {
-    getAuditLogs(page = 1, size = 20, action?: string, entityType?: string, userId?: string) {
-        const params = new URLSearchParams({ page: String(page), size: String(size) });
+    getAuditLogs(pageNumber = 1, pageSize = 20, action?: string, entityType?: string, userId?: string) {
+        const params = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
         if (action) params.set('action', action);
         if (entityType) params.set('entityType', entityType);
         if (userId) params.set('userId', userId);
         return api.get<{ items: AuditLogEntry[]; total: number }>(`/admin/audit?${params}`);
     },
 
-    async getUsers(page = 1, size = 20) {
-        const res = await api.get<{ items: AdminUserResponse[]; total: number }>(`/admin/users?page=${page}&size=${size}`);
+    async getUsers(pageNumber = 1, pageSize = 20) {
+        const res = await api.get<{ items: AdminUserResponse[]; total: number }>(`/admin/users?pageNumber=${pageNumber}&pageSize=${pageSize}`);
         return res.items;
     },
 
