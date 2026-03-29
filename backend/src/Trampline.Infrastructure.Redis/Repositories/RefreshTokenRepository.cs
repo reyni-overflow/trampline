@@ -26,7 +26,7 @@ public class RefreshTokenRepository(ILogger<RefreshTokenRepository> logger, IDis
         var findString = await cache.GetStringAsync(token, cancellationToken);
         if (string.IsNullOrWhiteSpace(findString))
             return Result<RefreshToken>.Failure(new ErrorDetail(nameof(token), "Token not found"));
-        logger.LogDebug("Getting access token from cache: {Token}", findString);
+        logger.LogDebug("Retrieved refresh token from cache");
         var findToken = JsonSerializer.Deserialize<RefreshToken>(findString, options)!;
 
         return Result<RefreshToken>.Success(findToken);
@@ -47,7 +47,7 @@ public class RefreshTokenRepository(ILogger<RefreshTokenRepository> logger, IDis
     public async Task AddAsync(RefreshToken token, CancellationToken cancellationToken)
     {
         var tokenString = JsonSerializer.Serialize(token, options);
-        logger.LogInformation("Adding refresh token {Token}", tokenString);
+        logger.LogInformation("Adding refresh token for user {UserId}", token.UserId);
         await cache.SetStringAsync(token.Token, tokenString, new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(10)
@@ -79,7 +79,7 @@ public class RefreshTokenRepository(ILogger<RefreshTokenRepository> logger, IDis
     public async Task UpdateAsync(RefreshToken token, CancellationToken cancellationToken)
     {
         var tokenString = JsonSerializer.Serialize(token, options);
-        logger.LogInformation("Updating refresh token {Token}", tokenString);
+        logger.LogInformation("Updating refresh token for user {UserId}", token.UserId);
         await cache.SetStringAsync(token.Token, tokenString, new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(10)
@@ -113,7 +113,7 @@ public class RefreshTokenRepository(ILogger<RefreshTokenRepository> logger, IDis
 
     public async Task DeleteAsync(string token, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleted refresh token {Token}", token);
+        logger.LogInformation("Deleted refresh token");
         await cache.RemoveAsync(token, cancellationToken);
     }
 
