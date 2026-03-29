@@ -15,6 +15,8 @@ using Trampline.Shared.Results;
 using Trampline.Contracts.DTOs.Responses;
 using Microsoft.AspNetCore.RateLimiting;
 using Trampline.Web.Extensions;
+using Trampline.Infrastructure.Postgres.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Trampline.Web.Controllers;
 
@@ -30,7 +32,8 @@ public class JobController(
     IUserService userService,
     ITagRepository tagRepository,
     IJobApplicationRepository jobApplicationRepository,
-    IMediaService mediaService) : ControllerBase
+    IMediaService mediaService,
+    AppDbContext dbContext) : ControllerBase
 {
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Получить все теги")]
@@ -118,6 +121,39 @@ public class JobController(
             hasNextPage = pageNumber < totalPages,
             hasPreviousPage = pageNumber > 1
         });
+    }
+
+    [Authorize(Roles = "Employee,Admin")]
+    [SwaggerOperation("Статистика откликов на вакансии текущего работодателя")]
+    [HttpGet("my-response-stats")]
+    public async Task<IActionResult> GetMyResponseStatsAsync(CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+
+        var guid = new Guid(userId);
+        var jobIds = await dbContext.Jobs
+            .Where(j => j.UserId == guid && j.DeletedAt == null)
+            .Select(j => j.Id)
+            .ToListAsync(cancellationToken);
+
+        if (jobIds.Count == 0)
+            return Ok(new { totalResponses = 0, pendingResponses = 0 });
+
+        var stats = await dbContext.JobApplications
+            .Where(a => jobIds.Contains(a.JobId))
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                totalResponses = g.Count(),
+                pendingResponses = g.Count(a => a.Status == ApplicationStatus.Pending)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return Ok(stats ?? new { totalResponses = 0, pendingResponses = 0 });
     }
 
     [AllowAnonymous]

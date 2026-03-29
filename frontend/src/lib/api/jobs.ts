@@ -87,7 +87,12 @@ export interface JobApplicationResponse {
         about: string | null;
         photo: string | null;
         resume: string | null;
-        info: { university: string; course: number; admissionAt: string; graduationAt: string } | null;
+        info: {
+            university: string;
+            course: number;
+            admissionAt: string;
+            graduationAt: string;
+        } | null;
     };
     jobId: string;
     jobTitle: string | null;
@@ -108,11 +113,27 @@ export interface TagStatsResponse {
 }
 
 export const jobsApi = {
-    getAll(pageNumber = 1, pageSize = 10, filters?: { city?: string; salaryMin?: number; salaryMax?: number; search?: string; type?: string; format?: string; tags?: string }) {
-        const params = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
+    getAll(
+        pageNumber = 1,
+        pageSize = 10,
+        filters?: {
+            city?: string;
+            salaryMin?: number;
+            salaryMax?: number;
+            search?: string;
+            type?: string;
+            format?: string;
+            tags?: string;
+        }
+    ) {
+        const params = new URLSearchParams({
+            pageNumber: String(pageNumber),
+            pageSize: String(pageSize)
+        });
         if (filters?.city) params.set('city', filters.city);
         if (filters?.salaryMin) params.set('salaryMin', String(filters.salaryMin));
-        if (filters?.salaryMax && filters.salaryMax < 1500000) params.set('salaryMax', String(filters.salaryMax));
+        if (filters?.salaryMax && filters.salaryMax < 100000000)
+            params.set('salaryMax', String(filters.salaryMax));
         if (filters?.search) params.set('search', filters.search);
         if (filters?.type) params.set('type', filters.type);
         if (filters?.format) params.set('format', filters.format);
@@ -141,7 +162,15 @@ export const jobsApi = {
     },
 
     getByUser(userId: string, pageNumber = 1, pageSize = 10) {
-        return api.get<JobResponse[]>(`/job/all-by/${userId}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+        return api.get<JobResponse[]>(
+            `/job/all-by/${userId}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        );
+    },
+
+    getMyResponseStats() {
+        return api.get<{ totalResponses: number; pendingResponses: number }>(
+            '/job/my-response-stats'
+        );
     },
 
     apply(jobId: string, coverLetter: string = '') {
