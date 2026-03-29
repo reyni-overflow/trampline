@@ -26,8 +26,12 @@ import MarkdownRenderer from '$lib/components/ui/MarkdownRenderer.svelte';
 import SocialLogin from '$lib/components/auth/SocialLogin.svelte';
 import { vi } from 'vitest';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderWithSnippet(component: Component<any>, props: Record<string, unknown> = {}, text = 'Content') {
+function renderWithSnippet(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    component: Component<any>,
+    props: Record<string, unknown> = {},
+    text = 'Content'
+) {
     return render(SnippetWrapper, { props: { component, props, text } });
 }
 
@@ -98,7 +102,9 @@ describe('Component Snapshots', () => {
     });
 
     it('Input snapshot', () => {
-        const { container } = render(Input, { props: { label: 'Name', placeholder: 'Enter name' } });
+        const { container } = render(Input, {
+            props: { label: 'Name', placeholder: 'Enter name' }
+        });
         expect(container.innerHTML).toMatchSnapshot();
     });
 
@@ -108,7 +114,9 @@ describe('Component Snapshots', () => {
     });
 
     it('Textarea snapshot', () => {
-        const { container } = render(Textarea, { props: { label: 'Bio', placeholder: 'Tell about yourself' } });
+        const { container } = render(Textarea, {
+            props: { label: 'Bio', placeholder: 'Tell about yourself' }
+        });
         expect(container.innerHTML).toMatchSnapshot();
     });
 
@@ -118,7 +126,9 @@ describe('Component Snapshots', () => {
     });
 
     it('Skeleton circle snapshot', () => {
-        const { container } = render(Skeleton, { props: { width: '48px', height: '48px', circle: true } });
+        const { container } = render(Skeleton, {
+            props: { width: '48px', height: '48px', circle: true }
+        });
         expect(container.innerHTML).toMatchSnapshot();
     });
 
@@ -154,7 +164,13 @@ describe('Component Snapshots', () => {
 
     it('Select snapshot', () => {
         const { container } = render(Select, {
-            props: { options: [{ value: '1', label: 'One' }, { value: '2', label: 'Two' }], placeholder: 'Select...' }
+            props: {
+                options: [
+                    { value: '1', label: 'One' },
+                    { value: '2', label: 'Two' }
+                ],
+                placeholder: 'Select...'
+            }
         });
         expect(container.innerHTML).toMatchSnapshot();
     });
@@ -182,7 +198,9 @@ describe('Component Snapshots', () => {
     });
 
     it('MarkdownRenderer snapshot', () => {
-        const { container } = render(MarkdownRenderer, { props: { source: '# Title\n\n**Bold** and *italic*\n\n- list item' } });
+        const { container } = render(MarkdownRenderer, {
+            props: { source: '# Title\n\n**Bold** and *italic*\n\n- list item' }
+        });
         expect(container.innerHTML).toMatchSnapshot();
     });
 

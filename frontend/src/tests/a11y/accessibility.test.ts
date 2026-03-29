@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
+import type { Component } from 'svelte';
 import SnippetWrapper from '../helpers/SnippetWrapper.svelte';
 import Button from '$lib/components/ui/Button.svelte';
 import Input from '$lib/components/ui/Input.svelte';
@@ -8,8 +9,12 @@ import Checkbox from '$lib/components/ui/Checkbox.svelte';
 import Textarea from '$lib/components/ui/Textarea.svelte';
 import Select from '$lib/components/ui/Select.svelte';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderWithSnippet(component: any, props: Record<string, unknown> = {}, text = 'Content') {
+function renderWithSnippet(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    component: Component<any>,
+    props: Record<string, unknown> = {},
+    text = 'Content'
+) {
     return render(SnippetWrapper, { props: { component, props, text } });
 }
 
@@ -67,7 +72,7 @@ describe('Accessibility', () => {
         it('number stepper buttons have aria-labels', () => {
             const { container } = render(Input, { props: { type: 'number' } });
             const steppers = container.querySelectorAll('.stepper');
-            steppers.forEach(stepper => {
+            steppers.forEach((stepper) => {
                 expect(stepper.getAttribute('aria-label')).toBeTruthy();
             });
         });
@@ -123,14 +128,20 @@ describe('Accessibility', () => {
         });
 
         it('renders title when provided', () => {
-            const { container } = renderWithSnippet(Modal, { open: true, title: 'Accessible Title', onclose: vi.fn() });
+            const { container } = renderWithSnippet(Modal, {
+                open: true,
+                title: 'Accessible Title',
+                onclose: vi.fn()
+            });
             expect(container.textContent).toContain('Accessible Title');
         });
     });
 
     describe('Select', () => {
         it('renders with listbox role for accessibility', () => {
-            const { container } = render(Select, { props: { options: [{ value: 'a', label: 'A' }] } });
+            const { container } = render(Select, {
+                props: { options: [{ value: 'a', label: 'A' }] }
+            });
             const selectGroup = container.querySelector('.select-group');
             expect(selectGroup).toBeInTheDocument();
         });
@@ -152,7 +163,7 @@ describe('Accessibility', () => {
         it('number input steppers have tabindex=-1 to skip tab order', () => {
             const { container } = render(Input, { props: { type: 'number' } });
             const steppers = container.querySelectorAll('.stepper');
-            steppers.forEach(stepper => {
+            steppers.forEach((stepper) => {
                 expect(stepper.getAttribute('tabindex')).toBe('-1');
             });
         });
