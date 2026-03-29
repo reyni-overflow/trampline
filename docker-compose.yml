@@ -1,0 +1,183 @@
+services:
+    certs:
+        image: alpine:3.21
+        command: sh /certs/generate.sh
+        volumes:
+            - ./traefik/certs/generate.sh:/certs/generate.sh:ro
+            - certs:/etc/traefik/certs
+
+    traefik:
+        image: traefik:3.6
+        command:
+            - --api.dashboard=true
+            - --providers.file.filename=/etc/traefik/dynamic.yml
+            - --providers.file.watch=true
+            - --entrypoints.web.address=:80
+            - --entrypoints.websecure.address=:443
+        ports:
+            - "80:80"
+            - "443:443"
+        environment:
+            - TRAEFIK_DASHBOARD_AUTH=${TRAEFIK_DASHBOARD_AUTH:-}
+        volumes:
+            - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+            - certs:/etc/traefik/certs:ro
+        depends_on:
+            certs:
+                condition: service_completed_successfully
+        networks:
+            - trampline-net
+        deploy:
+            resources:
+                limits:
+                    memory: 256M
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+            args:
+                PUBLIC_API_URL: ${PUBLIC_API_URL:-/api}
+                PUBLIC_CONTACT_EMAIL: ${PUBLIC_CONTACT_EMAIL}
+                PUBLIC_LINK_TELEGRAM: ${PUBLIC_LINK_TELEGRAM}
+                PUBLIC_LINK_VK: ${PUBLIC_LINK_VK}
+                PUBLIC_LINK_DZEN: ${PUBLIC_LINK_DZEN}
+                PUBLIC_LINK_MAX: ${PUBLIC_LINK_MAX}
+                PUBLIC_BOT_TELEGRAM: ${PUBLIC_BOT_TELEGRAM}
+                PUBLIC_BOT_VK: ${PUBLIC_BOT_VK}
+                PUBLIC_BOT_MAX: ${PUBLIC_BOT_MAX}
+                PUBLIC_MOBILE_APP_LINK: ${PUBLIC_MOBILE_APP_LINK}
+        ports:
+            - "3000:8080"
+        restart: unless-stopped
+        read_only: true
+        tmpfs:
+            - /var/cache/nginx
+            - /var/run
+            - /tmp
+        networks:
+            - trampline-net
+        deploy:
+            resources:
+                limits:
+                    memory: 128M
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: src/Trampline.Web/Dockerfile
+        ports:
+            - "7103:8080"
+        restart: unless-stopped
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Production
+            - ASPNETCORE_URLS=http://+:8080
+            - ConnectionStrings__DefaultConnection=Host=postgres;Database=trampline;Username=admin;Password=${POSTGRES_PASSWORD}
+            - ConnectionStrings__Redis=valkey:6379,password=${REDIS_PASSWORD}
+            - IPINFO_TOKEN=${IPINFO_TOKEN}
+            - Jwt__Key=${JWT_KEY}
+            - Jwt__Issuer=${JWT_ISSUER}
+            - Jwt__Audience=${JWT_AUDIENCE}
+            - DaData__Token=${DADATA_TOKEN}
+            - DaData__Secret=${DADATA_SECRET}
+            - Smtp__Host=${SMTP_HOST:-}
+            - Smtp__Port=${SMTP_PORT:-587}
+            - Smtp__Username=${SMTP_USERNAME:-}
+            - Smtp__Password=${SMTP_PASSWORD:-}
+            - Smtp__FromEmail=${SMTP_FROM_EMAIL:-}
+            - CORS_ORIGINS=${CORS_ORIGINS}
+            - AllowedHosts=${ALLOWED_HOSTS:-trampline.localhost;api.trampline.localhost}
+            - STORAGE_PROVIDER=${STORAGE_PROVIDER:-local}
+            - Minio__Endpoint=${MINIO_ENDPOINT:-minio:9000}
+            - Minio__AccessKey=${MINIO_ACCESS_KEY:-minioadmin}
+            - Minio__SecretKey=${MINIO_SECRET_KEY:-minioadmin}
+            - Minio__Bucket=${MINIO_BUCKET:-trampline}
+            - Minio__UseSsl=false
+        volumes:
+            - dp-keys:/app/data-protection-keys
+            - uploads:/app/files
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 15s
+        depends_on:
+            postgres:
+                condition: service_healthy
+            valkey:
+                condition: service_started
+        networks:
+            - trampline-net
+        deploy:
+            resources:
+                limits:
+                    memory: 512M
+
+    postgres:
+        image: postgres:17-alpine
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: trampline
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U admin -d trampline"]
+            interval: 5s
+            timeout: 3s
+            retries: 5
+        networks:
+            - trampline-net
+        deploy:
+            resources:
+                limits:
+                    memory: 512M
+
+    valkey:
+        image: valkey/valkey:9-alpine
+        command: valkey-server --requirepass ${REDIS_PASSWORD} --maxmemory 128mb --maxmemory-policy allkeys-lru
+        healthcheck:
+            test: ["CMD", "valkey-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+            interval: 5s
+            timeout: 3s
+            retries: 5
+        networks:
+            - trampline-net
+        deploy:
+            resources:
+                limits:
+                    memory: 192M
+
+    minio:
+        image: minio/minio:latest
+        command: server /data --console-address ":9001"
+        environment:
+            MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+            MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+        ports:
+            - "9001:9001"
+        volumes:
+            - minio-data:/data
+        healthcheck:
+            test: ["CMD", "mc", "ready", "local"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        networks:
+            - trampline-net
+        deploy:
+            resources:
+                limits:
+                    memory: 512M
+
+volumes:
+    postgres-data:
+    dp-keys:
+    uploads:
+    certs:
+    minio-data:
+
+networks:
+    trampline-net:
+        driver: bridge

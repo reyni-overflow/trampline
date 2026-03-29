@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+frontend/build/
+frontend/.svelte-kit/
+backend/**/bin/
+backend/**/obj/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln.docstates
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Docker volumes
+postgres-data/
+minio-data/
+
+# Misc
+*.log

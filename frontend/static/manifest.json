@@ -1,0 +1,20 @@
+{
+    "name": "Трамплин · карьерная платформа",
+    "short_name": "Трамплин",
+
+    "description": "Платформа для студентов и выпускников: вакансии, стажировки, мероприятия",
+
+    "start_url": "/",
+    "display": "standalone",
+
+    "theme_color": "#737373",
+    "background_color": "#0a0a0a",
+
+    "icons": [
+        { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+        { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+    ],
+
+    "categories": ["business", "education"],
+    "lang": "ru"
+}

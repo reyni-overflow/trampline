@@ -1,0 +1,121 @@
+http:
+    routers:
+        frontend:
+            rule: "Host(`trampline.localhost`)"
+            entryPoints:
+                - web
+            service: frontend
+            middlewares:
+                - https-redirect
+
+        frontend-secure:
+            rule: "Host(`trampline.localhost`)"
+            entryPoints:
+                - websecure
+            service: frontend
+            tls: {}
+
+        backend:
+            rule: "Host(`api.trampline.localhost`)"
+            entryPoints:
+                - web
+            service: backend
+            middlewares:
+                - https-redirect
+
+        backend-secure:
+            rule: "Host(`api.trampline.localhost`)"
+            entryPoints:
+                - websecure
+            service: backend
+            middlewares:
+                - api-security-headers
+                - rate-limit
+            tls: {}
+
+        minio-files:
+            rule: "Host(`api.trampline.localhost`) && (PathPrefix(`/files/photos`) || PathPrefix(`/files/videos`))"
+            entryPoints:
+                - web
+            service: minio
+            middlewares:
+                - https-redirect
+
+        minio-files-secure:
+            rule: "Host(`api.trampline.localhost`) && (PathPrefix(`/files/photos`) || PathPrefix(`/files/videos`))"
+            entryPoints:
+                - websecure
+            service: minio
+            middlewares:
+                - minio-path-rewrite
+                - rate-limit
+            tls: {}
+
+        dashboard:
+            rule: "Host(`traefik.trampline.localhost`)"
+            entryPoints:
+                - web
+            service: api@internal
+            middlewares:
+                - https-redirect
+
+        dashboard-secure:
+            rule: "Host(`traefik.trampline.localhost`)"
+            entryPoints:
+                - websecure
+            service: api@internal
+            middlewares:
+                - dashboard-auth
+            tls: {}
+
+    services:
+        frontend:
+            loadBalancer:
+                servers:
+                    - url: "http://frontend:8080"
+
+        backend:
+            loadBalancer:
+                servers:
+                    - url: "http://backend:8080"
+
+        minio:
+            loadBalancer:
+                servers:
+                    - url: "http://minio:9000"
+
+    middlewares:
+        https-redirect:
+            redirectScheme:
+                scheme: https
+                permanent: true
+        api-security-headers:
+            headers:
+                frameDeny: true
+                contentTypeNosniff: true
+                browserXssFilter: true
+                referrerPolicy: strict-origin-when-cross-origin
+                permissionsPolicy: "geolocation=(), camera=(), microphone=()"
+                contentSecurityPolicy: "default-src 'none'; frame-ancestors 'none'"
+                stsSeconds: 31536000
+                stsIncludeSubdomains: true
+        rate-limit:
+            rateLimit:
+                average: 100
+                burst: 50
+                period: 1s
+        minio-path-rewrite:
+            replacePathRegex:
+                regex: "^/files/(.*)"
+                replacement: "/trampline/$1"
+        dashboard-auth:
+            basicAuth:
+                users:
+                    - "{{ env `TRAEFIK_DASHBOARD_AUTH` }}"
+
+tls:
+    stores:
+        default:
+            defaultCertificate:
+                certFile: /etc/traefik/certs/local.pem
+                keyFile: /etc/traefik/certs/local-key.pem

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Трамплин · нет подключения</title>
+    <style>
+      @import url('/fonts/manrope.css');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+        background: #0a0a0a;
+        color: #e5e5e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100dvh;
+        padding: 1.5rem;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 400px;
+      }
+
+      .logo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+      }
+
+      p {
+        color: #a3a3a3;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 2rem;
+      }
+
+      button {
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0.625rem 1.5rem;
+        border: 1px solid #404040;
+        border-radius: 8px;
+        background: #171717;
+        color: #e5e5e5;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+      }
+
+      button:hover {
+        background: #262626;
+        border-color: #525252;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+        <path d="M 90 160 L 90 80" fill="none" stroke="#e5e5e5" stroke-width="20" stroke-linecap="round" />
+        <path d="M 30 100 L 135 65" fill="none" stroke="#e5e5e5" stroke-width="20" stroke-linecap="round" />
+        <circle cx="165" cy="55" r="14" fill="#e5e5e5" />
+      </svg>
+      <h1>Нет подключения к интернету</h1>
+      <p>Проверьте соединение и попробуйте снова</p>
+      <button onclick="location.reload()">Обновить</button>
+    </div>
+  </body>
+</html>

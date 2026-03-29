@@ -1,0 +1,90 @@
+/*
+  Accent is applied via [data-accent] attribute on <html>.
+  Each accent defines:
+    --accent          main color
+    --accent-hover    hover state
+    --accent-subtle   ghost bg, badges
+    --accent-contrast text on accent bg
+*/
+
+[data-theme="dark"][data-accent="neutral"] {
+    --accent: #FFFFFF;
+    --accent-hover: #E0E0E0;
+    --accent-subtle: rgba(255, 255, 255, 0.1);
+    --accent-contrast: #000000;
+}
+[data-theme="light"][data-accent="neutral"] {
+    --accent: #000000;
+    --accent-hover: #1A1A1A;
+    --accent-subtle: rgba(0, 0, 0, 0.08);
+    --accent-contrast: #FFFFFF;
+}
+
+
+[data-accent="yellow"] {
+    --accent: #FACC15;
+    --accent-hover: #EAB308;
+    --accent-subtle: rgba(250, 204, 21, 0.15);
+    --accent-contrast: #000000;
+}
+
+
+[data-accent="blue"] {
+    --accent: #3B82F6;
+    --accent-hover: #2563EB;
+    --accent-subtle: rgba(59, 130, 246, 0.15);
+    --accent-contrast: #FFFFFF;
+}
+
+
+[data-accent="purple"] {
+    --accent: #8B5CF6;
+    --accent-hover: #7C3AED;
+    --accent-subtle: rgba(139, 92, 246, 0.15);
+    --accent-contrast: #FFFFFF;
+}
+
+
+[data-accent="teal"] {
+    --accent: #06B6D4;
+    --accent-hover: #0891B2;
+    --accent-subtle: rgba(6, 182, 212, 0.15);
+    --accent-contrast: #000000;
+}
+
+
+[data-accent="green"] {
+    --accent: #10B981;
+    --accent-hover: #059669;
+    --accent-subtle: rgba(16, 185, 129, 0.15);
+    --accent-contrast: #000000;
+}
+
+
+[data-accent="pink"] {
+    --accent: #EC4899;
+    --accent-hover: #DB2777;
+    --accent-subtle: rgba(236, 72, 153, 0.15);
+    --accent-contrast: #FFFFFF;
+}
+
+
+[data-accent="orange"] {
+    --accent: #F97316;
+    --accent-hover: #EA580C;
+    --accent-subtle: rgba(249, 115, 22, 0.15);
+    --accent-contrast: #000000;
+}
+
+
+[data-accent="red"] {
+    --accent: #EF4444;
+    --accent-hover: #DC2626;
+    --accent-subtle: rgba(239, 68, 68, 0.15);
+    --accent-contrast: #FFFFFF;
+}
+
+
+[data-accent] {
+    --border-focus: var(--accent);
+}

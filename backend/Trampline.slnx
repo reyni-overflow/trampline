@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../docker-compose.yml" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Trampline.Application/Trampline.Application.csproj" />
+    <Project Path="src/Trampline.Contracts/Trampline.Contracts.csproj" />
+    <Project Path="src/Trampline.Core/Trampline.Core.csproj" />
+    <Project Path="src/Trampline.Infrastructure.Postgres/Trampline.Infrastructure.Postgres.csproj" />
+    <Project Path="src/Trampline.Infrastructure.Redis/Trampline.Infrastructure.Redis.csproj" />
+    <Project Path="src/Trampline.Shared/Trampline.Shared.csproj" />
+    <Project Path="src/Trampline.Web/Trampline.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Trampline.Tests/Trampline.Tests.csproj" />
+  </Folder>
+</Solution>
