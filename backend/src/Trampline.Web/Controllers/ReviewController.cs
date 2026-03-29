@@ -9,6 +9,7 @@ using Trampline.Contracts.DTOs.Responses;
 using Trampline.Core.Models;
 using Microsoft.AspNetCore.RateLimiting;
 using Trampline.Core.Repositories;
+using Trampline.Application.Utils;
 
 namespace Trampline.Web.Controllers;
 
@@ -86,7 +87,7 @@ public class ReviewController(
             UserId = guid,
             AuthorName = authorName,
             AuthorRole = authorRole,
-            Text = request.Text.Trim(),
+            Text = HtmlSanitization.Sanitize(request.Text.Trim()),
             Rating = request.Rating,
             IsApproved = false,
             CreatedAt = DateTime.UtcNow
