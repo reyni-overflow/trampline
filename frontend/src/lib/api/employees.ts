@@ -1,5 +1,6 @@
 import { api } from './client';
 import type { EmployeeProfileResponse } from './auth';
+import type { PaginatedResponse } from './jobs';
 
 export interface EmployeeProfileRequest {
     name: string;
@@ -23,7 +24,9 @@ export interface FindResponse {
 
 export const employeesApi = {
     getAll(pageNumber = 1, pageSize = 10) {
-        return api.get<{ items: EmployeeProfileResponse[]; total: number }>(`/employee?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+        return api.get<PaginatedResponse<EmployeeProfileResponse>>(
+            `/employee?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        );
     },
 
     getById(id: string) {

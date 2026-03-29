@@ -10,7 +10,12 @@
     import Textarea from '$lib/components/ui/Textarea.svelte';
     import { toast } from '$lib/stores/toast';
     import { isAuthenticated } from '$lib/stores/auth';
-    import { jobsApi, type JobResponse, type TagResponse, type TagStatsResponse } from '$lib/api/jobs';
+    import {
+        jobsApi,
+        type JobResponse,
+        type TagResponse,
+        type TagStatsResponse
+    } from '$lib/api/jobs';
     import { employeesApi } from '$lib/api/employees';
     import { eventsApi } from '$lib/api/events';
     import { mentorshipsApi } from '$lib/api/mentorships';
@@ -25,7 +30,13 @@
 
     let latestJobs = $state<JobResponse[]>([]);
     let landingView = $state<'list' | 'map'>('list');
-    let statsValues = $state({ companies: '0', jobs: '0', seekers: '0', events: '0', mentorships: '0' });
+    let statsValues = $state({
+        companies: '0',
+        jobs: '0',
+        seekers: '0',
+        events: '0',
+        mentorships: '0'
+    });
     let directionTags = $state<TagResponse[]>([]);
     let tagStats = $state<TagStatsResponse[]>([]);
     let apiReviews = $state<ReviewResponse[]>([]);
@@ -59,54 +70,81 @@
         }
     });
 
-    let mapMarkers = $derived(latestJobs.map((j, i) => {
-        const coords = (j.geoLat && j.geoLon) ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
-        return { id: j.id, lat: coords[0], lng: coords[1], title: j.title, company: j.city, salary: formatSalary(j.salaryFrom, j.salaryTo), tags: j.tags?.map(t => typeof t === 'string' ? t : t.name), type: j.type };
-    }));
+    let mapMarkers = $derived(
+        latestJobs.map((j, i) => {
+            const coords = j.geoLat && j.geoLon ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
+            return {
+                id: j.id,
+                lat: coords[0],
+                lng: coords[1],
+                title: j.title,
+                company: j.city,
+                salary: formatSalary(j.salaryFrom, j.salaryTo),
+                tags: j.tags?.map((t) => (typeof t === 'string' ? t : t.name)),
+                type: j.type
+            };
+        })
+    );
 
     onMount(async () => {
         try {
             const data = await jobsApi.getAll(1, 6);
             latestJobs = data.items || [];
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
 
         try {
             tagStats = await jobsApi.getTagStats();
-            directionTags = tagStats.map(s => ({ id: s.id, name: s.name, category: s.category, lvl: 0 }));
+            directionTags = tagStats.map((s) => ({
+                id: s.id,
+                name: s.name,
+                category: s.category,
+                lvl: 0
+            }));
         } catch {
             // fallback to getTags
             try {
                 directionTags = await jobsApi.getTags();
-            } catch { /* ignored */ }
+            } catch {
+                /* ignored */
+            }
         }
 
         try {
             apiReviews = await reviewsApi.getApproved();
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
 
         try {
             const companyList = await employeesApi.getAll(1, 8);
             if (companyList.items?.length > 0) {
-                apiCompanies = companyList.items.map(c => c.name);
+                apiCompanies = companyList.items.map((c) => c.name);
             }
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
 
         try {
-            const [jobsData, companiesData, eventsData, seekersData, mentorshipsData] = await Promise.all([
-                jobsApi.getAll(1, 1).catch(() => ({ totalCount: 0 })),
-                employeesApi.getAll(1, 1).catch(() => ({ total: 0 })),
-                eventsApi.getAll(1, 1).catch(() => ({ totalCount: 0 })),
-                workersApi.getCount().catch(() => ({ count: 0 })),
-                mentorshipsApi.getAll(1, 1).catch(() => ({ totalCount: 0 }))
-            ]);
+            const [jobsData, companiesData, eventsData, seekersData, mentorshipsData] =
+                await Promise.all([
+                    jobsApi.getAll(1, 1).catch(() => ({ totalCount: 0 })),
+                    employeesApi.getAll(1, 1).catch(() => ({ totalCount: 0 })),
+                    eventsApi.getAll(1, 1).catch(() => ({ totalCount: 0 })),
+                    workersApi.getCount().catch(() => ({ count: 0 })),
+                    mentorshipsApi.getAll(1, 1).catch(() => ({ totalCount: 0 }))
+                ]);
             statsValues = {
-                companies: String((companiesData as { total: number }).total || 0),
+                companies: String((companiesData as { totalCount: number }).totalCount || 0),
                 jobs: String((jobsData as { totalCount: number }).totalCount || 0),
                 seekers: String((seekersData as { count: number }).count || 0),
                 events: String((eventsData as { totalCount: number }).totalCount || 0),
                 mentorships: String((mentorshipsData as { totalCount: number }).totalCount || 0)
             };
-        } catch { /* ignored */ }
+        } catch {
+            /* ignored */
+        }
     });
 
     const steps = $derived([
@@ -147,17 +185,27 @@
         soft: $t('category.soft')
     });
 
-    const categoryOrder = ['tech', 'design', 'marketing', 'management', 'event', 'soft', 'finance', 'education', 'legal'];
+    const categoryOrder = [
+        'tech',
+        'design',
+        'marketing',
+        'management',
+        'event',
+        'soft',
+        'finance',
+        'education',
+        'legal'
+    ];
 
     function getTagJobCount(tagName: string): number {
-        const stat = tagStats.find(s => s.name === tagName);
+        const stat = tagStats.find((s) => s.name === tagName);
         return stat?.totalCount ?? 0;
     }
 
     let groupedTags = $derived.by(() => {
         const groups: { label: string; tags: TagResponse[] }[] = [];
         for (const cat of categoryOrder) {
-            const tags = directionTags.filter(t => t.category === cat);
+            const tags = directionTags.filter((t) => t.category === cat);
             if (tags.length > 0) {
                 groups.push({ label: categoryLabels[cat] || cat, tags });
             }
@@ -173,20 +221,60 @@
     });
 
     const hardcodedReviews = $derived([
-        { name: $t('landing.review0Name'), role: $t('landing.review0Role'), text: $t('landing.review0Text') },
-        { name: $t('landing.review1Name'), role: $t('landing.review1Role'), text: $t('landing.review1Text') },
-        { name: $t('landing.review2Name'), role: $t('landing.review2Role'), text: $t('landing.review2Text') },
-        { name: $t('landing.review3Name'), role: $t('landing.review3Role'), text: $t('landing.review3Text') },
-        { name: $t('landing.review4Name'), role: $t('landing.review4Role'), text: $t('landing.review4Text') },
-        { name: $t('landing.review5Name'), role: $t('landing.review5Role'), text: $t('landing.review5Text') },
-        { name: $t('landing.review6Name'), role: $t('landing.review6Role'), text: $t('landing.review6Text') },
-        { name: $t('landing.review7Name'), role: $t('landing.review7Role'), text: $t('landing.review7Text') },
-        { name: $t('landing.review8Name'), role: $t('landing.review8Role'), text: $t('landing.review8Text') },
-        { name: $t('landing.review9Name'), role: $t('landing.review9Role'), text: $t('landing.review9Text') }
+        {
+            name: $t('landing.review0Name'),
+            role: $t('landing.review0Role'),
+            text: $t('landing.review0Text')
+        },
+        {
+            name: $t('landing.review1Name'),
+            role: $t('landing.review1Role'),
+            text: $t('landing.review1Text')
+        },
+        {
+            name: $t('landing.review2Name'),
+            role: $t('landing.review2Role'),
+            text: $t('landing.review2Text')
+        },
+        {
+            name: $t('landing.review3Name'),
+            role: $t('landing.review3Role'),
+            text: $t('landing.review3Text')
+        },
+        {
+            name: $t('landing.review4Name'),
+            role: $t('landing.review4Role'),
+            text: $t('landing.review4Text')
+        },
+        {
+            name: $t('landing.review5Name'),
+            role: $t('landing.review5Role'),
+            text: $t('landing.review5Text')
+        },
+        {
+            name: $t('landing.review6Name'),
+            role: $t('landing.review6Role'),
+            text: $t('landing.review6Text')
+        },
+        {
+            name: $t('landing.review7Name'),
+            role: $t('landing.review7Role'),
+            text: $t('landing.review7Text')
+        },
+        {
+            name: $t('landing.review8Name'),
+            role: $t('landing.review8Role'),
+            text: $t('landing.review8Text')
+        },
+        {
+            name: $t('landing.review9Name'),
+            role: $t('landing.review9Role'),
+            text: $t('landing.review9Text')
+        }
     ]);
 
     const reviews = $derived([
-        ...apiReviews.map(r => ({ name: r.authorName, role: r.authorRole, text: r.text })),
+        ...apiReviews.map((r) => ({ name: r.authorName, role: r.authorRole, text: r.text })),
         ...hardcodedReviews
     ]);
 
@@ -227,8 +315,14 @@
 
     let apiCompanies = $state<string[]>([]);
     const mockCompanies = $derived([
-        $t('landing.company0'), $t('landing.company1'), $t('landing.company2'), $t('landing.company3'),
-        $t('landing.company4'), $t('landing.company5'), $t('landing.company6'), $t('landing.company7')
+        $t('landing.company0'),
+        $t('landing.company1'),
+        $t('landing.company2'),
+        $t('landing.company3'),
+        $t('landing.company4'),
+        $t('landing.company5'),
+        $t('landing.company6'),
+        $t('landing.company7')
     ]);
     const companies = $derived(apiCompanies.length > 0 ? apiCompanies : mockCompanies);
 
@@ -251,7 +345,18 @@
         return { destroy: () => observer.disconnect() };
     }
 
-    const jsonLd = $derived('<script type="application/ld+json">' + JSON.stringify({"@context":"https://schema.org","@type":"WebSite","name":"Трамплин","url":"https://trampline.localhost","description": $t('seo.landingDesc')}) + '</' + 'script>');
+    const jsonLd = $derived(
+        '<script type="application/ld+json">' +
+            JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'Трамплин',
+                url: 'https://trampline.localhost',
+                description: $t('seo.landingDesc')
+            }) +
+            '</' +
+            'script>'
+    );
 </script>
 
 <svelte:head>
@@ -266,15 +371,25 @@
 
 <div class="landing">
     <section class="hero">
-        <h1 class="hero-title">{#each $t('landing.heroTitle').split('\n') as line, i (i)}{#if i > 0}<br/>{/if}{line}{/each}</h1>
+        <h1 class="hero-title">
+            {#each $t('landing.heroTitle').split('\n') as line, i (i)}{#if i > 0}<br
+                    />{/if}{line}{/each}
+        </h1>
         <p class="hero-subtitle">{$t('landing.heroSubtitle')}</p>
         <div class="hero-actions">
             <Button href="/jobs" size="lg">{$t('landing.findOpportunities')}</Button>
-            <Button variant="outline" size="lg" onclick={() => authModal.openRegister('Employee')}>{$t('landing.imEmployer')}</Button>
+            <Button variant="outline" size="lg" onclick={() => authModal.openRegister('Employee')}
+                >{$t('landing.imEmployer')}</Button
+            >
         </div>
     </section>
 
-    <section class="section steps" data-section="steps" use:observeSection class:visible={visibleSections.has('steps')}>
+    <section
+        class="section steps"
+        data-section="steps"
+        use:observeSection
+        class:visible={visibleSections.has('steps')}
+    >
         <div class="container">
             <h2 class="section-title">{$t('landing.howItWorks')}</h2>
             <div class="steps-grid">
@@ -282,7 +397,16 @@
                     <div class="step-card" style="animation-delay: {i * 100}ms">
                         <span class="step-number">{i + 1}</span>
                         <span class="step-icon">
-                            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="28"
+                                height="28"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
                                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                                 {@html step.icon}
                             </svg>
@@ -295,7 +419,12 @@
         </div>
     </section>
 
-    <section class="section stats" data-section="stats" use:observeSection class:visible={visibleSections.has('stats')}>
+    <section
+        class="section stats"
+        data-section="stats"
+        use:observeSection
+        class:visible={visibleSections.has('stats')}
+    >
         <div class="container">
             <div class="stats-grid">
                 {#each stats as stat, i (stat.label)}
@@ -308,22 +437,82 @@
         </div>
     </section>
 
-    <section class="section opportunities" data-section="opps" use:observeSection class:visible={visibleSections.has('opps')}>
+    <section
+        class="section opportunities"
+        data-section="opps"
+        use:observeSection
+        class:visible={visibleSections.has('opps')}
+    >
         <div class="container">
             <div class="opps-header">
                 <h2 class="section-title">{$t('landing.latestOpportunities')}</h2>
                 <div class="opps-toggle">
-                    <button class="opps-btn" class:active={landingView === 'list'} type="button" onclick={() => landingView = 'list'} aria-label={$t('events.listView')}>
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    <button
+                        class="opps-btn"
+                        class:active={landingView === 'list'}
+                        type="button"
+                        onclick={() => (landingView = 'list')}
+                        aria-label={$t('events.listView')}
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            ><line x1="8" y1="6" x2="21" y2="6" /><line
+                                x1="8"
+                                y1="12"
+                                x2="21"
+                                y2="12"
+                            /><line x1="8" y1="18" x2="21" y2="18" /><line
+                                x1="3"
+                                y1="6"
+                                x2="3.01"
+                                y2="6"
+                            /><line x1="3" y1="12" x2="3.01" y2="12" /><line
+                                x1="3"
+                                y1="18"
+                                x2="3.01"
+                                y2="18"
+                            /></svg
+                        >
                     </button>
-                    <button class="opps-btn" class:active={landingView === 'map'} type="button" onclick={() => landingView = 'map'} aria-label={$t('map.title')}>
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <button
+                        class="opps-btn"
+                        class:active={landingView === 'map'}
+                        type="button"
+                        onclick={() => (landingView = 'map')}
+                        aria-label={$t('map.title')}
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle
+                                cx="12"
+                                cy="10"
+                                r="3"
+                            /></svg
+                        >
                     </button>
                 </div>
             </div>
             {#if landingView === 'map'}
                 <div class="opps-map">
-                    <MapView markers={mapMarkers} center={[55.751, 37.618]} zoom={4} height="24rem" />
+                    <MapView
+                        markers={mapMarkers}
+                        center={[55.751, 37.618]}
+                        zoom={4}
+                        height="24rem"
+                    />
                 </div>
             {:else}
                 <div class="opps-grid">
@@ -340,7 +529,12 @@
         </div>
     </section>
 
-    <section class="section directions" data-section="dirs" use:observeSection class:visible={visibleSections.has('dirs')}>
+    <section
+        class="section directions"
+        data-section="dirs"
+        use:observeSection
+        class:visible={visibleSections.has('dirs')}
+    >
         <div class="container">
             <h2 class="section-title">{$t('landing.popularDirections')}</h2>
             <p class="section-subtitle">{$t('landing.findInField')}</p>
@@ -351,17 +545,27 @@
                         class="directions-tab"
                         class:active={activeCategory === group.label}
                         type="button"
-                        onclick={(e) => handleTabClick(group.label, e)}
-                    >{group.label}</button>
+                        onclick={(e) => handleTabClick(group.label, e)}>{group.label}</button
+                    >
                 {/each}
             </div>
             <div class="directions-tags">
                 {#each groupedTags as group (group.label)}
                     {#if activeCategory === group.label}
                         {#each group.tags as tag (tag.name)}
-                            <Tag clickable onclick={() => goto(`/jobs?tags=${encodeURIComponent(tag.name)}`)}>
+                            <Tag
+                                clickable
+                                onclick={() => goto(`/jobs?tags=${encodeURIComponent(tag.name)}`)}
+                            >
                                 {tag.name}{#if tagStats.length > 0 && getTagJobCount(tag.name) > 0}
-                                    <span class="tag-count">{pluralForm(getTagJobCount(tag.name), `${getTagJobCount(tag.name)} ${tGet('plural.opportunityOne')}`, `${getTagJobCount(tag.name)} ${tGet('plural.opportunityFew')}`, `${getTagJobCount(tag.name)} ${tGet('plural.opportunityMany')}`)}</span>
+                                    <span class="tag-count"
+                                        >{pluralForm(
+                                            getTagJobCount(tag.name),
+                                            `${getTagJobCount(tag.name)} ${tGet('plural.opportunityOne')}`,
+                                            `${getTagJobCount(tag.name)} ${tGet('plural.opportunityFew')}`,
+                                            `${getTagJobCount(tag.name)} ${tGet('plural.opportunityMany')}`
+                                        )}</span
+                                    >
                                 {/if}
                             </Tag>
                         {/each}
@@ -371,10 +575,17 @@
         </div>
     </section>
 
-    <section class="section reviews" data-section="reviews" use:observeSection class:visible={visibleSections.has('reviews')}>
+    <section
+        class="section reviews"
+        data-section="reviews"
+        use:observeSection
+        class:visible={visibleSections.has('reviews')}
+    >
         <h2 class="section-title">{$t('landing.userReviews')}</h2>
         <div class="reviews-action">
-            <Button variant="outline" size="sm" onclick={openReviewModal}>{$t('landing.writeReview')}</Button>
+            <Button variant="outline" size="sm" onclick={openReviewModal}
+                >{$t('landing.writeReview')}</Button
+            >
         </div>
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
@@ -400,7 +611,12 @@
         </div>
     </section>
 
-    <section class="section companies" data-section="companies" use:observeSection class:visible={visibleSections.has('companies')}>
+    <section
+        class="section companies"
+        data-section="companies"
+        use:observeSection
+        class:visible={visibleSections.has('companies')}
+    >
         <div class="container">
             <h2 class="section-title">{$t('landing.companiesOnPlatform')}</h2>
             <div class="companies-row">
@@ -417,13 +633,20 @@
         </div>
     </section>
 
-    <section class="section cta" data-section="cta" use:observeSection class:visible={visibleSections.has('cta')}>
+    <section
+        class="section cta"
+        data-section="cta"
+        use:observeSection
+        class:visible={visibleSections.has('cta')}
+    >
         <div class="container">
             <div class="cta-card">
                 <h2 class="cta-title">{$t('landing.readyToStart')}</h2>
                 <p class="cta-subtitle">{$t('landing.joinThousands')}</p>
                 <div class="cta-actions">
-                    <Button size="lg" onclick={() => authModal.openRegister()}>{$t('landing.createAccount')}</Button>
+                    <Button size="lg" onclick={() => authModal.openRegister()}
+                        >{$t('landing.createAccount')}</Button
+                    >
                     <Button size="lg" variant="ghost" href="/jobs">{$t('landing.viewJobs')}</Button>
                 </div>
             </div>
@@ -441,11 +664,22 @@
                         class="star-btn"
                         class:active={star <= reviewRating}
                         type="button"
-                        onclick={() => reviewRating = star}
-                        aria-label="{String(star)}"
+                        onclick={() => (reviewRating = star)}
+                        aria-label={String(star)}
                     >
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill={star <= reviewRating ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            fill={star <= reviewRating ? 'currentColor' : 'none'}
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                            />
                         </svg>
                     </button>
                 {/each}
@@ -456,7 +690,9 @@
             bind:value={reviewText}
             placeholder={$t('landing.reviewTextPlaceholder')}
         />
-        <Button onclick={submitReview} disabled={reviewSubmitting || !reviewText.trim()}>{$t('landing.reviewSubmit')}</Button>
+        <Button onclick={submitReview} disabled={reviewSubmitting || !reviewText.trim()}
+            >{$t('landing.reviewSubmit')}</Button
+        >
     </div>
 </Modal>
 
@@ -503,7 +739,8 @@
         padding: var(--space-16) 0;
         opacity: 0;
         transform: translateY(1.25rem);
-        transition: opacity var(--duration-slow) var(--ease-out),
+        transition:
+            opacity var(--duration-slow) var(--ease-out),
             transform var(--duration-slow) var(--ease-out);
     }
 
@@ -698,7 +935,9 @@
         height: calc(100% - 0.5rem);
         border-radius: var(--radius-full);
         background: var(--accent);
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition:
+            left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 0;
     }
 
@@ -755,7 +994,13 @@
         overflow: hidden;
         margin-top: var(--space-8);
         mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 5%,
+            black 95%,
+            transparent
+        );
     }
 
     .reviews-track {
@@ -770,8 +1015,12 @@
     }
 
     @keyframes marquee {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
     }
 
     .review-card {
@@ -897,12 +1146,14 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
-        .hero-actions, .cta-actions {
+        .hero-actions,
+        .cta-actions {
             flex-direction: column;
             width: 100%;
         }
 
-        .hero-actions :global(.btn), .cta-actions :global(.btn) {
+        .hero-actions :global(.btn),
+        .cta-actions :global(.btn) {
             width: 100%;
         }
     }

@@ -52,7 +52,18 @@ public class AdminController(
             CreatedAt = u.Sessions.MinBy(s => s.CreatedAt)?.CreatedAt
         });
 
-        return Ok(new { items = list, total });
+        var totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+        return Ok(new
+        {
+            items = list,
+            totalCount = total,
+            totalPages,
+            pageSize,
+            currentPage = pageNumber,
+            hasNextPage = pageNumber < totalPages,
+            hasPreviousPage = pageNumber > 1
+        });
     }
 
     [HttpGet("audit")]
@@ -68,7 +79,18 @@ public class AdminController(
         pageNumber = Math.Max(pageNumber, 1);
         var (items, total) = await auditLogRepository.GetPaginatedAsync(pageNumber, pageSize, action, entityType, userId, ct);
 
-        return Ok(new { items, total });
+        var totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+        return Ok(new
+        {
+            items,
+            totalCount = total,
+            totalPages,
+            pageSize,
+            currentPage = pageNumber,
+            hasNextPage = pageNumber < totalPages,
+            hasPreviousPage = pageNumber > 1
+        });
     }
 
     [HttpPut("users/{id:guid}/block")]

@@ -58,10 +58,18 @@ public class EmployeeController(
             });
         }
 
+        var totalCount = list.Item2;
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
         return Ok(new
         {
             items = filtered,
-            total = filtered.Count
+            totalCount,
+            totalPages,
+            pageSize,
+            currentPage = pageNumber,
+            hasNextPage = pageNumber < totalPages,
+            hasPreviousPage = pageNumber > 1
         });
     }
 

@@ -69,7 +69,7 @@ function createNotificationStore() {
         if (!browser) return;
         try {
             const response = await notificationsApi.getAll(page, size);
-            totalFromServer = response.total;
+            totalFromServer = response.totalCount;
             const mapped = response.items.map(mapServerNotification);
             if (page === 1) {
                 set(mapped);
@@ -133,6 +133,7 @@ function createNotificationStore() {
 
 export const notifications = createNotificationStore();
 
-export const unreadCount = derived(notifications, ($notifications) =>
-    $notifications.filter((n) => !n.read).length
+export const unreadCount = derived(
+    notifications,
+    ($notifications) => $notifications.filter((n) => !n.read).length
 );

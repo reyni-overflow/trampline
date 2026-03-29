@@ -12,12 +12,14 @@ export interface NotificationItem {
 
 export interface NotificationsResponse {
     items: NotificationItem[];
-    total: number;
+    totalCount: number;
 }
 
 export const notificationsApi = {
     async getAll(pageNumber = 1, pageSize = 20): Promise<NotificationsResponse> {
-        return api.get<NotificationsResponse>(`/notification?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+        return api.get<NotificationsResponse>(
+            `/notification?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        );
     },
 
     async getUnreadCount(): Promise<{ count: number }> {

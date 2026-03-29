@@ -52,7 +52,18 @@ public class NotificationController(AppDbContext dbContext) : ControllerBase
             })
             .ToListAsync(ct);
 
-        return Ok(new { items, total });
+        var totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+        return Ok(new
+        {
+            items,
+            totalCount = total,
+            totalPages,
+            pageSize,
+            currentPage = pageNumber,
+            hasNextPage = pageNumber < totalPages,
+            hasPreviousPage = pageNumber > 1
+        });
     }
 
     [HttpGet("unread-count")]

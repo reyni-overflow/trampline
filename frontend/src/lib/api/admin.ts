@@ -60,16 +60,27 @@ export interface AuditLogEntry {
 }
 
 export const adminApi = {
-    getAuditLogs(pageNumber = 1, pageSize = 20, action?: string, entityType?: string, userId?: string) {
-        const params = new URLSearchParams({ pageNumber: String(pageNumber), pageSize: String(pageSize) });
+    getAuditLogs(
+        pageNumber = 1,
+        pageSize = 20,
+        action?: string,
+        entityType?: string,
+        userId?: string
+    ) {
+        const params = new URLSearchParams({
+            pageNumber: String(pageNumber),
+            pageSize: String(pageSize)
+        });
         if (action) params.set('action', action);
         if (entityType) params.set('entityType', entityType);
         if (userId) params.set('userId', userId);
-        return api.get<{ items: AuditLogEntry[]; total: number }>(`/admin/audit?${params}`);
+        return api.get<{ items: AuditLogEntry[]; totalCount: number }>(`/admin/audit?${params}`);
     },
 
     async getUsers(pageNumber = 1, pageSize = 20) {
-        const res = await api.get<{ items: AdminUserResponse[]; total: number }>(`/admin/users?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+        const res = await api.get<{ items: AdminUserResponse[]; totalCount: number }>(
+            `/admin/users?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        );
         return res.items;
     },
 
@@ -98,7 +109,14 @@ export const adminApi = {
     },
 
     checkInn(inn: string) {
-        return api.get<{ found: boolean; value?: string; inn?: string; kpp?: string; orgn?: string; type?: string }>(`/admin/verification/check-inn/${inn}`);
+        return api.get<{
+            found: boolean;
+            value?: string;
+            inn?: string;
+            kpp?: string;
+            orgn?: string;
+            type?: string;
+        }>(`/admin/verification/check-inn/${inn}`);
     },
 
     getPendingJobs() {
