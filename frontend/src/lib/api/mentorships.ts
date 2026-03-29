@@ -10,8 +10,8 @@ export interface MentorshipResponse {
     address: string;
     city: string;
     street: string;
-    geoLon: string;
-    geoLat: string;
+    geoLon: number;
+    geoLat: number;
     country: string;
     format: 'Remote' | 'Hybrid' | 'Office';
     maxParticipants?: number;
@@ -66,6 +66,8 @@ export interface MentorshipApplicationResponse {
     id: string;
     coverLetter: string;
     mentorshipId: string;
+    mentorshipTitle?: string;
+    companyName?: string;
     profile: {
         name: string;
         lastName: string;

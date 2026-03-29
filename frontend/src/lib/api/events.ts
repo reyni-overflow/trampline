@@ -60,6 +60,8 @@ export interface EventApplicationResponse {
     id: string;
     coverLetter: string;
     eventId: string;
+    eventTitle?: string;
+    companyName?: string;
     profile: {
         name: string;
         lastName: string;
