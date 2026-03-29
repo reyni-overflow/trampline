@@ -1,5 +1,7 @@
 import { api } from './client';
 
+export type ContactStatus = 'Pending' | 'Accepted' | 'Declined';
+
 export interface ContactResponse {
     id: string;
     contactUserId: string;
@@ -8,7 +10,7 @@ export interface ContactResponse {
     patronymic: string;
     photo: string | null;
     skills: string[];
-    status: string;
+    status: ContactStatus;
     createdAt: string;
 }
 
@@ -20,7 +22,7 @@ export interface IncomingContactResponse {
     patronymic: string;
     photo: string | null;
     skills: string[];
-    status: string;
+    status: ContactStatus;
     createdAt: string;
 }
 
