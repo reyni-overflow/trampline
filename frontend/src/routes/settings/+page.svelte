@@ -469,12 +469,12 @@
                             <div class="session-row">
                                 <div class="session-info">
                                     <span class="session-device">
-                                        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                                        <span class="session-os-icon"
-                                            >{@html browser
+                                        <span class="session-os-icon">
+                                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                                            {@html browser
                                                 ? DOMPurify.sanitize(session.osIcon)
-                                                : session.osIcon}</span
-                                        >
+                                                : session.osIcon}
+                                        </span>
                                         {session.osName} &middot; {session.browser}
                                         {#if session.current}<Badge variant="success" size="sm"
                                                 >{$t('settings.currentSession')}</Badge

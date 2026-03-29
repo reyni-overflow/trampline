@@ -137,8 +137,11 @@
                             stroke="currentColor"
                             stroke-width="1.75"
                             stroke-linecap="round"
-                            stroke-linejoin="round">{@html stat.icon}</svg
+                            stroke-linejoin="round"
                         >
+                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                            {@html stat.icon}
+                        </svg>
                     </span>
                     <div class="stat-info">
                         <span class="stat-value">{stat.value}</span>

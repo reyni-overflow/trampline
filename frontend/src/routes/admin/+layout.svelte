@@ -122,8 +122,11 @@
                         stroke="currentColor"
                         stroke-width="1.75"
                         stroke-linecap="round"
-                        stroke-linejoin="round">{@html item.icon}</svg
+                        stroke-linejoin="round"
                     >
+                        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                        {@html item.icon}
+                    </svg>
                     <span>{item.label}</span>
                 </a>
             {/each}
