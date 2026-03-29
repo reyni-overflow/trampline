@@ -57,7 +57,8 @@
                     salary: formatSalary(j.salaryFrom, j.salaryTo),
                     tags: j.tags?.map((t) => (typeof t === 'string' ? t : t.name)),
                     type: j.type,
-                    isFavorite: favorites.isJobFavorite(j.id)
+                    isFavorite:
+                        favorites.isJobFavorite(j.id) || favorites.isCompanyFavorite(j.employeeId)
                 };
             });
 
@@ -72,7 +73,8 @@
                     company: e.companyName || e.city,
                     tags: (e.tags || []).map((t) => t.name),
                     type: 'Event',
-                    isFavorite: favorites.isEventFavorite(e.id)
+                    isFavorite:
+                        favorites.isEventFavorite(e.id) || favorites.isCompanyFavorite(e.employeeId)
                 };
             });
 
@@ -90,7 +92,9 @@
                     salary: formatSalary(m.salaryFrom ?? null, m.salaryTo ?? null),
                     tags: (m.tags || []).map((t) => t.name),
                     type: 'Mentorship',
-                    isFavorite: favorites.isMentorshipFavorite(m.id)
+                    isFavorite:
+                        favorites.isMentorshipFavorite(m.id) ||
+                        favorites.isCompanyFavorite(m.employeeId)
                 };
             });
 

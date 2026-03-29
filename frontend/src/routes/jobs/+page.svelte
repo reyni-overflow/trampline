@@ -15,6 +15,7 @@
     import { toast } from '$lib/stores/toast';
     import { formatSalary } from '$lib/utils/format';
     import { getCityCoords } from '$lib/utils/geo';
+    import { favorites } from '$lib/stores/favorites';
     import { t } from '$lib/i18n';
 
     let viewMode = $state<'grid' | 'list'>('grid');
@@ -162,7 +163,9 @@
                 company: j.companyName || j.city,
                 salary: formatSalary(j.salaryFrom, j.salaryTo),
                 tags: j.tags?.map((t) => (typeof t === 'string' ? t : t.name)),
-                type: j.type
+                type: j.type,
+                isFavorite:
+                    favorites.isJobFavorite(j.id) || favorites.isCompanyFavorite(j.employeeId)
             };
         })
     );
