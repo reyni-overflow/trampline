@@ -8,12 +8,7 @@ let connection: signalR.HubConnection | null = null;
 
 function resolveHubUrl(): string {
     if (env.PUBLIC_API_URL) return `${env.PUBLIC_API_URL}/hubs/notifications`;
-    if (!browser) return 'http://localhost:7103/hubs/notifications';
-
-    const host = window.location.hostname;
-    if (host === 'trampline.localhost') return '/api/hubs/notifications';
-
-    return `${window.location.protocol}//${host}:7103/hubs/notifications`;
+    return '/api/hubs/notifications';
 }
 
 const notificationTitles: Record<string, string> = {
@@ -23,7 +18,7 @@ const notificationTitles: Record<string, string> = {
     job_recommendation: 'notifications.jobRecommendation',
     verification_status: 'notifications.verificationStatus',
     job_moderation: 'notifications.jobModeration',
-    event_moderation: 'notifications.eventModeration',
+    event_moderation: 'notifications.eventModeration'
 };
 
 export async function startConnection() {
@@ -38,10 +33,18 @@ export async function startConnection() {
     connection.on('Notification', (data: { type: string; payload: Record<string, unknown> }) => {
         const titleKey = notificationTitles[data.type] || 'notifications.generic';
         notifications.add({
-            type: (data.type as 'application_status' | 'contact_request' | 'new_application' | 'job_recommendation' | 'verification_status' | 'job_moderation' | 'event_moderation') || 'system',
+            type:
+                (data.type as
+                    | 'application_status'
+                    | 'contact_request'
+                    | 'new_application'
+                    | 'job_recommendation'
+                    | 'verification_status'
+                    | 'job_moderation'
+                    | 'event_moderation') || 'system',
             title: tGet(titleKey),
             message: JSON.stringify(data.payload),
-            link: buildLink(data.type, data.payload),
+            link: buildLink(data.type, data.payload)
         });
     });
 

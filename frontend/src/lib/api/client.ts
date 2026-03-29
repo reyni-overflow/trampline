@@ -5,12 +5,9 @@ import { tGet } from '$lib/i18n';
 
 function resolveApiUrl(): string {
     if (env.PUBLIC_API_URL) return env.PUBLIC_API_URL;
-    if (!browser) return 'http://localhost:7103';
+    if (!browser) return '/api';
 
-    const host = window.location.hostname;
-    if (host === 'trampline.localhost') return '/api';
-
-    return `${window.location.protocol}//${host}:7103`;
+    return '/api';
 }
 
 const BASE_URL = resolveApiUrl();
@@ -74,7 +71,12 @@ class HttpClient {
         try {
             let response = await fetch(`${this.base}${path}`, config);
 
-            if (response.status === 401 && !noAuth && !path.includes('/auth/refresh') && !this.refreshFailed) {
+            if (
+                response.status === 401 &&
+                !noAuth &&
+                !path.includes('/auth/refresh') &&
+                !this.refreshFailed
+            ) {
                 const refreshed = await this.refreshToken();
                 if (refreshed) {
                     this.refreshFailed = false;
@@ -82,7 +84,9 @@ class HttpClient {
                 } else {
                     this.refreshFailed = true;
                     if (this.refreshCooldown) clearTimeout(this.refreshCooldown);
-                    this.refreshCooldown = setTimeout(() => { this.refreshFailed = false; }, 10_000);
+                    this.refreshCooldown = setTimeout(() => {
+                        this.refreshFailed = false;
+                    }, 10_000);
                 }
             }
 
@@ -171,8 +175,8 @@ const errorTranslations: Record<string, string> = {
     'Photo not found': 'api.photoNotFound',
     'Video not found': 'api.videoNotFound',
     'Not Found': 'api.notFound',
-    'Unauthorized': 'api.unauthorized',
-    'Forbidden': 'api.forbidden',
+    Unauthorized: 'api.unauthorized',
+    Forbidden: 'api.forbidden',
     'Bad Request': 'api.badRequest',
     'Internal Server Error': 'api.serverError',
     'Only the super administrator can create curators': 'api.superAdminOnly',
@@ -193,7 +197,7 @@ const errorTranslations: Record<string, string> = {
     'Password must contain at least one lowercase letter': 'api.passwordNoLower',
     'Password must contain at least one digit': 'api.passwordNoDigit',
     'Invalid TOTP code': 'api.invalidTotpCode',
-    'User is not a curator': 'api.notCurator',
+    'User is not a curator': 'api.notCurator'
 };
 
 function localizeError(message: string): string {
