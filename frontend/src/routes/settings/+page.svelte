@@ -16,7 +16,7 @@
     import { user as userStore, isAuthenticated, authReady } from '$lib/stores/auth';
     import { authModal } from '$lib/stores/auth-modal';
     import { onMount, onDestroy } from 'svelte';
-    import { t } from '$lib/i18n';
+    import { t, getLocaleDateString } from '$lib/i18n';
 
     let isAuth = $state(false);
     const unsubAuth = isAuthenticated.subscribe((v) => {
@@ -66,6 +66,9 @@
             if (v) {
                 email = v.email;
                 totpEnabled = v.isTotpEnabled ?? false;
+                publicProfile = !(v.isPrivate ?? false);
+                hideApplications = v.hideApplications ?? false;
+                hideResume = v.hideResume ?? false;
             }
         });
         loadSessions();
@@ -174,9 +177,9 @@
                             ? s.userAgent.ip
                             : '',
                     lastUsed: s.lastUsedAt
-                        ? new Date(s.lastUsedAt).toLocaleString('ru-RU')
+                        ? new Date(s.lastUsedAt).toLocaleString(getLocaleDateString())
                         : s.createdAt
-                          ? new Date(s.createdAt).toLocaleString('ru-RU')
+                          ? new Date(s.createdAt).toLocaleString(getLocaleDateString())
                           : '—',
                     current: s.id === mostRecentId
                 };
@@ -243,7 +246,13 @@
 
     async function savePrivacy() {
         try {
-            await authApi.updatePrivacy(!publicProfile);
+            await authApi.updatePrivacy({
+                isPrivate: !publicProfile,
+                hideApplications,
+                hideResume
+            });
+            const me = await authApi.me();
+            userStore.setUser(me);
             toast.success($t('settings.privacySaved'));
         } catch (err) {
             handleApiError(err);
