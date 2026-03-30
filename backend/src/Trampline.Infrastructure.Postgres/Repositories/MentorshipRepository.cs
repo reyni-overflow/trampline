@@ -42,10 +42,20 @@ public class MentorshipRepository(ILogger<MentorshipRepository> logger, AppDbCon
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            var s = search.ToLower();
-            query = query.Where(x =>
-                (x.Title != null && x.Title.ToLower().Contains(s)) ||
-                (x.Description != null && x.Description.ToLower().Contains(s)));
+            var s = search.Trim();
+            if (s.Length <= 2)
+            {
+                var sl = s.ToLower();
+                query = query.Where(x => x.Title.ToLower().Contains(sl));
+            }
+            else
+            {
+                query = query.Where(x =>
+                    EF.Functions.ToTsVector("russian", x.Title + " " + x.Description)
+                        .Matches(EF.Functions.WebSearchToTsQuery("russian", s)) ||
+                    EF.Functions.ToTsVector("simple", x.Title + " " + x.Description)
+                        .Matches(EF.Functions.WebSearchToTsQuery("simple", s)));
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(format) && Enum.TryParse<WorkFormat>(format, true, out var workFormat))
