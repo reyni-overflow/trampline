@@ -7,6 +7,7 @@ public enum ApplicationStatus
     Rejected,    // Отклонён
     Invited,     // Приглашён на собеседование
     InProgress,  // Собеседование
+    Reserved,    // В резерве
     Hired,       // Нанят
     Withdrawn    // Отозван соискателем
 }
