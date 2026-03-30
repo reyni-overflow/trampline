@@ -78,72 +78,100 @@
     ]);
 </script>
 
-<div class="admin">
-    <button
-        class="sidebar-toggle"
-        type="button"
-        onclick={() => (sidebarOpen = !sidebarOpen)}
-        aria-label={$t('admin.menu')}
-    >
-        <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+{#if !ready || !isAdmin}
+    <div class="auth-loading">
+        <div class="auth-spinner"></div>
+    </div>
+{:else}
+    <div class="admin">
+        <button
+            class="sidebar-toggle"
+            type="button"
+            onclick={() => (sidebarOpen = !sidebarOpen)}
+            aria-label={$t('admin.menu')}
         >
-            <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line
-                x1="4"
-                y1="18"
-                x2="20"
-                y2="18"
-            />
-        </svg>
-    </button>
+            <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line
+                    x1="4"
+                    y1="18"
+                    x2="20"
+                    y2="18"
+                />
+            </svg>
+        </button>
 
-    {#if sidebarOpen}
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <div class="sidebar-overlay" onclick={() => (sidebarOpen = false)}></div>
-    {/if}
+        {#if sidebarOpen}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div class="sidebar-overlay" onclick={() => (sidebarOpen = false)}></div>
+        {/if}
 
-    <aside class="sidebar" class:open={sidebarOpen}>
-        <div class="sidebar-header">
-            <span class="sidebar-title">{$t('admin.title')}</span>
-            <Badge variant="error" size="sm">Admin</Badge>
-        </div>
-        <nav class="sidebar-nav">
-            {#each navItems as item (item.href)}
-                <a href={item.href} class="sidebar-link" onclick={() => (sidebarOpen = false)}>
-                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    <svg
-                        viewBox="0 0 24 24"
-                        width="18"
-                        height="18"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.75"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
+        <aside class="sidebar" class:open={sidebarOpen}>
+            <div class="sidebar-header">
+                <span class="sidebar-title">{$t('admin.title')}</span>
+                <Badge variant="error" size="sm">Admin</Badge>
+            </div>
+            <nav class="sidebar-nav">
+                {#each navItems as item (item.href)}
+                    <a href={item.href} class="sidebar-link" onclick={() => (sidebarOpen = false)}>
                         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                        {@html item.icon}
-                    </svg>
-                    <span>{item.label}</span>
-                </a>
-            {/each}
-        </nav>
-    </aside>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                            {@html item.icon}
+                        </svg>
+                        <span>{item.label}</span>
+                    </a>
+                {/each}
+            </nav>
+        </aside>
 
-    <main class="admin-content">
-        {@render children()}
-    </main>
-</div>
+        <main class="admin-content">
+            {@render children()}
+        </main>
+    </div>
+{/if}
 
 <style>
+    .auth-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100dvh - var(--header-height));
+    }
+
+    .auth-spinner {
+        width: 2rem;
+        height: 2rem;
+        border: 2px solid var(--border-default);
+        border-top-color: var(--accent);
+        border-radius: var(--radius-full);
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
     .admin {
         display: flex;
         min-height: calc(100dvh - var(--header-height));

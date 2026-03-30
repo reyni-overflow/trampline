@@ -147,77 +147,110 @@
     let sidebarOpen = $state(false);
 </script>
 
-<div class="dashboard">
-    <button
-        class="sidebar-toggle"
-        type="button"
-        onclick={() => (sidebarOpen = !sidebarOpen)}
-        aria-label={$t('dash.menu')}
-    >
-        <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+{#if !ready || !authenticated}
+    <div class="auth-loading">
+        <div class="auth-spinner"></div>
+    </div>
+{:else}
+    <div class="dashboard">
+        <button
+            class="sidebar-toggle"
+            type="button"
+            onclick={() => (sidebarOpen = !sidebarOpen)}
+            aria-label={$t('dash.menu')}
         >
-            <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line
-                x1="4"
-                y1="18"
-                x2="20"
-                y2="18"
-            />
-        </svg>
-    </button>
+            <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line
+                    x1="4"
+                    y1="18"
+                    x2="20"
+                    y2="18"
+                />
+            </svg>
+        </button>
 
-    {#if sidebarOpen}
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <div class="sidebar-overlay" onclick={() => (sidebarOpen = false)}></div>
-    {/if}
+        {#if sidebarOpen}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div class="sidebar-overlay" onclick={() => (sidebarOpen = false)}></div>
+        {/if}
 
-    <aside class="sidebar" class:open={sidebarOpen} style="--actual-header-height: {headerHeight};">
-        <div class="sidebar-user">
-            <Avatar name={currentUser?.nickname || 'U'} src={currentUser?.avatar} size={40} />
-            <div class="sidebar-user-info">
-                <span class="sidebar-user-name">{currentUser?.nickname || $t('dash.user')}</span>
-                <Badge variant="accent" size="sm"
-                    >{role === 'Employee' ? $t('dash.employee') : $t('dash.worker')}</Badge
-                >
-            </div>
-        </div>
-
-        <nav class="sidebar-nav">
-            {#each navItems as item (item.href)}
-                <a href={item.href} class="sidebar-link" onclick={() => (sidebarOpen = false)}>
-                    <svg
-                        viewBox="0 0 24 24"
-                        width="18"
-                        height="18"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.75"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+        <aside
+            class="sidebar"
+            class:open={sidebarOpen}
+            style="--actual-header-height: {headerHeight};"
+        >
+            <div class="sidebar-user">
+                <Avatar name={currentUser?.nickname || 'U'} src={currentUser?.avatar} size={40} />
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-name">{currentUser?.nickname || $t('dash.user')}</span
                     >
-                        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                        {@html item.icon}
-                    </svg>
-                    <span>{item.label}</span>
-                </a>
-            {/each}
-        </nav>
-    </aside>
+                    <Badge variant="accent" size="sm"
+                        >{role === 'Employee' ? $t('dash.employee') : $t('dash.worker')}</Badge
+                    >
+                </div>
+            </div>
 
-    <main class="dashboard-content">
-        {@render children()}
-    </main>
-</div>
+            <nav class="sidebar-nav">
+                {#each navItems as item (item.href)}
+                    <a href={item.href} class="sidebar-link" onclick={() => (sidebarOpen = false)}>
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.75"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                            {@html item.icon}
+                        </svg>
+                        <span>{item.label}</span>
+                    </a>
+                {/each}
+            </nav>
+        </aside>
+
+        <main class="dashboard-content">
+            {@render children()}
+        </main>
+    </div>
+{/if}
 
 <style>
+    .auth-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100dvh - var(--header-height));
+    }
+
+    .auth-spinner {
+        width: 2rem;
+        height: 2rem;
+        border: 2px solid var(--border-default);
+        border-top-color: var(--accent);
+        border-radius: var(--radius-full);
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
     .dashboard {
         display: flex;
         min-height: calc(100dvh - var(--header-height));
