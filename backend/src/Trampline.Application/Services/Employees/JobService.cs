@@ -193,8 +193,10 @@ public class JobService(
             return Result<Job>.Failure(new ErrorDetail(nameof(userId), "Access denied", 403));
         }
 
-        findJob.Update(request.Title, request.Description, request.Address, request.City, request.Country,
-            request.IsActive);
+        findJob.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+
+        if (request.IsPublished.HasValue)
+            findJob.SetPublished(request.IsPublished.Value);
 
         findJob.UpdateSalary(request.SalaryFrom, request.SalaryTo);
         findJob.UpdateEndedAt(request.EndedAt);
@@ -216,16 +218,17 @@ public class JobService(
         return Result<Job>.Success(findJob);
     }
 
-    public async Task DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken)
+    public async Task<Result> DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken)
     {
         var find = await repository.GetByEmployeeAsync(id, employeeId, cancellationToken);
 
-        if (find != null)
-        {
-            find.SoftDelete();
-            await repository.UpdateAsync(find, cancellationToken);
-            logger.LogInformation("Job soft-deleted {JobId}", id);
-        }
+        if (find == null)
+            return Result.Failure(new ErrorDetail("job", "Job not found or access denied", 403));
+
+        find.SoftDelete();
+        await repository.UpdateAsync(find, cancellationToken);
+        logger.LogInformation("Job soft-deleted {JobId}", id);
+        return Result.Success();
     }
 
     public async Task<IEnumerable<Job>> GetAllAsync(CancellationToken cancellationToken)

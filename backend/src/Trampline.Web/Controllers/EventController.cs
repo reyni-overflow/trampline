@@ -39,7 +39,7 @@ public class EventController(
         string? format, string? tags,
         CancellationToken cancellationToken, int pageSize = 10, int pageNumber = 1)
     {
-        pageSize = Math.Clamp(pageSize, 1, 500);
+        pageSize = Math.Clamp(pageSize, 1, 100);
         pageNumber = Math.Max(pageNumber, 1);
         if (search?.Length > 200) search = search[..200];
         var (items, totalCount) = await repository.GetPaginationAsync(
@@ -77,6 +77,8 @@ public class EventController(
     [HttpGet("all-by/{userId}")]
     public async Task<IActionResult> GetByEmployeeAsync(Guid userId, CancellationToken cancellationToken, int pageSize = 10, int pageNumber = 1)
     {
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        pageNumber = Math.Max(pageNumber, 1);
         var list = await repository.GetAllByUserIdAsync(userId, pageNumber, pageSize, cancellationToken);
 
         return Ok(list.Select(x => x.ToEventResponse()));
@@ -456,7 +458,10 @@ public class EventController(
             });
         }
 
-        await eventService.DeleteAsync(id, new Guid(userId), cancellationToken);
+        var result = await eventService.DeleteAsync(id, new Guid(userId), cancellationToken);
+
+        if (result.IsFailure)
+            return result.ToActionResult();
 
         logger.LogInformation("Event {Id} deleted by {UserId}", id, userId);
         return Ok();

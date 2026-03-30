@@ -19,7 +19,7 @@ public interface IEventService
 
     Task<Result<Event>> UpdateAsync(Guid userId, Guid id, UpdateEventRequest request, CancellationToken cancellationToken);
 
-    Task DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken);
+    Task<Result> DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken);
 
     Task<IEnumerable<Event>> GetAllAsync(CancellationToken cancellationToken);
 }

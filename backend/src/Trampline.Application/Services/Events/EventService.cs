@@ -193,8 +193,10 @@ public class EventService(
             return Result<Event>.Failure(new ErrorDetail(nameof(userId), "Access denied", 403));
         }
 
-        findEvent.Update(request.Title, request.Description, request.Address, request.City, request.Country,
-            request.IsActive);
+        findEvent.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+
+        if (request.IsPublished.HasValue)
+            findEvent.SetPublished(request.IsPublished.Value);
         findEvent.UpdateSalary(request.SalaryFrom, request.SalaryTo);
         findEvent.UpdateStartDate(request.StartDate);
         findEvent.UpdateEndedAt(request.EndedAt);
@@ -216,16 +218,17 @@ public class EventService(
         return Result<Event>.Success(findEvent);
     }
 
-    public async Task DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken)
+    public async Task<Result> DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken)
     {
         var find = await repository.GetByEmployeeAsync(id, employeeId, cancellationToken);
 
-        if (find != null)
-        {
-            find.SoftDelete();
-            await repository.UpdateAsync(find, cancellationToken);
-            logger.LogInformation("Event soft-deleted {EventId}", id);
-        }
+        if (find == null)
+            return Result.Failure(new ErrorDetail("event", "Event not found or access denied", 403));
+
+        find.SoftDelete();
+        await repository.UpdateAsync(find, cancellationToken);
+        logger.LogInformation("Event soft-deleted {EventId}", id);
+        return Result.Success();
     }
 
     public async Task<IEnumerable<Event>> GetAllAsync(CancellationToken cancellationToken)

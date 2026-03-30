@@ -200,8 +200,10 @@ public class MentorshipService(
             request.Description ?? findMentorship.Description,
             request.Address ?? findMentorship.Address,
             request.City ?? findMentorship.City,
-            request.Country ?? findMentorship.Country,
-            request.IsActive);
+            request.Country ?? findMentorship.Country);
+
+        if (request.IsPublished.HasValue)
+            findMentorship.SetPublished(request.IsPublished.Value);
         if (request.SalaryFrom.HasValue || request.SalaryTo.HasValue)
             findMentorship.UpdateSalary(request.SalaryFrom, request.SalaryTo);
         if (request.StartDate.HasValue)
@@ -230,16 +232,17 @@ public class MentorshipService(
         return Result<Mentorship>.Success(findMentorship);
     }
 
-    public async Task DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken)
+    public async Task<Result> DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken)
     {
         var find = await repository.GetByEmployeeAsync(id, employeeId, cancellationToken);
 
-        if (find != null)
-        {
-            find.SoftDelete();
-            await repository.UpdateAsync(find, cancellationToken);
-            logger.LogInformation("Mentorship soft-deleted {MentorshipId}", id);
-        }
+        if (find == null)
+            return Result.Failure(new ErrorDetail("mentorship", "Mentorship not found or access denied", 403));
+
+        find.SoftDelete();
+        await repository.UpdateAsync(find, cancellationToken);
+        logger.LogInformation("Mentorship soft-deleted {MentorshipId}", id);
+        return Result.Success();
     }
 
     public async Task<IEnumerable<Mentorship>> GetAllAsync(CancellationToken cancellationToken)

@@ -19,7 +19,7 @@ public interface IMentorshipService
 
     Task<Result<Mentorship>> UpdateAsync(Guid userId, Guid id, UpdateMentorshipRequest request, CancellationToken cancellationToken);
 
-    Task DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken);
+    Task<Result> DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken);
 
     Task<IEnumerable<Mentorship>> GetAllAsync(CancellationToken cancellationToken);
 }

@@ -19,7 +19,7 @@ public interface IJobService
 
     Task<Result<Job>> UpdateAsync(Guid userId, Guid id, UpdateJobRequest request, CancellationToken cancellationToken);
 
-    Task DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken);
+    Task<Result> DeleteAsync(Guid id, Guid employeeId, CancellationToken cancellationToken);
 
     Task<IEnumerable<Job>> GetAllAsync(CancellationToken cancellationToken);
 }
