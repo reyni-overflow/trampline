@@ -62,11 +62,13 @@ export interface WorkerEventApplicationResponse {
 }
 
 export interface WorkerSearchResult {
+    id: string;
     userId: string;
     name: string;
     lastName: string;
     patronymic: string;
     photo: string | null;
+    about: string | null;
     skills: string[];
     university: string | null;
     course: number | null;
