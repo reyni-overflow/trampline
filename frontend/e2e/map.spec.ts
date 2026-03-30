@@ -10,7 +10,7 @@ test.describe('Map Page', () => {
     test('has sidebar with filters', async ({ page }) => {
         await page.goto('/map');
         const sidebar = page.locator('.sidebar, .map-sidebar, .filters');
-        if (await sidebar.count() > 0) {
+        if ((await sidebar.count()) > 0) {
             await expect(sidebar.first()).toBeVisible();
         }
     });

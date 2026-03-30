@@ -15,7 +15,7 @@ test.describe('Events Page', () => {
     test('has filter controls', async ({ page }) => {
         await page.goto('/events');
         const filters = page.locator('select, .select, .filter, input');
-        if (await filters.count() > 0) {
+        if ((await filters.count()) > 0) {
             await expect(filters.first()).toBeVisible();
         }
     });

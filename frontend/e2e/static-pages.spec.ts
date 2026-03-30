@@ -21,7 +21,7 @@ test.describe('Static Pages', () => {
     test('help page has accordion items', async ({ page }) => {
         await page.goto('/help');
         const items = page.locator('.faq-item, .accordion, details, button');
-        if (await items.count() > 0) {
+        if ((await items.count()) > 0) {
             await expect(items.first()).toBeVisible();
         }
     });

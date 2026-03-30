@@ -26,21 +26,21 @@ test.describe('Homepage', () => {
 
     test('shows popular directions section', async ({ page }) => {
         const tags = page.locator('.directions, .popular-directions, .tags-section');
-        if (await tags.count() > 0) {
+        if ((await tags.count()) > 0) {
             await expect(tags.first()).toBeVisible();
         }
     });
 
     test('shows reviews section', async ({ page }) => {
         const reviews = page.locator('.reviews, .testimonials');
-        if (await reviews.count() > 0) {
+        if ((await reviews.count()) > 0) {
             await expect(reviews.first()).toBeVisible();
         }
     });
 
     test('shows companies section', async ({ page }) => {
         const companies = page.locator('.companies, .partners');
-        if (await companies.count() > 0) {
+        if ((await companies.count()) > 0) {
             await expect(companies.first()).toBeVisible();
         }
     });
@@ -48,7 +48,7 @@ test.describe('Homepage', () => {
     test('theme toggle works', async ({ page }) => {
         const htmlBefore = await page.locator('html').getAttribute('data-theme');
         const toggleBtn = page.locator('.theme-toggle, header button').first();
-        if (await toggleBtn.count() > 0) {
+        if ((await toggleBtn.count()) > 0) {
             await toggleBtn.click();
             const htmlAfter = await page.locator('html').getAttribute('data-theme');
             expect(htmlAfter !== htmlBefore || htmlAfter !== null).toBeTruthy();

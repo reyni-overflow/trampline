@@ -14,12 +14,12 @@ export default defineConfig({
     resolve: {
         conditions: ['browser'],
         alias: {
-            '$lib': path.resolve('./src/lib'),
+            $lib: path.resolve('./src/lib'),
             '$app/environment': path.resolve('./src/tests/mocks/app-environment.ts'),
             '$app/navigation': path.resolve('./src/tests/mocks/app-navigation.ts'),
             '$app/stores': path.resolve('./src/tests/mocks/app-stores.ts'),
             '$env/dynamic/public': path.resolve('./src/tests/mocks/env-dynamic-public.ts'),
-            '$styles': path.resolve('./src/styles')
+            $styles: path.resolve('./src/styles')
         }
     },
 
@@ -34,7 +34,12 @@ export default defineConfig({
         coverage: {
             provider: 'v8',
             include: ['src/lib/**/*.ts', 'src/lib/**/*.svelte'],
-            exclude: ['src/lib/i18n/ru.ts', 'src/lib/i18n/en.ts', 'src/lib/i18n/zh.ts', 'src/lib/i18n/pirate.ts'],
+            exclude: [
+                'src/lib/i18n/ru.ts',
+                'src/lib/i18n/en.ts',
+                'src/lib/i18n/zh.ts',
+                'src/lib/i18n/pirate.ts'
+            ],
             reporter: ['text', 'html', 'lcov']
         }
     }

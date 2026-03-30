@@ -34,7 +34,7 @@ test.describe('Accessibility', () => {
     test('skip-to-content link exists', async ({ page }) => {
         await page.goto('/');
         const skip = page.locator('[href="#main"], .skip-to-content, .skip-link');
-        if (await skip.count() > 0) {
+        if ((await skip.count()) > 0) {
             await expect(skip.first()).toBeTruthy();
         }
     });
@@ -48,7 +48,7 @@ test.describe('Accessibility', () => {
     test('theme-color meta tag exists', async ({ page }) => {
         await page.goto('/');
         const meta = page.locator('meta[name="theme-color"]');
-        if (await meta.count() > 0) {
+        if ((await meta.count()) > 0) {
             const content = await meta.getAttribute('content');
             expect(content).toBeTruthy();
         }

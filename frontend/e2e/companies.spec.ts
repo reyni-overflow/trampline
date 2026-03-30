@@ -15,7 +15,7 @@ test.describe('Companies Page', () => {
     test('shows company cards', async ({ page }) => {
         await page.goto('/companies');
         const cards = page.locator('.company-card');
-        if (await cards.count() > 0) {
+        if ((await cards.count()) > 0) {
             await expect(cards.first()).toBeVisible();
         }
     });
@@ -23,7 +23,7 @@ test.describe('Companies Page', () => {
     test('clicking company card navigates to detail', async ({ page }) => {
         await page.goto('/companies');
         const cardLink = page.locator('.company-card').first();
-        if (await cardLink.count() > 0) {
+        if ((await cardLink.count()) > 0) {
             await cardLink.click();
             await expect(page).toHaveURL(/\/companies\/.+/);
         }

@@ -43,7 +43,7 @@ test.describe('Navigation', () => {
     test('navigate to help page via footer', async ({ page }) => {
         await page.goto('/');
         const helpLink = page.locator('footer a[href="/help"]');
-        if (await helpLink.count() > 0) {
+        if ((await helpLink.count()) > 0) {
             await helpLink.first().click();
             await expect(page).toHaveURL(/\/help/);
         }
@@ -52,7 +52,7 @@ test.describe('Navigation', () => {
     test('navigate to privacy page via footer', async ({ page }) => {
         await page.goto('/');
         const link = page.locator('footer a[href="/privacy"]');
-        if (await link.count() > 0) {
+        if ((await link.count()) > 0) {
             await link.first().click();
             await expect(page).toHaveURL(/\/privacy/);
         }
@@ -61,7 +61,7 @@ test.describe('Navigation', () => {
     test('navigate to terms page via footer', async ({ page }) => {
         await page.goto('/');
         const link = page.locator('footer a[href="/terms"]');
-        if (await link.count() > 0) {
+        if ((await link.count()) > 0) {
             await link.first().click();
             await expect(page).toHaveURL(/\/terms/);
         }

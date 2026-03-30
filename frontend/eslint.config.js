@@ -18,7 +18,10 @@ export default defineConfig(
         rules: {
             'no-undef': 'off',
             'svelte/no-navigation-without-resolve': 'off',
-            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
+            ]
         }
     },
     {

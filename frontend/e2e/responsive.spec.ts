@@ -12,7 +12,7 @@ test.describe('Responsive Design', () => {
         await page.setViewportSize({ width: 375, height: 812 });
         await page.goto('/');
         const nav = page.locator('header nav');
-        if (await nav.count() > 0) {
+        if ((await nav.count()) > 0) {
             await expect(nav.first()).not.toBeVisible();
         }
     });
@@ -21,7 +21,7 @@ test.describe('Responsive Design', () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto('/');
         const nav = page.locator('header nav');
-        if (await nav.count() > 0) {
+        if ((await nav.count()) > 0) {
             await expect(nav.first()).toBeVisible();
         }
     });
