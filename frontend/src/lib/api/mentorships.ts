@@ -89,7 +89,15 @@ export interface MentorshipApplicationResponse {
     workerProfileId: string;
     createdAt: string;
     isReadByEmployer: boolean;
-    status: 'Pending' | 'Viewed' | 'Rejected' | 'Invited' | 'InProgress' | 'Hired' | 'Withdrawn';
+    status:
+        | 'Pending'
+        | 'Viewed'
+        | 'Rejected'
+        | 'Invited'
+        | 'InProgress'
+        | 'Hired'
+        | 'Withdrawn'
+        | 'Reserved';
 }
 
 export const mentorshipsApi = {
@@ -161,5 +169,9 @@ export const mentorshipsApi = {
 
     deleteVideo(mentorshipId: string, path: string) {
         return api.delete(`/mentorship/${mentorshipId}/video?path=${encodeURIComponent(path)}`);
+    },
+
+    withdrawApplication(applicationId: string) {
+        return api.put(`/mentorship/application/${applicationId}/withdraw`);
     }
 };

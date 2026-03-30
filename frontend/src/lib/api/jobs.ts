@@ -102,7 +102,15 @@ export interface JobApplicationResponse {
     jobId: string;
     jobTitle: string | null;
     companyName: string | null;
-    status: 'Pending' | 'Viewed' | 'Rejected' | 'Invited' | 'InProgress' | 'Hired' | 'Withdrawn';
+    status:
+        | 'Pending'
+        | 'Viewed'
+        | 'Rejected'
+        | 'Invited'
+        | 'InProgress'
+        | 'Hired'
+        | 'Withdrawn'
+        | 'Reserved';
     coverLetter: string | null;
     isReadByEmployer: boolean;
     createdAt: string;
@@ -208,5 +216,9 @@ export const jobsApi = {
 
     deleteVideo(jobId: string, path: string) {
         return api.delete(`/job/${jobId}/video?path=${encodeURIComponent(path)}`);
+    },
+
+    withdrawApplication(applicationId: string) {
+        return api.put(`/job/application/${applicationId}/withdraw`);
     }
 };

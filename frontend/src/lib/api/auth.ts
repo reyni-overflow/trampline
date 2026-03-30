@@ -25,6 +25,7 @@ export interface LoginResponse {
 export interface UserResponse {
     id: string;
     email: string;
+    phone: string | null;
     nickname: string;
     avatar: string | null;
     role: 'Worker' | 'Employee' | 'Admin';
@@ -165,6 +166,10 @@ export const authApi = {
 
     totpVerify(challengeId: string, code: string) {
         return api.post<AuthResponse>('/auth/totp/verify', { challengeId, code });
+    },
+
+    updatePhone(phone: string) {
+        return api.put('/auth/phone', { phone });
     }
 };
 

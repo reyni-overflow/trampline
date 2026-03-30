@@ -23,7 +23,15 @@ export interface WorkerApplicationResponse {
         type: string;
         format: string;
     };
-    status: 'Pending' | 'Viewed' | 'Rejected' | 'Invited' | 'InProgress' | 'Hired' | 'Withdrawn';
+    status:
+        | 'Pending'
+        | 'Viewed'
+        | 'Rejected'
+        | 'Invited'
+        | 'InProgress'
+        | 'Hired'
+        | 'Withdrawn'
+        | 'Reserved';
     coverLetter: string | null;
     isReadByEmployer: boolean;
     createdAt: string;
@@ -39,7 +47,15 @@ export interface WorkerMentorshipApplicationResponse {
         city: string;
         format: string;
     };
-    status: 'Pending' | 'Viewed' | 'Rejected' | 'Invited' | 'InProgress' | 'Hired' | 'Withdrawn';
+    status:
+        | 'Pending'
+        | 'Viewed'
+        | 'Rejected'
+        | 'Invited'
+        | 'InProgress'
+        | 'Hired'
+        | 'Withdrawn'
+        | 'Reserved';
     coverLetter: string;
     isReadByEmployer: boolean;
     createdAt: string;
@@ -55,7 +71,15 @@ export interface WorkerEventApplicationResponse {
         city: string;
         format: string;
     };
-    status: 'Pending' | 'Viewed' | 'Rejected' | 'Invited' | 'InProgress' | 'Hired' | 'Withdrawn';
+    status:
+        | 'Pending'
+        | 'Viewed'
+        | 'Rejected'
+        | 'Invited'
+        | 'InProgress'
+        | 'Hired'
+        | 'Withdrawn'
+        | 'Reserved';
     coverLetter: string | null;
     isReadByEmployer: boolean;
     createdAt: string;

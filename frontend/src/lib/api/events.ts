@@ -83,7 +83,15 @@ export interface EventApplicationResponse {
     workerProfileId: string;
     createdAt: string;
     isReadByEmployer: boolean;
-    status: 'Pending' | 'Viewed' | 'Rejected' | 'Invited' | 'InProgress' | 'Hired' | 'Withdrawn';
+    status:
+        | 'Pending'
+        | 'Viewed'
+        | 'Rejected'
+        | 'Invited'
+        | 'InProgress'
+        | 'Hired'
+        | 'Withdrawn'
+        | 'Reserved';
 }
 
 export const eventsApi = {
@@ -149,5 +157,9 @@ export const eventsApi = {
 
     deleteVideo(eventId: string, path: string) {
         return api.delete(`/event/${eventId}/video?path=${encodeURIComponent(path)}`);
+    },
+
+    withdrawApplication(applicationId: string) {
+        return api.put(`/event/application/${applicationId}/withdraw`);
     }
 };
