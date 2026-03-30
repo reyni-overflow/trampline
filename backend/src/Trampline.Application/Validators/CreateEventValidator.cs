@@ -15,7 +15,9 @@ public class CreateEventValidator : AbstractValidator<CreateEventRequest>
 
         RuleFor(r => r.Description)
             .NotEmpty()
-            .WithMessage("Description is required");
+            .WithMessage("Description is required")
+            .MaximumLength(10000)
+            .WithMessage("Description must be at most 10000 characters");
 
         RuleFor(r => r.Address)
             .NotEmpty()
