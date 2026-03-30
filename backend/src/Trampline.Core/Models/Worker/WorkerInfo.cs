@@ -35,7 +35,7 @@ public record WorkerInfo
             return Result<WorkerInfo>.Failure(new ErrorDetail(nameof(course), "Курс должен быть больше 0", 400));
 
         if (course > 6)
-            return Result<WorkerInfo>.Failure(new ErrorDetail(nameof(course), "Курс должен быть больше 6", 400));
+            return Result<WorkerInfo>.Failure(new ErrorDetail(nameof(course), "Курс должен быть от 1 до 6", 400));
 
         if (graduationAt < admissionAt)
             return Result<WorkerInfo>.Failure(new ErrorDetail(nameof(graduationAt),

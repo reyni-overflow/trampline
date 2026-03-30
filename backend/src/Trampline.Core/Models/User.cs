@@ -117,11 +117,6 @@ public class User
         Avatar = photo;
     }
 
-    public void RemoveSession(UserSession session)
-    {
-        Sessions.Remove(session);
-    }
-
     public void RevokeAllSessions()
     {
         foreach (var session in Sessions)
@@ -131,8 +126,6 @@ public class User
     }
 
     public void SetPhone(string? phone) => Phone = phone;
-
-    public void ChangePrivate() => IsPrivate = !IsPrivate;
 
     public void SetPrivate(bool isPrivate) => IsPrivate = isPrivate;
 
