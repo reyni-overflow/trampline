@@ -6,7 +6,7 @@ public interface IEmployeeRepository
 {
     Task<EmployeeProfile?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    Task<(IEnumerable<EmployeeProfile>, int)> GetPaginationAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
+    Task<(IEnumerable<EmployeeProfile>, int)> GetPaginationAsync(int pageNumber, int pageSize, string? search, string? activity, CancellationToken cancellationToken);
 
     Task<EmployeeProfile?> GetByUserIdAsync(Guid id, CancellationToken cancellationToken);
 

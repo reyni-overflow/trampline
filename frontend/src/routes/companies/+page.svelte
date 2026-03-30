@@ -39,10 +39,24 @@
         { value: 'edtech', label: $t('companies.fieldEdtech') }
     ]);
 
+    let debounceTimer: ReturnType<typeof setTimeout>;
+
     async function loadCompanies(p = page) {
         loading = true;
         try {
-            const data = await employeesApi.getAll(p, pageSize);
+            const activityMap: Record<string, string> = {
+                dev: $t('companies.fieldSoftware'),
+                fintech: $t('companies.fieldFintech'),
+                gamedev: $t('companies.fieldGamedev'),
+                ai: $t('companies.fieldAI'),
+                security: $t('companies.fieldCyber'),
+                cloud: $t('companies.fieldCloud'),
+                edtech: $t('companies.fieldEdtech')
+            };
+            const data = await employeesApi.getAll(p, pageSize, {
+                search: search || undefined,
+                activity: activityFilter ? activityMap[activityFilter] : undefined
+            });
             companies = data.items.map((e) => ({
                 id: e.id,
                 name: e.name,
@@ -61,30 +75,21 @@
         }
     }
 
-    onMount(() => loadCompanies());
+    function onFilterChange() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            page = 1;
+            loadCompanies(1);
+        }, 300);
+    }
 
-    let filtered = $derived.by(() => {
-        let list = companies;
-        if (search) {
-            const q = search.toLowerCase();
-            list = list.filter(
-                (c) => c.name.toLowerCase().includes(q) || c.activity.toLowerCase().includes(q)
-            );
-        }
-        if (activityFilter) {
-            const activityMap: Record<string, string> = {
-                dev: $t('companies.fieldSoftware'),
-                fintech: $t('companies.fieldFintech'),
-                gamedev: $t('companies.fieldGamedev'),
-                ai: $t('companies.fieldAI'),
-                security: $t('companies.fieldCyber'),
-                cloud: $t('companies.fieldCloud'),
-                edtech: $t('companies.fieldEdtech')
-            };
-            list = list.filter((c) => c.activity === activityMap[activityFilter]);
-        }
-        return list;
+    $effect(() => {
+        search;
+        activityFilter;
+        onFilterChange();
     });
+
+    onMount(() => loadCompanies());
 </script>
 
 <svelte:head>
@@ -114,7 +119,7 @@
                 <CompanyCardSkeleton />
             {/each}
         </div>
-    {:else if filtered.length === 0}
+    {:else if companies.length === 0}
         <div class="empty-state">
             <svg
                 viewBox="0 0 24 24"
@@ -134,7 +139,7 @@
         </div>
     {:else}
         <div class="companies-grid content-fade-in">
-            {#each filtered as company, i (company.id)}
+            {#each companies as company, i (company.id)}
                 <div class="stagger-item" style="animation-delay: {Math.min(i * 50, 500)}ms">
                     <CompanyCard {...company} />
                 </div>

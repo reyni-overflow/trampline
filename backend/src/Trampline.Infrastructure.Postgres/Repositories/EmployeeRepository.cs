@@ -16,17 +16,30 @@ public class EmployeeRepository(ILogger<EmployeeRepository> logger, AppDbContext
     }
 
     public async Task<(IEnumerable<EmployeeProfile>, int)> GetPaginationAsync(int pageNumber,
-        int pageSize,
+        int pageSize, string? search, string? activity,
         CancellationToken cancellationToken)
     {
-        var list = await context.EmployeeProfiles
+        var query = context.EmployeeProfiles
             .Include(x => x.Jobs)
+            .Include(x => x.User)
             .Where(x => x.VerificationLevel >= 1)
+            .Where(x => !x.User.IsPrivate);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var q = search.Trim().ToLower();
+            query = query.Where(x => x.Name.ToLower().Contains(q) || x.Activity.ToLower().Contains(q));
+        }
+
+        if (!string.IsNullOrWhiteSpace(activity))
+            query = query.Where(x => x.Activity.ToLower().Contains(activity.Trim().ToLower()));
+
+        var total = await query.CountAsync(cancellationToken);
+
+        var list = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
-
-        var total = await context.EmployeeProfiles.Where(x => x.VerificationLevel >= 1).CountAsync(cancellationToken);
 
         return (list, total);
     }

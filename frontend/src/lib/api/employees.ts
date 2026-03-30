@@ -23,10 +23,14 @@ export interface FindResponse {
 }
 
 export const employeesApi = {
-    getAll(pageNumber = 1, pageSize = 10) {
-        return api.get<PaginatedResponse<EmployeeProfileResponse>>(
-            `/employee?pageNumber=${pageNumber}&pageSize=${pageSize}`
-        );
+    getAll(pageNumber = 1, pageSize = 10, filters?: { search?: string; activity?: string }) {
+        const params = new URLSearchParams({
+            pageNumber: String(pageNumber),
+            pageSize: String(pageSize)
+        });
+        if (filters?.search) params.set('search', filters.search);
+        if (filters?.activity) params.set('activity', filters.activity);
+        return api.get<PaginatedResponse<EmployeeProfileResponse>>(`/employee?${params}`);
     },
 
     getById(id: string) {

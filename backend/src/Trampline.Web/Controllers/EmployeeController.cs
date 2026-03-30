@@ -29,41 +29,37 @@ public class EmployeeController(
     [SwaggerOperation(Summary = "Пагинация", Description = "Появляются только Profile с Active - true, верифицрованные")]
     [SwaggerResponse(200, "Успешный ответ", typeof(IEnumerable<EmployeeProfileResponse>))]
     [HttpGet]
-    public async Task<IActionResult> GetPaginationAsync(CancellationToken cancellationToken, int pageSize = 10, int pageNumber = 1)
+    public async Task<IActionResult> GetPaginationAsync(CancellationToken cancellationToken,
+        int pageSize = 10, int pageNumber = 1, string? search = null, string? activity = null)
     {
         pageSize = Math.Clamp(pageSize, 1, 500);
         pageNumber = Math.Max(pageNumber, 1);
-        var list = await employeeRepository.GetPaginationAsync(pageNumber, pageSize, cancellationToken);
 
-        var filtered = new List<EmployeeProfileResponse>();
-        foreach (var e in list.Item1)
+        var (items, totalCount) = await employeeRepository.GetPaginationAsync(
+            pageNumber, pageSize, search, activity, cancellationToken);
+
+        var responseItems = items.Select(e => new EmployeeProfileResponse
         {
-            var user = await userService.GetByIdAsync(e.UserId, cancellationToken);
-            if (user is { IsPrivate: true }) continue;
-            filtered.Add(new EmployeeProfileResponse
-            {
-                Id = e.Id,
-                UserId = e.UserId,
-                Name = e.Name,
-                Description = e.Description,
-                Activity = e.Activity,
-                Link = e.Link,
-                Socials = e.Socials,
-                Photos = e.Photos,
-                Videos = e.Videos,
-                IsVerified = e.IsVerified,
-                VerificationLevel = e.VerificationLevel,
-                VerifiedName = e.VerifiedName,
-                Info = e.Info
-            });
-        }
+            Id = e.Id,
+            UserId = e.UserId,
+            Name = e.Name,
+            Description = e.Description,
+            Activity = e.Activity,
+            Link = e.Link,
+            Socials = e.Socials,
+            Photos = e.Photos,
+            Videos = e.Videos,
+            IsVerified = e.IsVerified,
+            VerificationLevel = e.VerificationLevel,
+            VerifiedName = e.VerifiedName,
+            Info = e.Info
+        }).ToList();
 
-        var totalCount = list.Item2;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         return Ok(new
         {
-            items = filtered,
+            items = responseItems,
             totalCount,
             totalPages,
             pageSize,
