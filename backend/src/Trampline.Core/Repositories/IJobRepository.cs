@@ -21,7 +21,7 @@ public interface IJobRepository
 
     Task<Job?> GetByTitleAsync(string title, CancellationToken cancellationToken);
 
-    Task<Job> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken);
+    Task<Job?> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken);
 
     Task<IEnumerable<Job>> GetAllByUserIdAsync(Guid userId, int pageNumber, int pageSize,
         CancellationToken cancellationToken);
@@ -39,4 +39,8 @@ public interface IJobRepository
     Task<IEnumerable<Job>> GetPendingModerationAsync(CancellationToken cancellationToken);
 
     Task<IDictionary<Guid, Job>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+
+    Task<object> GetResponseStatsAsync(Guid userId, CancellationToken cancellationToken);
+
+    Task SoftDeleteByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 }

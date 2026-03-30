@@ -111,12 +111,12 @@ public class MentorshipRepository(ILogger<MentorshipRepository> logger, AppDbCon
             .FirstOrDefaultAsync(e => e.Title == title, cancellationToken);
     }
 
-    public async Task<Mentorship> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<Mentorship?> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        return (await context.Mentorships
+        return await context.Mentorships
             .Include(x => x.Profile)
             .Include(x => x.Tags)
-            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken))!;
+            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
     }
 
     public async Task<IEnumerable<Mentorship>> GetAllByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
@@ -250,5 +250,14 @@ public class MentorshipRepository(ILogger<MentorshipRepository> logger, AppDbCon
         }
 
         return result;
+    }
+
+    public async Task SoftDeleteByUserIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        await context.Mentorships
+            .Where(m => m.UserId == userId && m.DeletedAt == null)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(m => m.IsActive, false)
+                .SetProperty(m => m.DeletedAt, DateTime.UtcNow), cancellationToken);
     }
 }

@@ -119,12 +119,12 @@ public class JobRepository(ILogger<JobRepository> logger, AppDbContext context) 
             .FirstOrDefaultAsync(x => x.Id == id && x.UserId == employeeId, cancellationToken);
     }
 
-    public async Task<Job> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<Job?> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        return (await context.Jobs
+        return await context.Jobs
             .Include(x => x.JobApplications)
             .Include(x => x.Tags)
-            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken))!;
+            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
     }
 
     public async Task<IEnumerable<Job>> GetAllByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
@@ -199,6 +199,29 @@ public class JobRepository(ILogger<JobRepository> logger, AppDbContext context) 
             .ToDictionaryAsync(j => j.Id, cancellationToken);
     }
 
+    public async Task<object> GetResponseStatsAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var jobIds = await context.Jobs
+            .Where(j => j.UserId == userId && j.DeletedAt == null)
+            .Select(j => j.Id)
+            .ToListAsync(cancellationToken);
+
+        if (jobIds.Count == 0)
+            return new { totalResponses = 0, pendingResponses = 0 };
+
+        var stats = await context.JobApplications
+            .Where(a => jobIds.Contains(a.JobId))
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                totalResponses = g.Count(),
+                pendingResponses = g.Count(a => a.Status == Core.Models.ApplicationStatus.Pending)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return stats ?? new { totalResponses = 0, pendingResponses = 0 } as object;
+    }
+
     public async Task<IEnumerable<Tag>> GetOrCreateTagsAsync(IEnumerable<Tag> tags, CancellationToken cancellationToken)
     {
         var normalizedTags = tags
@@ -266,5 +289,14 @@ public class JobRepository(ILogger<JobRepository> logger, AppDbContext context) 
         }
 
         return result;
+    }
+
+    public async Task SoftDeleteByUserIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        await context.Jobs
+            .Where(j => j.UserId == userId && j.DeletedAt == null)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(j => j.IsActive, false)
+                .SetProperty(j => j.DeletedAt, DateTime.UtcNow), cancellationToken);
     }
 }

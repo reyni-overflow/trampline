@@ -20,7 +20,7 @@ public interface IEventRepository
 
     Task<Event?> GetByTitleAsync(string title, CancellationToken cancellationToken);
 
-    Task<Event> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken);
+    Task<Event?> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken);
 
     Task<IEnumerable<Event>> GetAllByUserIdAsync(Guid userId, int pageNumber, int pageSize,
         CancellationToken cancellationToken);
@@ -38,4 +38,6 @@ public interface IEventRepository
     Task<IEnumerable<Event>> GetPendingModerationAsync(CancellationToken cancellationToken);
 
     Task<IDictionary<Guid, Event>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+
+    Task SoftDeleteByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 }

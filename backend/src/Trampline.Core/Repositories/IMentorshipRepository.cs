@@ -20,7 +20,7 @@ public interface IMentorshipRepository
 
     Task<Mentorship?> GetByTitleAsync(string title, CancellationToken cancellationToken);
 
-    Task<Mentorship> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken);
+    Task<Mentorship?> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken);
 
     Task<IEnumerable<Mentorship>> GetAllByUserIdAsync(Guid userId, int pageNumber, int pageSize,
         CancellationToken cancellationToken);
@@ -38,4 +38,6 @@ public interface IMentorshipRepository
     Task<IEnumerable<Mentorship>> GetPendingModerationAsync(CancellationToken cancellationToken);
 
     Task<IDictionary<Guid, Mentorship>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+
+    Task SoftDeleteByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 }

@@ -111,12 +111,12 @@ public class EventRepository(ILogger<EventRepository> logger, AppDbContext conte
             .FirstOrDefaultAsync(e => e.Title == title, cancellationToken);
     }
 
-    public async Task<Event> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<Event?> GetByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        return (await context.Events
+        return await context.Events
             .Include(x => x.Profile)
             .Include(x => x.Tags)
-            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken))!;
+            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
     }
 
     public async Task<IEnumerable<Event>> GetAllByUserIdAsync(Guid userId, int pageNumber, int pageSize, CancellationToken cancellationToken)
@@ -250,5 +250,14 @@ public class EventRepository(ILogger<EventRepository> logger, AppDbContext conte
         }
 
         return result;
+    }
+
+    public async Task SoftDeleteByUserIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        await context.Events
+            .Where(e => e.UserId == userId && e.DeletedAt == null)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(e => e.IsActive, false)
+                .SetProperty(e => e.DeletedAt, DateTime.UtcNow), cancellationToken);
     }
 }
