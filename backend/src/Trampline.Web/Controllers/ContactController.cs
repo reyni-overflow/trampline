@@ -8,6 +8,7 @@ using Trampline.Contracts.DTOs.Requests;
 using Trampline.Contracts.DTOs.Responses;
 using Trampline.Core.Models.Worker;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Core.Constants;
 using Trampline.Core.Repositories;
 
 namespace Trampline.Web.Controllers;
@@ -125,7 +126,7 @@ public class ContactController(
 
         try
         {
-            await notificationService.SendAsync(receiverId, "contact_request", new
+            await notificationService.SendAsync(receiverId, NotificationTypes.ContactRequest, new
             {
                 contactId = contact.Id,
                 fromUserId = userId.Value
@@ -207,7 +208,7 @@ public class ContactController(
 
         try
         {
-            await notificationService.SendAsync(request.ToUserId, "job_recommendation", new
+            await notificationService.SendAsync(request.ToUserId, NotificationTypes.JobRecommendation, new
             {
                 recommendationId = recommendation.Id,
                 fromUserId = userId.Value,

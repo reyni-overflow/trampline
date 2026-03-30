@@ -10,6 +10,7 @@ using Trampline.Contracts.Extensions;
 using Trampline.Core.Models;
 using Trampline.Core.Models.Employee;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Core.Constants;
 using Trampline.Core.Repositories;
 
 namespace Trampline.Web.Controllers;
@@ -232,7 +233,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(profile.UserId, "verification_status", new
+            await notificationService.SendAsync(profile.UserId, NotificationTypes.VerificationStatus, new
             {
                 profileId = id,
                 companyName = profile.Name,
@@ -267,7 +268,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(profile.UserId, "verification_status", new
+            await notificationService.SendAsync(profile.UserId, NotificationTypes.VerificationStatus, new
             {
                 profileId = id,
                 companyName = profile.Name,
@@ -310,7 +311,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(job.UserId, "job_moderation", new
+            await notificationService.SendAsync(job.UserId, NotificationTypes.JobModeration, new
             {
                 jobId = id,
                 jobTitle = job.Title,
@@ -344,7 +345,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(jobUserId, "job_moderation", new
+            await notificationService.SendAsync(jobUserId, NotificationTypes.JobModeration, new
             {
                 jobId = id,
                 jobTitle,
@@ -386,7 +387,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(evt.UserId, "event_moderation", new
+            await notificationService.SendAsync(evt.UserId, NotificationTypes.EventModeration, new
             {
                 eventId = id,
                 eventTitle = evt.Title,
@@ -420,7 +421,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(evtUserId, "event_moderation", new
+            await notificationService.SendAsync(evtUserId, NotificationTypes.EventModeration, new
             {
                 eventId = id,
                 eventTitle = evtTitle,
@@ -462,7 +463,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(mentorship.UserId, "mentorship_moderation", new
+            await notificationService.SendAsync(mentorship.UserId, NotificationTypes.MentorshipModeration, new
             {
                 mentorshipId = id,
                 mentorshipTitle = mentorship.Title,
@@ -496,7 +497,7 @@ public class AdminController(
 
         try
         {
-            await notificationService.SendAsync(mentorshipUserId, "mentorship_moderation", new
+            await notificationService.SendAsync(mentorshipUserId, NotificationTypes.MentorshipModeration, new
             {
                 mentorshipId = id,
                 mentorshipTitle,
@@ -527,10 +528,10 @@ public class AdminController(
     [HttpPost("tags")]
     public async Task<IActionResult> CreateTagAsync([FromBody] CreateTagRequest request, CancellationToken ct)
     {
-        var exists = await tagRepository.ExistsAsync(request.Name, ct);
-        if (exists) return Conflict("Tag already exists");
-
         var trimmedName = request.Name.Trim();
+
+        var exists = await tagRepository.ExistsAsync(trimmedName, ct);
+        if (exists) return Conflict("Tag already exists");
         if (string.IsNullOrWhiteSpace(trimmedName) || trimmedName.All(c => char.IsWhiteSpace(c) || char.IsControl(c) || char.GetUnicodeCategory(c) == UnicodeCategory.Format))
             return BadRequest(new ProblemDetails { Title = "Tag name must contain visible characters", Status = 400 });
 

@@ -13,8 +13,9 @@ using Trampline.Core.Models.Employee;
 using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 using Trampline.Contracts.DTOs.Responses;
-using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Core.Constants;
 using Trampline.Web.Extensions;
+using Microsoft.AspNetCore.RateLimiting;
 using Trampline.Infrastructure.Postgres.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,13 +67,15 @@ public class JobController(
     [HttpPost("tags")]
     public async Task<IActionResult> CreateTagAsync([FromBody] CreateTagRequest request, CancellationToken ct)
     {
-        var exists = await tagRepository.ExistsAsync(request.Name, ct);
+        var trimmedName = request.Name.Trim();
+
+        var exists = await tagRepository.ExistsAsync(trimmedName, ct);
         if (exists) return Conflict("Tag already exists");
 
         var tag = new Tag
         {
             Id = Guid.NewGuid(),
-            Name = request.Name.Trim(),
+            Name = trimmedName,
             Category = request.Category,
             Lvl = 0
         };
@@ -358,7 +361,7 @@ public class JobController(
             var job = result.Value;
             if (job != null)
             {
-                await notificationService.SendAsync(job.UserId, "new_application", new
+                await notificationService.SendAsync(job.UserId, NotificationTypes.NewApplication, new
                 {
                     jobId = job.Id,
                     jobTitle = job.Title,
@@ -397,7 +400,7 @@ public class JobController(
             var application = await jobApplicationRepository.GetByIdAsync(applicationId, cancellationToken);
             if (application != null)
             {
-                await notificationService.SendAsync(application.Profile.UserId, "application_status", new
+                await notificationService.SendAsync(application.Profile.UserId, NotificationTypes.ApplicationStatus, new
                 {
                     applicationId,
                     jobId = application.JobId,
@@ -423,18 +426,12 @@ public class JobController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-        if (files.Length == 0) return UnprocessableEntity("File list is empty.");
+        var photoError = files.ValidatePhotos();
+        if (photoError != null) return UnprocessableEntity(photoError);
 
         var job = await repository.GetByIdAsync(id, ct);
         if (job == null) return NotFound();
         if (job.UserId != new Guid(userId)) return Forbid();
-
-        var allowedExtensions = new[] { ".jpg", ".webp", ".png" };
-        foreach (var file in files)
-        {
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                return UnprocessableEntity("Only .jpg, .webp, .png are allowed");
-        }
 
         foreach (var file in files)
         {
@@ -455,18 +452,13 @@ public class JobController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-        if (files.Length == 0) return UnprocessableEntity("File list is empty.");
+
+        var videoError = files.ValidateVideos();
+        if (videoError != null) return UnprocessableEntity(videoError);
 
         var job = await repository.GetByIdAsync(id, ct);
         if (job == null) return NotFound();
         if (job.UserId != new Guid(userId)) return Forbid();
-
-        var allowedExtensions = new[] { ".mp4", ".webm" };
-        foreach (var file in files)
-        {
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                return UnprocessableEntity("Only .mp4, .webm are allowed");
-        }
 
         foreach (var file in files)
         {

@@ -13,6 +13,7 @@ using Trampline.Core.Models.Employee;
 using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Core.Constants;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
@@ -272,7 +273,7 @@ public class EventController(
             var evt = result.Value;
             if (evt != null)
             {
-                await notificationService.SendAsync(evt.UserId, "new_application", new
+                await notificationService.SendAsync(evt.UserId, NotificationTypes.NewApplication, new
                 {
                     eventId = evt.Id,
                     eventTitle = evt.Title,
@@ -311,7 +312,7 @@ public class EventController(
             var application = await eventApplicationRepository.GetByIdAsync(applicationId, cancellationToken);
             if (application != null)
             {
-                await notificationService.SendAsync(application.Profile.UserId, "application_status", new
+                await notificationService.SendAsync(application.Profile.UserId, NotificationTypes.ApplicationStatus, new
                 {
                     applicationId,
                     eventId = application.EventId,
@@ -337,18 +338,12 @@ public class EventController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-        if (files.Length == 0) return UnprocessableEntity("File list is empty.");
+        var photoError = files.ValidatePhotos();
+        if (photoError != null) return UnprocessableEntity(photoError);
 
         var evt = await repository.GetByIdAsync(id, ct);
         if (evt == null) return NotFound();
         if (evt.UserId != new Guid(userId)) return Forbid();
-
-        var allowedExtensions = new[] { ".jpg", ".webp", ".png" };
-        foreach (var file in files)
-        {
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                return UnprocessableEntity("Only .jpg, .webp, .png are allowed");
-        }
 
         foreach (var file in files)
         {
@@ -369,18 +364,13 @@ public class EventController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-        if (files.Length == 0) return UnprocessableEntity("File list is empty.");
+
+        var videoError = files.ValidateVideos();
+        if (videoError != null) return UnprocessableEntity(videoError);
 
         var evt = await repository.GetByIdAsync(id, ct);
         if (evt == null) return NotFound();
         if (evt.UserId != new Guid(userId)) return Forbid();
-
-        var allowedExtensions = new[] { ".mp4", ".webm" };
-        foreach (var file in files)
-        {
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                return UnprocessableEntity("Only .mp4, .webm are allowed");
-        }
 
         foreach (var file in files)
         {

@@ -13,6 +13,7 @@ using Trampline.Core.Models.Employee;
 using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Core.Constants;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
@@ -272,7 +273,7 @@ public class MentorshipController(
             var mentorship = result.Value;
             if (mentorship != null)
             {
-                await notificationService.SendAsync(mentorship.UserId, "new_application", new
+                await notificationService.SendAsync(mentorship.UserId, NotificationTypes.NewApplication, new
                 {
                     mentorshipId = mentorship.Id,
                     mentorshipTitle = mentorship.Title,
@@ -311,7 +312,7 @@ public class MentorshipController(
             var application = await mentorshipApplicationRepository.GetByIdAsync(applicationId, cancellationToken);
             if (application != null)
             {
-                await notificationService.SendAsync(application.Profile.UserId, "application_status", new
+                await notificationService.SendAsync(application.Profile.UserId, NotificationTypes.ApplicationStatus, new
                 {
                     applicationId,
                     mentorshipId = application.MentorshipId,
@@ -337,18 +338,12 @@ public class MentorshipController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-        if (files.Length == 0) return UnprocessableEntity("File list is empty.");
+        var photoError = files.ValidatePhotos();
+        if (photoError != null) return UnprocessableEntity(photoError);
 
         var mentorship = await repository.GetByIdAsync(id, ct);
         if (mentorship == null) return NotFound();
         if (mentorship.UserId != new Guid(userId)) return Forbid();
-
-        var allowedExtensions = new[] { ".jpg", ".webp", ".png" };
-        foreach (var file in files)
-        {
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                return UnprocessableEntity("Only .jpg, .webp, .png are allowed");
-        }
 
         foreach (var file in files)
         {
@@ -369,18 +364,13 @@ public class MentorshipController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-        if (files.Length == 0) return UnprocessableEntity("File list is empty.");
+
+        var videoError = files.ValidateVideos();
+        if (videoError != null) return UnprocessableEntity(videoError);
 
         var mentorship = await repository.GetByIdAsync(id, ct);
         if (mentorship == null) return NotFound();
         if (mentorship.UserId != new Guid(userId)) return Forbid();
-
-        var allowedExtensions = new[] { ".mp4", ".webm" };
-        foreach (var file in files)
-        {
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                return UnprocessableEntity("Only .mp4, .webm are allowed");
-        }
 
         foreach (var file in files)
         {
