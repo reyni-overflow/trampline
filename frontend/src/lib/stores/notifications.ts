@@ -11,6 +11,7 @@ export type NotificationType =
     | 'verification_status'
     | 'job_moderation'
     | 'event_moderation'
+    | 'mentorship_moderation'
     | 'event_reminder'
     | 'system';
 

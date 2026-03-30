@@ -18,7 +18,8 @@ const notificationTitles: Record<string, string> = {
     job_recommendation: 'notifications.jobRecommendation',
     verification_status: 'notifications.verificationStatus',
     job_moderation: 'notifications.jobModeration',
-    event_moderation: 'notifications.eventModeration'
+    event_moderation: 'notifications.eventModeration',
+    mentorship_moderation: 'notifications.mentorshipModeration'
 };
 
 export async function startConnection() {
@@ -41,7 +42,8 @@ export async function startConnection() {
                     | 'job_recommendation'
                     | 'verification_status'
                     | 'job_moderation'
-                    | 'event_moderation') || 'system',
+                    | 'event_moderation'
+                    | 'mentorship_moderation') || 'system',
             title: tGet(titleKey),
             message: JSON.stringify(data.payload),
             link: buildLink(data.type, data.payload)
@@ -77,6 +79,8 @@ function buildLink(type: string, payload: Record<string, unknown>): string | und
         case 'job_moderation':
         case 'event_moderation':
             return '/dashboard/jobs';
+        case 'mentorship_moderation':
+            return '/dashboard/mentorships';
         default:
             return undefined;
     }
