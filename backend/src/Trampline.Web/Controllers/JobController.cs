@@ -1,5 +1,3 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,14 +12,12 @@ using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 using Trampline.Contracts.DTOs.Responses;
 using Trampline.Core.Constants;
+using Trampline.Web.Controllers.Base;
 using Trampline.Web.Extensions;
 using Microsoft.AspNetCore.RateLimiting;
-using Trampline.Infrastructure.Postgres.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Trampline.Web.Controllers;
 
-[ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("api")]
 public class JobController(
@@ -33,8 +29,7 @@ public class JobController(
     IUserService userService,
     ITagRepository tagRepository,
     IJobApplicationRepository jobApplicationRepository,
-    IMediaService mediaService,
-    AppDbContext dbContext) : ControllerBase
+    IMediaService mediaService) : BaseApiController
 {
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Получить все теги")]
@@ -102,7 +97,7 @@ public class JobController(
 
         var responseItems = items.Select(x => x.ToJobResponse()).ToList();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -131,32 +126,10 @@ public class JobController(
     [HttpGet("my-response-stats")]
     public async Task<IActionResult> GetMyResponseStatsAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var guid = new Guid(userId);
-        var jobIds = await dbContext.Jobs
-            .Where(j => j.UserId == guid && j.DeletedAt == null)
-            .Select(j => j.Id)
-            .ToListAsync(cancellationToken);
-
-        if (jobIds.Count == 0)
-            return Ok(new { totalResponses = 0, pendingResponses = 0 });
-
-        var stats = await dbContext.JobApplications
-            .Where(a => jobIds.Contains(a.JobId))
-            .GroupBy(_ => 1)
-            .Select(g => new
-            {
-                totalResponses = g.Count(),
-                pendingResponses = g.Count(a => a.Status == ApplicationStatus.Pending)
-            })
-            .FirstOrDefaultAsync(cancellationToken);
-
-        return Ok(stats ?? new { totalResponses = 0, pendingResponses = 0 });
+        var stats = await repository.GetResponseStatsAsync(userGuid, cancellationToken);
+        return Ok(stats);
     }
 
     [AllowAnonymous]
@@ -178,27 +151,16 @@ public class JobController(
     [HttpPost]
     public async Task<IActionResult> CreateJobAsync(CreateJobRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await jobService.CreateJob(new Guid(userId), request, cancellationToken);
+        var result = await jobService.CreateJob(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Job created by {UserId}", userId);
+        logger.LogInformation("Job created by {UserId}", userGuid);
         return Ok(result.Value!.ToJobResponse());
     }
 
@@ -213,7 +175,7 @@ public class JobController(
         var dict = await repository.GetByIdsAsync(request.Ids, cancellationToken);
         var responseItems = dict.Values.Select(x => x.ToJobResponse()).ToList();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -231,13 +193,12 @@ public class JobController(
     [HttpGet("{id}")]
     public async Task<IActionResult> GetJobByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userIdLine = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userIdLine = GetUserIdString();
 
         Result<Job>? find;
         if (!string.IsNullOrEmpty(userIdLine))
         {
-            find = await jobService.GetByIdAsync(id, cancellationToken, new Guid(userIdLine));
+            find = await jobService.GetByIdAsync(id, cancellationToken, Guid.Parse(userIdLine));
         }
         else
         {
@@ -255,15 +216,15 @@ public class JobController(
             var owner = await userService.GetByIdAsync(jobValue.UserId, cancellationToken);
             if (owner is { IsPrivate: true })
             {
-                var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (requesterId == null || new Guid(requesterId) != owner.Id)
+                var requesterId = GetUserIdString();
+                if (requesterId == null || Guid.Parse(requesterId) != owner.Id)
                     return NotFound();
             }
         }
 
         var response = find.Value!.ToJobResponse();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -279,27 +240,16 @@ public class JobController(
     public async Task<IActionResult> UpdateJobAsync(Guid id, UpdateJobRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await jobService.UpdateAsync(new Guid(userId), id, request, cancellationToken);
+        var result = await jobService.UpdateAsync(userGuid, id, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Job {Id} updated by {UserId}", id, userId);
+        logger.LogInformation("Job {Id} updated by {UserId}", id, userGuid);
         return Ok(result.Value!.ToJobResponse());
     }
 
@@ -308,20 +258,9 @@ public class JobController(
     [HttpGet("{id}/responses")]
     public async Task<IActionResult> GetApplicationJobAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await jobService.GetApplicationsAsync(new Guid(userId), id, cancellationToken);
+        var result = await jobService.GetApplicationsAsync(userGuid, id, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -336,27 +275,16 @@ public class JobController(
     [HttpPost("application-job")]
     public async Task<IActionResult> ApplicationJobAsync(JobApplicationRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await jobService.ApplicationJobAsync(new Guid(userId), request, cancellationToken);
+        var result = await jobService.ApplicationJobAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Application submitted for job by {UserId}", userId);
+        logger.LogInformation("Application submitted for job by {UserId}", userGuid);
 
         try
         {
@@ -367,7 +295,7 @@ public class JobController(
                 {
                     jobId = job.Id,
                     jobTitle = job.Title,
-                    applicantId = userId
+                    applicantId = userGuid
                 });
             }
         }
@@ -384,13 +312,9 @@ public class JobController(
     [HttpPut("application/{applicationId}/status")]
     public async Task<IActionResult> UpdateApplicationStatusAsync(Guid applicationId, [FromBody] UpdateStatusRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var result = await jobService.UpdateApplicationStatusAsync(new Guid(userId), applicationId, request.Status, cancellationToken);
+        var result = await jobService.UpdateApplicationStatusAsync(userGuid, applicationId, request.Status, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
@@ -419,21 +343,43 @@ public class JobController(
         return Ok();
     }
 
+    [Authorize(Roles = "Worker")]
+    [SwaggerOperation("Отозвать отклик на вакансию")]
+    [HttpPut("application/{id}/withdraw")]
+    public async Task<IActionResult> WithdrawApplicationAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var userGuid = GetUserId();
+
+        var application = await jobApplicationRepository.GetByIdAsync(id, cancellationToken);
+        if (application == null)
+            return NotFound();
+
+        if (application.Profile.UserId != userGuid)
+            return Forbid();
+
+        application.UpdateStatus(ApplicationStatus.Withdrawn);
+        await jobApplicationRepository.UpdateAsync(application, cancellationToken);
+
+        logger.LogInformation("Application {AppId} withdrawn by {UserId}", id, userGuid);
+        return Ok();
+    }
+
     [Authorize(Roles = "Employee")]
     [EnableRateLimiting("upload")]
     [SwaggerOperation("Загрузить фото к вакансии")]
     [HttpPost("{id}/photo")]
     public async Task<IActionResult> UploadJobPhotoAsync(Guid id, IFormFile[] files, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
         var photoError = files.ValidatePhotos();
         if (photoError != null) return UnprocessableEntity(photoError);
 
         var job = await repository.GetByIdAsync(id, ct);
         if (job == null) return NotFound();
-        if (job.UserId != new Guid(userId)) return Forbid();
+        if (job.UserId != userGuid) return Forbid();
+
+        if (job.Photos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 photos allowed" });
 
         foreach (var file in files)
         {
@@ -451,16 +397,17 @@ public class JobController(
     [HttpPost("{id}/video")]
     public async Task<IActionResult> UploadJobVideoAsync(Guid id, IFormFile[] files, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
 
         var videoError = files.ValidateVideos();
         if (videoError != null) return UnprocessableEntity(videoError);
 
         var job = await repository.GetByIdAsync(id, ct);
         if (job == null) return NotFound();
-        if (job.UserId != new Guid(userId)) return Forbid();
+        if (job.UserId != userGuid) return Forbid();
+
+        if (job.Videos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 videos allowed" });
 
         foreach (var file in files)
         {
@@ -478,14 +425,12 @@ public class JobController(
     [HttpDelete("{id}/photo")]
     public async Task<IActionResult> DeleteJobPhotoAsync(Guid id, [FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
         var job = await jobService.GetByIdAsync(id, ct);
         if (job.IsFailure) return job.ToActionResult();
 
-        if (job.Value!.UserId != new Guid(userId) && !User.IsInRole("Admin"))
+        if (job.Value!.UserId != userGuid && !User.IsInRole("Admin"))
             return Forbid();
 
         if (!job.Value!.Photos.Contains(path))
@@ -506,14 +451,12 @@ public class JobController(
     [HttpDelete("{id}/video")]
     public async Task<IActionResult> DeleteJobVideoAsync(Guid id, [FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
         var job = await jobService.GetByIdAsync(id, ct);
         if (job.IsFailure) return job.ToActionResult();
 
-        if (job.Value!.UserId != new Guid(userId) && !User.IsInRole("Admin"))
+        if (job.Value!.UserId != userGuid && !User.IsInRole("Admin"))
             return Forbid();
 
         if (!job.Value!.Videos.Contains(path))
@@ -533,25 +476,14 @@ public class JobController(
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteJobAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await jobService.DeleteAsync(id, new Guid(userId), cancellationToken);
+        var result = await jobService.DeleteAsync(id, userGuid, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
 
-        logger.LogInformation("Job {Id} deleted by {UserId}", id, userId);
+        logger.LogInformation("Job {Id} deleted by {UserId}", id, userGuid);
         return Ok();
     }
 }

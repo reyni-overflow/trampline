@@ -1,5 +1,3 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,12 +8,12 @@ using Trampline.Contracts.DTOs.Responses;
 using Trampline.Application.Services.IO;
 using Trampline.Core.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Web.Controllers.Base;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
 
 [Authorize(Roles = "Employee, Admin")]
-[ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("api")]
 public class EmployeeController(
@@ -23,7 +21,7 @@ public class EmployeeController(
     IEmployeeService employeeService,
     IEmployeeRepository employeeRepository,
     IUserService userService,
-    IMediaService mediaService) : ControllerBase
+    IMediaService mediaService) : BaseApiController
 {
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Пагинация", Description = "Появляются только Profile с Active - true, верифицрованные")]
@@ -73,23 +71,18 @@ public class EmployeeController(
     [HttpPost("video")]
     public async Task<IActionResult> UploadVideoAsync(IFormFile[] files, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
+        var userGuid = GetUserId();
 
         if (files.Length == 0)
         {
             return UnprocessableEntity("File list is empty.");
         }
+
+        var profile = await employeeRepository.GetByUserIdAsync(userGuid, cancellationToken);
+        if (profile == null) return NotFound();
+
+        if (profile.Videos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 videos allowed" });
 
         var allowedExtensions = new[] { ".mp4", ".webm" };
 
@@ -103,14 +96,14 @@ public class EmployeeController(
             }
         }
 
-        var result = await employeeService.UpdateVideoAsync(new Guid(userId), files, cancellationToken);
+        var result = await employeeService.UpdateVideoAsync(userGuid, files, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Files uploaded by {UserId}", userId);
+        logger.LogInformation("Files uploaded by {UserId}", userGuid);
         return Ok(result.Value!.EmployeeProfile!.Videos);
     }
 
@@ -118,23 +111,18 @@ public class EmployeeController(
     [HttpPost("photo")]
     public async Task<IActionResult> UploadPhotoAsync(IFormFile[] files, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
+        var userGuid = GetUserId();
 
         if (files.Length == 0)
         {
             return UnprocessableEntity("File list is empty.");
         }
+
+        var profile = await employeeRepository.GetByUserIdAsync(userGuid, cancellationToken);
+        if (profile == null) return NotFound();
+
+        if (profile.Photos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 photos allowed" });
 
         var allowedExtensions = new[] { ".jpg", ".webp", ".png" };
 
@@ -148,14 +136,14 @@ public class EmployeeController(
             }
         }
 
-        var result = await employeeService.UpdatePhotosAsync(new Guid(userId), files, cancellationToken);
+        var result = await employeeService.UpdatePhotosAsync(userGuid, files, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Files uploaded by {UserId}", userId);
+        logger.LogInformation("Files uploaded by {UserId}", userGuid);
         return Ok(result.Value!.EmployeeProfile!.Photos);
     }
 
@@ -164,11 +152,9 @@ public class EmployeeController(
     [HttpDelete("photo")]
     public async Task<IActionResult> DeletePhotoAsync([FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
-        var profile = await employeeRepository.GetByUserIdAsync(new Guid(userId), ct);
+        var profile = await employeeRepository.GetByUserIdAsync(userGuid, ct);
         if (profile == null) return NotFound();
 
         if (!profile.Photos.Contains(path))
@@ -189,11 +175,9 @@ public class EmployeeController(
     [HttpDelete("video")]
     public async Task<IActionResult> DeleteVideoAsync([FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
-        var profile = await employeeRepository.GetByUserIdAsync(new Guid(userId), ct);
+        var profile = await employeeRepository.GetByUserIdAsync(userGuid, ct);
         if (profile == null) return NotFound();
 
         if (!profile.Videos.Contains(path))
@@ -212,27 +196,16 @@ public class EmployeeController(
     public async Task<IActionResult> UpdateProfileAsync(EmployeeProfileRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await employeeService.UpdateProfileAsync(new Guid(userId), request, cancellationToken);
+        var result = await employeeService.UpdateProfileAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Employee profile updated by {UserId}", userId);
+        logger.LogInformation("Employee profile updated by {UserId}", userGuid);
         var profile = result.Value!.EmployeeProfile;
         return Ok(profile != null ? new EmployeeProfileResponse
         {
@@ -292,8 +265,8 @@ public class EmployeeController(
         var user = await userService.GetByIdAsync(findEmployee.UserId, cancellationToken);
         if (user is { IsPrivate: true })
         {
-            var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (requesterId == null || new Guid(requesterId) != user.Id)
+            var requesterId = GetUserIdString();
+            if (requesterId == null || Guid.Parse(requesterId) != user.Id)
                 return NotFound();
         }
 
@@ -318,28 +291,16 @@ public class EmployeeController(
     [HttpGet("verify")]
     public async Task<IActionResult> ConfirmAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await employeeService.VerifyCompanyAsync(new Guid(userId), cancellationToken);
+        var result = await employeeService.VerifyCompanyAsync(userGuid, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Verification requested by {UserId}", userId);
+        logger.LogInformation("Verification requested by {UserId}", userGuid);
         return Ok(result.Value!);
     }
-
 }

@@ -62,6 +62,8 @@ public static class ConfigureBuilder
             services.AddScoped<IAuditLogRepository, AuditLogRepository>();
             services.AddScoped<IMentorshipRepository, MentorshipRepository>();
             services.AddScoped<IMentorshipApplicationRepository, MentorshipApplicationRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IMapRepository, MapRepository>();
             return services;
         }
 

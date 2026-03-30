@@ -1,5 +1,3 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -9,19 +7,19 @@ using Trampline.Contracts.DTOs.Responses;
 using Trampline.Contracts.Extensions;
 using Trampline.Core.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Web.Controllers.Base;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
 
 [Authorize(Roles = "Worker, Admin")]
-[ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("api")]
 public class WorkerController(
     ILogger<WorkerController> logger,
     IWorkerService workerService,
     IWorkerRepository workerRepository,
-    IUserService userService) : ControllerBase
+    IUserService userService) : BaseApiController
 {
     [AllowAnonymous]
     [SwaggerOperation("Количество соискателей")]
@@ -107,9 +105,8 @@ public class WorkerController(
         var owner = await userService.GetByIdAsync(profile.UserId, cancellationToken);
         if (owner is { IsPrivate: true })
         {
-            var requestingUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                                   ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            var isOwner = requestingUserId != null && new Guid(requestingUserId) == owner.Id;
+            var requestingUserId = GetUserIdString();
+            var isOwner = requestingUserId != null && Guid.Parse(requestingUserId) == owner.Id;
             var isAdmin = User.IsInRole("Admin");
 
             if (!isOwner && !isAdmin)
@@ -131,9 +128,8 @@ public class WorkerController(
         var owner = await userService.GetByIdAsync(profile.UserId, cancellationToken);
         if (owner is { IsPrivate: true })
         {
-            var requestingUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                                   ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            var isOwner = requestingUserId != null && new Guid(requestingUserId) == owner.Id;
+            var requestingUserId = GetUserIdString();
+            var isOwner = requestingUserId != null && Guid.Parse(requestingUserId) == owner.Id;
             var isAdmin = User.IsInRole("Admin");
 
             if (!isOwner && !isAdmin)
@@ -146,27 +142,16 @@ public class WorkerController(
     [HttpPut]
     public async Task<IActionResult> UpdateWorkerProfile(WorkerProfileRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await workerService.UpdateProfileAsync(new Guid(userId), request, cancellationToken);
+        var result = await workerService.UpdateProfileAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Worker profile updated by {UserId}", userId);
+        logger.LogInformation("Worker profile updated by {UserId}", userGuid);
         return Ok(result.Value!.WorkerProfile?.ToWorkerProfileResponse());
     }
 
@@ -175,18 +160,7 @@ public class WorkerController(
     [HttpPost("upload-resume")]
     public async Task<IActionResult> UploadResumeAsync(IFormFile file, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
+        var userGuid = GetUserId();
 
         var allowedExtensions = new[] { ".pdf", ".docx", ".doc" };
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
@@ -196,14 +170,14 @@ public class WorkerController(
             return UnprocessableEntity("Only pdf, docx, doc are allowed");
         }
 
-        var result = await workerService.UpdateResumeAsync(new Guid(userId), file, cancellationToken);
+        var result = await workerService.UpdateResumeAsync(userGuid, file, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Resume uploaded by {UserId}", userId);
+        logger.LogInformation("Resume uploaded by {UserId}", userGuid);
         return Ok(result.Value!.WorkerProfile?.Resume);
     }
 
@@ -212,18 +186,7 @@ public class WorkerController(
     [HttpPost("avatar")]
     public async Task<IActionResult> UploadPhotoAsync(IFormFile file, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
+        var userGuid = GetUserId();
 
         var allowedExtensions = new[] { ".jpg", ".webp", ".png" };
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
@@ -232,34 +195,23 @@ public class WorkerController(
             return UnprocessableEntity("Only .jpg, .webp, .png are allowed");
         }
 
-        var result = await workerService.UpdateAvatarAsync(new Guid(userId), file, cancellationToken);
+        var result = await workerService.UpdateAvatarAsync(userGuid, file, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Avatar uploaded by {UserId}", userId);
+        logger.LogInformation("Avatar uploaded by {UserId}", userGuid);
         return Ok(result.Value!.WorkerProfile?.Photo ?? result.Value!.Avatar);
     }
 
     [HttpGet("applications")]
     public async Task<IActionResult> GetApplicationsAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await workerService.GetApplicationsAsync(new Guid(userId), cancellationToken);
+        var result = await workerService.GetApplicationsAsync(userGuid, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -272,20 +224,9 @@ public class WorkerController(
     [HttpGet("event-applications")]
     public async Task<IActionResult> GetEventApplicationsAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await workerService.GetEventApplicationsAsync(new Guid(userId), cancellationToken);
+        var result = await workerService.GetEventApplicationsAsync(userGuid, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -298,20 +239,9 @@ public class WorkerController(
     [HttpGet("mentorship-applications")]
     public async Task<IActionResult> GetMentorshipApplicationsAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await workerService.GetMentorshipApplicationsAsync(new Guid(userId), cancellationToken);
+        var result = await workerService.GetMentorshipApplicationsAsync(userGuid, cancellationToken);
 
         if (result.IsFailure)
         {

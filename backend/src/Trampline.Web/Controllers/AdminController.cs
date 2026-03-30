@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +12,11 @@ using Trampline.Core.Models.Employee;
 using Microsoft.AspNetCore.RateLimiting;
 using Trampline.Core.Constants;
 using Trampline.Core.Repositories;
+using Trampline.Web.Controllers.Base;
 
 namespace Trampline.Web.Controllers;
 
 [Authorize(Roles = "Admin")]
-[ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("admin")]
 public class AdminController(
@@ -33,7 +33,7 @@ public class AdminController(
     IAuditLogRepository auditLogRepository,
     IDaDataService daDataService,
     IMentorshipRepository mentorshipRepository,
-    IMentorshipService mentorshipService) : ControllerBase
+    IMentorshipService mentorshipService) : BaseApiController
 {
     [HttpGet("users")]
     public async Task<IActionResult> GetUsersAsync(CancellationToken ct, int pageSize = 20, int pageNumber = 1)
@@ -102,9 +102,8 @@ public class AdminController(
 
         if (user.Role == Role.Admin)
         {
-            var callerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (callerIdStr == null) return Unauthorized();
-            var caller = await userService.GetByIdAsync(Guid.Parse(callerIdStr), ct);
+            var callerGuid = GetUserId();
+            var caller = await userService.GetByIdAsync(callerGuid, ct);
             if (caller == null || !caller.IsSuperAdmin)
                 return StatusCode(403, new ProblemDetails { Title = "Only the super administrator can block admin users", Status = 403 });
         }
@@ -114,10 +113,10 @@ public class AdminController(
         await userService.UpdateAsync(user, ct);
         logger.LogWarning("Admin blocked user {TargetUserId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "block_user", "User", id, $"Blocked user {user.Nickname}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "block_user", "User", id, $"Blocked user {user.Nickname}", ip, ct);
 
         return Ok();
     }
@@ -130,9 +129,8 @@ public class AdminController(
 
         if (user.Role == Role.Admin)
         {
-            var callerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (callerIdStr == null) return Unauthorized();
-            var caller = await userService.GetByIdAsync(Guid.Parse(callerIdStr), ct);
+            var callerGuid = GetUserId();
+            var caller = await userService.GetByIdAsync(callerGuid, ct);
             if (caller == null || !caller.IsSuperAdmin)
                 return StatusCode(403, new ProblemDetails { Title = "Only the super administrator can unblock admin users", Status = 403 });
         }
@@ -142,10 +140,10 @@ public class AdminController(
         await userService.UpdateAsync(user, ct);
         logger.LogWarning("Admin unblocked user {TargetUserId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "unblock_user", "User", id, $"Unblocked user {user.Nickname}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "unblock_user", "User", id, $"Unblocked user {user.Nickname}", ip, ct);
 
         return Ok();
     }
@@ -158,9 +156,8 @@ public class AdminController(
         if (!Enum.TryParse<Role>(request.Role, true, out var role))
             return BadRequest("Invalid role");
 
-        var callerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (callerIdStr == null) return Unauthorized();
-        var caller = await userService.GetByIdAsync(Guid.Parse(callerIdStr), ct);
+        var callerGuid = GetUserId();
+        var caller = await userService.GetByIdAsync(callerGuid, ct);
         if (caller == null) return Unauthorized();
 
         if (role == Role.Admin && !caller.IsSuperAdmin)
@@ -226,10 +223,10 @@ public class AdminController(
         await employeeRepository.UpdateAsync(profile, ct);
         logger.LogInformation("Admin approved verification {ProfileId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "approve_verification", "EmployeeProfile", id, $"Approved verification for {profile.Name}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "approve_verification", "EmployeeProfile", id, $"Approved verification for {profile.Name}", ip, ct);
 
         try
         {
@@ -261,10 +258,10 @@ public class AdminController(
         await employeeRepository.UpdateAsync(profile, ct);
         logger.LogInformation("Admin rejected verification {ProfileId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "reject_verification", "EmployeeProfile", id, $"Rejected verification for {profile.Name}, reason: {request.Reason}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "reject_verification", "EmployeeProfile", id, $"Rejected verification for {profile.Name}, reason: {request.Reason}", ip, ct);
 
         try
         {
@@ -304,10 +301,10 @@ public class AdminController(
         await jobRepository.UpdateAsync(job, ct);
         logger.LogInformation("Admin approved job {JobId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "approve_job", "Job", id, $"Approved job: {job.Title}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "approve_job", "Job", id, $"Approved job: {job.Title}", ip, ct);
 
         try
         {
@@ -338,10 +335,10 @@ public class AdminController(
         await jobRepository.DeleteAsync(id, ct);
         logger.LogInformation("Admin rejected job {JobId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "reject_job", "Job", id, $"Rejected job: {jobTitle}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "reject_job", "Job", id, $"Rejected job: {jobTitle}", ip, ct);
 
         try
         {
@@ -380,10 +377,10 @@ public class AdminController(
         await eventRepository.UpdateAsync(evt, ct);
         logger.LogInformation("Admin approved event {EventId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "approve_event", "Event", id, $"Approved event: {evt.Title}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "approve_event", "Event", id, $"Approved event: {evt.Title}", ip, ct);
 
         try
         {
@@ -414,10 +411,10 @@ public class AdminController(
         await eventRepository.DeleteAsync(id, ct);
         logger.LogInformation("Admin rejected event {EventId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "reject_event", "Event", id, $"Rejected event: {evtTitle}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "reject_event", "Event", id, $"Rejected event: {evtTitle}", ip, ct);
 
         try
         {
@@ -456,10 +453,10 @@ public class AdminController(
         await mentorshipRepository.UpdateAsync(mentorship, ct);
         logger.LogInformation("Admin approved mentorship {MentorshipId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "approve_mentorship", "Mentorship", id, $"Approved mentorship: {mentorship.Title}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "approve_mentorship", "Mentorship", id, $"Approved mentorship: {mentorship.Title}", ip, ct);
 
         try
         {
@@ -490,10 +487,10 @@ public class AdminController(
         await mentorshipRepository.DeleteAsync(id, ct);
         logger.LogInformation("Admin rejected mentorship {MentorshipId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "reject_mentorship", "Mentorship", id, $"Rejected mentorship: {mentorshipTitle}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "reject_mentorship", "Mentorship", id, $"Rejected mentorship: {mentorshipTitle}", ip, ct);
 
         try
         {
@@ -547,10 +544,10 @@ public class AdminController(
 
         logger.LogInformation("Tag created: {TagName}", tag.Name);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "create_tag", "Tag", tag.Id, $"Created tag: {tag.Name}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "create_tag", "Tag", tag.Id, $"Created tag: {tag.Name}", ip, ct);
 
         return Ok(tag);
     }
@@ -562,10 +559,10 @@ public class AdminController(
 
         logger.LogInformation("Tag deleted: {TagName}", name);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var adminGuid = GetUserId();
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "delete_tag", "Tag", null, $"Deleted tag: {name}", ip, ct);
+        await auditService.LogAsync(adminGuid, adminName, "Admin", "delete_tag", "Tag", null, $"Deleted tag: {name}", ip, ct);
 
         return Ok();
     }
@@ -592,9 +589,8 @@ public class AdminController(
     [HttpPost("curators")]
     public async Task<IActionResult> CreateCuratorAsync([FromBody] CreateCuratorRequest request, CancellationToken ct)
     {
-        var callerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (callerIdStr == null) return Unauthorized();
-        var caller = await userService.GetByIdAsync(Guid.Parse(callerIdStr), ct);
+        var callerGuid = GetUserId();
+        var caller = await userService.GetByIdAsync(callerGuid, ct);
         if (caller == null || !caller.IsSuperAdmin)
             return StatusCode(403, new ProblemDetails { Title = "Only the super administrator can create curators", Status = 403 });
 
@@ -620,10 +616,9 @@ public class AdminController(
 
         logger.LogWarning("Admin created curator {Email}", request.Email);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "create_curator", "User", result.Value!.Id, $"Created curator: {request.Email}", ip, ct);
+        await auditService.LogAsync(callerGuid, adminName, "Admin", "create_curator", "User", result.Value!.Id, $"Created curator: {request.Email}", ip, ct);
 
         return Ok(new { result.Value!.Id, result.Value!.Nickname, result.Value!.Email, Role = "Admin" });
     }
@@ -631,9 +626,8 @@ public class AdminController(
     [HttpDelete("curators/{id:guid}")]
     public async Task<IActionResult> DeleteCuratorAsync(Guid id, CancellationToken ct)
     {
-        var callerIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (callerIdStr == null) return Unauthorized();
-        var caller = await userService.GetByIdAsync(Guid.Parse(callerIdStr), ct);
+        var callerGuid = GetUserId();
+        var caller = await userService.GetByIdAsync(callerGuid, ct);
         if (caller == null || !caller.IsSuperAdmin)
             return StatusCode(403, new ProblemDetails { Title = "Only the super administrator can delete curators", Status = 403 });
 
@@ -646,10 +640,9 @@ public class AdminController(
         await userService.DeleteAsync(id, ct);
         logger.LogWarning("Admin deleted curator {CuratorId}", id);
 
-        var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var adminName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
         var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        await auditService.LogAsync(adminId is not null ? Guid.Parse(adminId) : null, adminName, "Admin", "delete_curator", "User", id, $"Deleted curator: {id}", ip, ct);
+        await auditService.LogAsync(callerGuid, adminName, "Admin", "delete_curator", "User", id, $"Deleted curator: {id}", ip, ct);
 
         return Ok();
     }

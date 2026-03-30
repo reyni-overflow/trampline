@@ -12,6 +12,8 @@ public record UserResponse
 
     public string? Avatar { get; init; }
 
+    public string? Phone { get; init; }
+
     public Role Role { get; init; }
 
     public bool IsPrivate { get; init; }

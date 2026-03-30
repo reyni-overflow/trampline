@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
@@ -12,11 +12,11 @@ using Trampline.Contracts.DTOs.Requests;
 using Trampline.Contracts.DTOs.Responses;
 using Trampline.Core.Models;
 using Trampline.Core.Repositories;
+using Trampline.Web.Controllers.Base;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
 
-[ApiController]
 [Route("[controller]")]
 public class AuthController(
     ILogger<AuthController> logger,
@@ -28,7 +28,7 @@ public class AuthController(
     IMediaService mediaService,
     ITotpService totpService,
     IDistributedCache cache,
-    IWebHostEnvironment environment) : ControllerBase
+    IWebHostEnvironment environment) : BaseApiController
 {
     private CookieOptions CreateCookieOptions(TimeSpan expiry)
     {
@@ -151,7 +151,8 @@ public class AuthController(
                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         var roleLine = User.FindFirst(ClaimTypes.Role)?.Value
                        ?? User.FindFirst(JwtRegisteredClaimNames.Profile)?.Value;
-        var role = Enum.Parse<Role>(roleLine ?? "Worker", ignoreCase: true);
+        if (!Enum.TryParse<Role>(roleLine, ignoreCase: true, out var role))
+            role = Role.Worker;
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -173,6 +174,7 @@ public class AuthController(
                 Email = user.Email,
                 Nickname = user.Nickname,
                 Avatar = user.Avatar,
+                Phone = user.Phone,
                 Role = user.Role,
                 IsPrivate = user.IsPrivate,
                 HideApplications = user.HideApplications,
@@ -207,6 +209,7 @@ public class AuthController(
                 Email = user.Email,
                 Nickname = user.Nickname,
                 Avatar = user.Avatar,
+                Phone = user.Phone,
                 Role = user.Role,
                 IsPrivate = user.IsPrivate,
                 HideApplications = user.HideApplications,
@@ -237,6 +240,7 @@ public class AuthController(
                 Email = user.Email,
                 Nickname = user.Nickname,
                 Avatar = user.Avatar,
+                Phone = user.Phone,
                 Role = user.Role,
                 IsPrivate = user.IsPrivate,
                 HideApplications = user.HideApplications,
@@ -265,18 +269,14 @@ public class AuthController(
     [HttpGet("sessions/{token}")]
     public async Task<IActionResult> GetSessions(string token, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-            return Unauthorized();
+        var userGuid = GetUserId();
 
         var result = await tokenService.GetSession(token, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
 
-        if (result.Value!.UserId != new Guid(userId))
+        if (result.Value!.UserId != userGuid)
             return Forbid();
 
         return result.ToActionResult();
@@ -287,22 +287,9 @@ public class AuthController(
     [HttpGet("sessions")]
     public async Task<IActionResult> Sessions(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var id = new Guid(userId);
-
-        var sessions = await tokenService.GetTokensByUserIdAsync(id, cancellationToken);
+        var sessions = await tokenService.GetTokensByUserIdAsync(userGuid, cancellationToken);
         return Ok(sessions.Select(s => new
         {
             s.Id,
@@ -326,22 +313,9 @@ public class AuthController(
         if (refreshToken == null)
             return Unauthorized("refresh токен не был найден");
 
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var id = new Guid(userId);
-
-        var tokens = await tokenService.GetSessions(id, cancellationToken);
+        var tokens = await tokenService.GetSessions(userGuid, cancellationToken);
         if (tokens.Value != null)
             await tokenRepository.DisableAllRefreshAsync(tokens.Value, cancellationToken, refreshToken);
 
@@ -354,18 +328,14 @@ public class AuthController(
     [HttpDelete("sessions/{sessionId:guid}")]
     public async Task<IActionResult> DisableSessionById(Guid sessionId, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-            return Unauthorized();
+        var userGuid = GetUserId();
 
         var session = await userSessionRepository.GetByIdAsync(sessionId, cancellationToken);
 
         if (session == null)
             return NotFound("Сессия не найдена");
 
-        if (session.UserId != new Guid(userId))
+        if (session.UserId != userGuid)
             return Forbid();
 
         session.Revoke("Terminated by user");
@@ -380,13 +350,9 @@ public class AuthController(
     [HttpPut("change-password")]
     public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var result = await authService.ChangePasswordAsync(new Guid(userId), request.CurrentPassword, request.NewPassword, cancellationToken);
+        var result = await authService.ChangePasswordAsync(userGuid, request.CurrentPassword, request.NewPassword, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
@@ -403,13 +369,9 @@ public class AuthController(
     [HttpPost("delete-account")]
     public async Task<IActionResult> DeleteAccountAsync(DeleteAccountRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var result = await authService.DeleteAccountAsync(new Guid(userId), request.Password, cancellationToken);
+        var result = await authService.DeleteAccountAsync(userGuid, request.Password, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
@@ -426,18 +388,30 @@ public class AuthController(
     [HttpPut("privacy")]
     public async Task<IActionResult> UpdatePrivacyAsync(UpdatePrivacyRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var user = await userService.GetByIdAsync(new Guid(userId), cancellationToken);
+        var user = await userService.GetByIdAsync(userGuid, cancellationToken);
         if (user == null) return NotFound();
 
         if (request.IsPrivate.HasValue) user.SetPrivate(request.IsPrivate.Value);
         if (request.HideApplications.HasValue) user.SetHideApplications(request.HideApplications.Value);
         if (request.HideResume.HasValue) user.SetHideResume(request.HideResume.Value);
+        await userService.UpdateAsync(user, cancellationToken);
+
+        return Ok();
+    }
+
+    [SwaggerOperation(Summary = "Обновить номер телефона")]
+    [Authorize]
+    [HttpPut("phone")]
+    public async Task<IActionResult> UpdatePhoneAsync([FromBody] UpdatePhoneRequest request, CancellationToken cancellationToken)
+    {
+        var userGuid = GetUserId();
+
+        var user = await userService.GetByIdAsync(userGuid, cancellationToken);
+        if (user == null) return NotFound();
+
+        user.SetPhone(request.Phone);
         await userService.UpdateAsync(user, cancellationToken);
 
         return Ok();
@@ -449,11 +423,7 @@ public class AuthController(
     [HttpPost("avatar")]
     public async Task<IActionResult> UploadAvatarAsync(IFormFile file, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
 
         var ext = Path.GetExtension(file.FileName).ToLower();
         if (ext is not ".jpg" and not ".jpeg" and not ".png" and not ".webp")
@@ -462,7 +432,7 @@ public class AuthController(
         var result = await mediaService.UploadFile(file, cancellationToken);
         if (result.IsFailure) return result.ToActionResult();
 
-        var user = await userService.GetByIdAsync(new Guid(userId), cancellationToken);
+        var user = await userService.GetByIdAsync(userGuid, cancellationToken);
         if (user == null) return NotFound();
 
         user.SetAvatar(result.Value!);
@@ -478,11 +448,9 @@ public class AuthController(
     [HttpPost("totp/setup")]
     public async Task<IActionResult> TotpSetupAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
-        var user = await userService.GetByIdAsync(new Guid(userId), cancellationToken);
+        var user = await userService.GetByIdAsync(userGuid, cancellationToken);
         if (user == null) return NotFound();
 
         if (user.IsTotpEnabled)
@@ -499,11 +467,9 @@ public class AuthController(
     [HttpPost("totp/enable")]
     public async Task<IActionResult> TotpEnableAsync([FromBody] TotpCodeRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
-        var user = await userService.GetByIdAsync(new Guid(userId), cancellationToken);
+        var user = await userService.GetByIdAsync(userGuid, cancellationToken);
         if (user == null) return NotFound();
         if (string.IsNullOrEmpty(user.TotpSecret))
             return BadRequest(new ProblemDetails { Title = "Call /auth/totp/setup first", Status = 400 });
@@ -514,7 +480,7 @@ public class AuthController(
         user.EnableTotp(user.TotpSecret);
         await userService.UpdateAsync(user, cancellationToken);
 
-        logger.LogInformation("TOTP enabled for user {UserId}", userId);
+        logger.LogInformation("TOTP enabled for user {UserId}", userGuid);
         return Ok();
     }
 
@@ -522,11 +488,9 @@ public class AuthController(
     [HttpPost("totp/disable")]
     public async Task<IActionResult> TotpDisableAsync([FromBody] TotpCodeRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
-        var user = await userService.GetByIdAsync(new Guid(userId), cancellationToken);
+        var user = await userService.GetByIdAsync(userGuid, cancellationToken);
         if (user == null) return NotFound();
         if (!user.IsTotpEnabled)
             return BadRequest(new ProblemDetails { Title = "TOTP not enabled", Status = 400 });
@@ -537,7 +501,7 @@ public class AuthController(
         user.DisableTotp();
         await userService.UpdateAsync(user, cancellationToken);
 
-        logger.LogInformation("TOTP disabled for user {UserId}", userId);
+        logger.LogInformation("TOTP disabled for user {UserId}", userGuid);
         return Ok();
     }
 
@@ -611,7 +575,7 @@ public class AuthController(
         var result = await authService.SendVerificationCodeAsync(request.Email, cancellationToken);
 
         var code = result.Value;
-        if (!environment.IsProduction() && code != null && code.Length == 6 && code.All(char.IsDigit))
+        if (environment.IsDevelopment() && code != null && code.Length == 6 && code.All(char.IsDigit))
             return Ok(new { message = "Verification code sent", debugCode = code });
 
         return Ok(new { message = "Verification code sent" });

@@ -1,5 +1,3 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,11 +12,11 @@ using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 using Microsoft.AspNetCore.RateLimiting;
 using Trampline.Core.Constants;
+using Trampline.Web.Controllers.Base;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
 
-[ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("api")]
 public class EventController(
@@ -29,7 +27,7 @@ public class EventController(
     IFavoriteRepository favoriteRepository,
     IUserService userService,
     IEventApplicationRepository eventApplicationRepository,
-    IMediaService mediaService) : ControllerBase
+    IMediaService mediaService) : BaseApiController
 {
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Пагинация", Description = "")]
@@ -47,7 +45,7 @@ public class EventController(
 
         var responseItems = items.Select(x => x.ToEventResponse()).ToList();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -90,27 +88,16 @@ public class EventController(
     [HttpPost]
     public async Task<IActionResult> CreateEventAsync(CreateEventRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await eventService.CreateEventAsync(new Guid(userId), request, cancellationToken);
+        var result = await eventService.CreateEventAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Event created by {UserId}", userId);
+        logger.LogInformation("Event created by {UserId}", userGuid);
         return Ok(result.Value!.Id);
     }
 
@@ -125,7 +112,7 @@ public class EventController(
         var dict = await repository.GetByIdsAsync(request.Ids, cancellationToken);
         var responseItems = dict.Values.Select(x => x.ToEventResponse()).ToList();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -143,13 +130,12 @@ public class EventController(
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEventByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userIdLine = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userIdLine = GetUserIdString();
 
         Result<Event>? find;
         if (!string.IsNullOrEmpty(userIdLine))
         {
-            find = await eventService.GetByIdAsync(id, cancellationToken, new Guid(userIdLine));
+            find = await eventService.GetByIdAsync(id, cancellationToken, Guid.Parse(userIdLine));
         }
         else
         {
@@ -167,15 +153,15 @@ public class EventController(
             var owner = await userService.GetByIdAsync(eventValue.UserId, cancellationToken);
             if (owner is { IsPrivate: true })
             {
-                var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (requesterId == null || new Guid(requesterId) != owner.Id)
+                var requesterId = GetUserIdString();
+                if (requesterId == null || Guid.Parse(requesterId) != owner.Id)
                     return NotFound();
             }
         }
 
         var response = find.Value!.ToEventResponse();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -191,27 +177,16 @@ public class EventController(
     public async Task<IActionResult> UpdateEventAsync(Guid id, UpdateEventRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await eventService.UpdateAsync(new Guid(userId), id, request, cancellationToken);
+        var result = await eventService.UpdateAsync(userGuid, id, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Event {Id} updated by {UserId}", id, userId);
+        logger.LogInformation("Event {Id} updated by {UserId}", id, userGuid);
         return Ok(result.Value!.Id);
     }
 
@@ -220,20 +195,9 @@ public class EventController(
     [HttpGet("{id}/responses")]
     public async Task<IActionResult> GetApplicationJobAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await eventService.GetApplicationsAsync(new Guid(userId), id, cancellationToken);
+        var result = await eventService.GetApplicationsAsync(userGuid, id, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -248,27 +212,16 @@ public class EventController(
     [HttpPost("application-event")]
     public async Task<IActionResult> ApplicationEventAsync(EventApplicationRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await eventService.ApplicationEventAsync(new Guid(userId), request, cancellationToken);
+        var result = await eventService.ApplicationEventAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Event application submitted by {UserId}", userId);
+        logger.LogInformation("Event application submitted by {UserId}", userGuid);
 
         try
         {
@@ -279,7 +232,7 @@ public class EventController(
                 {
                     eventId = evt.Id,
                     eventTitle = evt.Title,
-                    applicantId = userId
+                    applicantId = userGuid
                 });
             }
         }
@@ -296,13 +249,9 @@ public class EventController(
     [HttpPut("application/{applicationId}/status")]
     public async Task<IActionResult> UpdateApplicationStatusAsync(Guid applicationId, [FromBody] UpdateStatusRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var result = await eventService.UpdateApplicationStatusAsync(new Guid(userId), applicationId, request.Status, cancellationToken);
+        var result = await eventService.UpdateApplicationStatusAsync(userGuid, applicationId, request.Status, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
@@ -331,21 +280,43 @@ public class EventController(
         return Ok();
     }
 
+    [Authorize(Roles = "Worker")]
+    [SwaggerOperation("Отозвать отклик на мероприятие")]
+    [HttpPut("application/{id}/withdraw")]
+    public async Task<IActionResult> WithdrawApplicationAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var userGuid = GetUserId();
+
+        var application = await eventApplicationRepository.GetByIdAsync(id, cancellationToken);
+        if (application == null)
+            return NotFound();
+
+        if (application.Profile.UserId != userGuid)
+            return Forbid();
+
+        application.UpdateStatus(ApplicationStatus.Withdrawn);
+        await eventApplicationRepository.UpdateAsync(application, cancellationToken);
+
+        logger.LogInformation("Event application {AppId} withdrawn by {UserId}", id, userGuid);
+        return Ok();
+    }
+
     [Authorize(Roles = "Employee")]
     [EnableRateLimiting("upload")]
     [SwaggerOperation("Загрузить фото к мероприятию")]
     [HttpPost("{id}/photo")]
     public async Task<IActionResult> UploadEventPhotoAsync(Guid id, IFormFile[] files, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
         var photoError = files.ValidatePhotos();
         if (photoError != null) return UnprocessableEntity(photoError);
 
         var evt = await repository.GetByIdAsync(id, ct);
         if (evt == null) return NotFound();
-        if (evt.UserId != new Guid(userId)) return Forbid();
+        if (evt.UserId != userGuid) return Forbid();
+
+        if (evt.Photos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 photos allowed" });
 
         foreach (var file in files)
         {
@@ -363,16 +334,17 @@ public class EventController(
     [HttpPost("{id}/video")]
     public async Task<IActionResult> UploadEventVideoAsync(Guid id, IFormFile[] files, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
 
         var videoError = files.ValidateVideos();
         if (videoError != null) return UnprocessableEntity(videoError);
 
         var evt = await repository.GetByIdAsync(id, ct);
         if (evt == null) return NotFound();
-        if (evt.UserId != new Guid(userId)) return Forbid();
+        if (evt.UserId != userGuid) return Forbid();
+
+        if (evt.Videos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 videos allowed" });
 
         foreach (var file in files)
         {
@@ -390,14 +362,12 @@ public class EventController(
     [HttpDelete("{id}/photo")]
     public async Task<IActionResult> DeleteEventPhotoAsync(Guid id, [FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
         var evt = await eventService.GetByIdAsync(id, ct);
         if (evt.IsFailure) return evt.ToActionResult();
 
-        if (evt.Value!.UserId != new Guid(userId) && !User.IsInRole("Admin"))
+        if (evt.Value!.UserId != userGuid && !User.IsInRole("Admin"))
             return Forbid();
 
         if (!evt.Value!.Photos.Contains(path))
@@ -418,14 +388,12 @@ public class EventController(
     [HttpDelete("{id}/video")]
     public async Task<IActionResult> DeleteEventVideoAsync(Guid id, [FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
         var evt = await eventService.GetByIdAsync(id, ct);
         if (evt.IsFailure) return evt.ToActionResult();
 
-        if (evt.Value!.UserId != new Guid(userId) && !User.IsInRole("Admin"))
+        if (evt.Value!.UserId != userGuid && !User.IsInRole("Admin"))
             return Forbid();
 
         if (!evt.Value!.Videos.Contains(path))
@@ -445,25 +413,14 @@ public class EventController(
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEventAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await eventService.DeleteAsync(id, new Guid(userId), cancellationToken);
+        var result = await eventService.DeleteAsync(id, userGuid, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
 
-        logger.LogInformation("Event {Id} deleted by {UserId}", id, userId);
+        logger.LogInformation("Event {Id} deleted by {UserId}", id, userGuid);
         return Ok();
     }
 }

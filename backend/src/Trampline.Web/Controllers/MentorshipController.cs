@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,11 +12,11 @@ using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 using Microsoft.AspNetCore.RateLimiting;
 using Trampline.Core.Constants;
+using Trampline.Web.Controllers.Base;
 using Trampline.Web.Extensions;
 
 namespace Trampline.Web.Controllers;
 
-[ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("api")]
 public class MentorshipController(
@@ -29,7 +27,7 @@ public class MentorshipController(
     IFavoriteRepository favoriteRepository,
     IUserService userService,
     IMentorshipApplicationRepository mentorshipApplicationRepository,
-    IMediaService mediaService) : ControllerBase
+    IMediaService mediaService) : BaseApiController
 {
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Пагинация", Description = "")]
@@ -47,7 +45,7 @@ public class MentorshipController(
 
         var responseItems = items.Select(x => x.ToMentorshipResponse()).ToList();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -90,27 +88,16 @@ public class MentorshipController(
     [HttpPost]
     public async Task<IActionResult> CreateMentorshipAsync(CreateMentorshipRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await mentorshipService.CreateMentorshipAsync(new Guid(userId), request, cancellationToken);
+        var result = await mentorshipService.CreateMentorshipAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Mentorship created by {UserId}", userId);
+        logger.LogInformation("Mentorship created by {UserId}", userGuid);
         return Ok(result.Value!.Id);
     }
 
@@ -125,7 +112,7 @@ public class MentorshipController(
         var dict = await repository.GetByIdsAsync(request.Ids, cancellationToken);
         var responseItems = dict.Values.Select(x => x.ToMentorshipResponse()).ToList();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -143,13 +130,12 @@ public class MentorshipController(
     [HttpGet("{id}")]
     public async Task<IActionResult> GetMentorshipByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userIdLine = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userIdLine = GetUserIdString();
 
         Result<Mentorship>? find;
         if (!string.IsNullOrEmpty(userIdLine))
         {
-            find = await mentorshipService.GetByIdAsync(id, cancellationToken, new Guid(userIdLine));
+            find = await mentorshipService.GetByIdAsync(id, cancellationToken, Guid.Parse(userIdLine));
         }
         else
         {
@@ -167,15 +153,15 @@ public class MentorshipController(
             var owner = await userService.GetByIdAsync(mentorshipValue.UserId, cancellationToken);
             if (owner is { IsPrivate: true })
             {
-                var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (requesterId == null || new Guid(requesterId) != owner.Id)
+                var requesterId = GetUserIdString();
+                if (requesterId == null || Guid.Parse(requesterId) != owner.Id)
                     return NotFound();
             }
         }
 
         var response = find.Value!.ToMentorshipResponse();
 
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = GetUserIdString();
         Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
 
         if (userId.HasValue)
@@ -191,27 +177,16 @@ public class MentorshipController(
     public async Task<IActionResult> UpdateMentorshipAsync(Guid id, UpdateMentorshipRequest request,
         CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await mentorshipService.UpdateAsync(new Guid(userId), id, request, cancellationToken);
+        var result = await mentorshipService.UpdateAsync(userGuid, id, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Mentorship {Id} updated by {UserId}", id, userId);
+        logger.LogInformation("Mentorship {Id} updated by {UserId}", id, userGuid);
         return Ok(result.Value!.Id);
     }
 
@@ -220,20 +195,9 @@ public class MentorshipController(
     [HttpGet("{id}/responses")]
     public async Task<IActionResult> GetApplicationMentorshipAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await mentorshipService.GetApplicationsAsync(new Guid(userId), id, cancellationToken);
+        var result = await mentorshipService.GetApplicationsAsync(userGuid, id, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -248,27 +212,16 @@ public class MentorshipController(
     [HttpPost("application-mentorship")]
     public async Task<IActionResult> ApplicationMentorshipAsync(MentorshipApplicationRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await mentorshipService.ApplicationMentorshipAsync(new Guid(userId), request, cancellationToken);
+        var result = await mentorshipService.ApplicationMentorshipAsync(userGuid, request, cancellationToken);
 
         if (result.IsFailure)
         {
             return result.ToActionResult();
         }
 
-        logger.LogInformation("Mentorship application submitted by {UserId}", userId);
+        logger.LogInformation("Mentorship application submitted by {UserId}", userGuid);
 
         try
         {
@@ -279,7 +232,7 @@ public class MentorshipController(
                 {
                     mentorshipId = mentorship.Id,
                     mentorshipTitle = mentorship.Title,
-                    applicantId = userId
+                    applicantId = userGuid
                 });
             }
         }
@@ -296,13 +249,9 @@ public class MentorshipController(
     [HttpPut("application/{applicationId}/status")]
     public async Task<IActionResult> UpdateApplicationStatusAsync(Guid applicationId, [FromBody] UpdateStatusRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
-
-        var result = await mentorshipService.UpdateApplicationStatusAsync(new Guid(userId), applicationId, request.Status, cancellationToken);
+        var result = await mentorshipService.UpdateApplicationStatusAsync(userGuid, applicationId, request.Status, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
@@ -331,21 +280,43 @@ public class MentorshipController(
         return Ok();
     }
 
+    [Authorize(Roles = "Worker")]
+    [SwaggerOperation("Отозвать отклик на менторство")]
+    [HttpPut("application/{id}/withdraw")]
+    public async Task<IActionResult> WithdrawApplicationAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var userGuid = GetUserId();
+
+        var application = await mentorshipApplicationRepository.GetByIdAsync(id, cancellationToken);
+        if (application == null)
+            return NotFound();
+
+        if (application.Profile.UserId != userGuid)
+            return Forbid();
+
+        application.UpdateStatus(ApplicationStatus.Withdrawn);
+        await mentorshipApplicationRepository.UpdateAsync(application, cancellationToken);
+
+        logger.LogInformation("Mentorship application {AppId} withdrawn by {UserId}", id, userGuid);
+        return Ok();
+    }
+
     [Authorize(Roles = "Employee")]
     [EnableRateLimiting("upload")]
     [SwaggerOperation("Загрузить фото к менторству")]
     [HttpPost("{id}/photo")]
     public async Task<IActionResult> UploadMentorshipPhotoAsync(Guid id, IFormFile[] files, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
         var photoError = files.ValidatePhotos();
         if (photoError != null) return UnprocessableEntity(photoError);
 
         var mentorship = await repository.GetByIdAsync(id, ct);
         if (mentorship == null) return NotFound();
-        if (mentorship.UserId != new Guid(userId)) return Forbid();
+        if (mentorship.UserId != userGuid) return Forbid();
+
+        if (mentorship.Photos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 photos allowed" });
 
         foreach (var file in files)
         {
@@ -363,16 +334,17 @@ public class MentorshipController(
     [HttpPost("{id}/video")]
     public async Task<IActionResult> UploadMentorshipVideoAsync(Guid id, IFormFile[] files, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return BadRequest(new ProblemDetails { Title = "token is invalid", Status = 400 });
+        var userGuid = GetUserId();
 
         var videoError = files.ValidateVideos();
         if (videoError != null) return UnprocessableEntity(videoError);
 
         var mentorship = await repository.GetByIdAsync(id, ct);
         if (mentorship == null) return NotFound();
-        if (mentorship.UserId != new Guid(userId)) return Forbid();
+        if (mentorship.UserId != userGuid) return Forbid();
+
+        if (mentorship.Videos.Count + files.Length > 50)
+            return BadRequest(new { message = "Maximum 50 videos allowed" });
 
         foreach (var file in files)
         {
@@ -390,14 +362,12 @@ public class MentorshipController(
     [HttpDelete("{id}/photo")]
     public async Task<IActionResult> DeleteMentorshipPhotoAsync(Guid id, [FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
         var mentorship = await mentorshipService.GetByIdAsync(id, ct);
         if (mentorship.IsFailure) return mentorship.ToActionResult();
 
-        if (mentorship.Value!.UserId != new Guid(userId) && !User.IsInRole("Admin"))
+        if (mentorship.Value!.UserId != userGuid && !User.IsInRole("Admin"))
             return Forbid();
 
         if (!mentorship.Value!.Photos.Contains(path))
@@ -418,14 +388,12 @@ public class MentorshipController(
     [HttpDelete("{id}/video")]
     public async Task<IActionResult> DeleteMentorshipVideoAsync(Guid id, [FromQuery] string path, CancellationToken ct)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var userGuid = GetUserId();
 
         var mentorship = await mentorshipService.GetByIdAsync(id, ct);
         if (mentorship.IsFailure) return mentorship.ToActionResult();
 
-        if (mentorship.Value!.UserId != new Guid(userId) && !User.IsInRole("Admin"))
+        if (mentorship.Value!.UserId != userGuid && !User.IsInRole("Admin"))
             return Forbid();
 
         if (!mentorship.Value!.Videos.Contains(path))
@@ -445,25 +413,14 @@ public class MentorshipController(
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMentorshipAsync(Guid id, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userGuid = GetUserId();
 
-        if (string.IsNullOrEmpty(userId))
-        {
-            return BadRequest(new ProblemDetails()
-            {
-                Title = "token is invalid",
-                Status = 400,
-                Detail = "Please provide a valid token"
-            });
-        }
-
-        var result = await mentorshipService.DeleteAsync(id, new Guid(userId), cancellationToken);
+        var result = await mentorshipService.DeleteAsync(id, userGuid, cancellationToken);
 
         if (result.IsFailure)
             return result.ToActionResult();
 
-        logger.LogInformation("Mentorship {Id} deleted by {UserId}", id, userId);
+        logger.LogInformation("Mentorship {Id} deleted by {UserId}", id, userGuid);
         return Ok();
     }
 }
