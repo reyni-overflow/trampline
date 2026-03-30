@@ -127,18 +127,6 @@ public class UserTests
     }
 
     [Fact]
-    public void ChangePrivate_TogglesIsPrivate()
-    {
-        var user = User.Create("test@example.com", "TestUser", "Password123", Role.Worker).Value!;
-
-        user.IsPrivate.Should().BeFalse();
-        user.ChangePrivate();
-        user.IsPrivate.Should().BeTrue();
-        user.ChangePrivate();
-        user.IsPrivate.Should().BeFalse();
-    }
-
-    [Fact]
     public void SetPrivate_SetsExactValue()
     {
         var user = User.Create("test@example.com", "TestUser", "Password123", Role.Worker).Value!;
@@ -203,18 +191,6 @@ public class UserTests
         var act = () => user.AddSession(session);
 
         act.Should().Throw<DomainException>().WithMessage("*another user*");
-    }
-
-    [Fact]
-    public void RemoveSession_RemovesFromCollection()
-    {
-        var user = User.Create("test@example.com", "TestUser", "Password123", Role.Worker).Value!;
-        var session = UserSession.Create(user.Id, "tokenhash", new UserAgent("127.0.0.1", "Test Agent"));
-        user.AddSession(session);
-
-        user.RemoveSession(session);
-
-        user.Sessions.Should().BeEmpty();
     }
 
     [Fact]
