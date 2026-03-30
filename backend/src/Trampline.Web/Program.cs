@@ -279,6 +279,14 @@ if (app.Services.GetRequiredService<Trampline.Core.Storage.IStorageService>() is
 
 app.MapGet("/files/{**path}", async (HttpContext ctx, string path, Trampline.Core.Storage.IStorageService storage) =>
 {
+    if (string.IsNullOrWhiteSpace(path) || path.Contains("..") || path.Contains('\\')
+        || path.Contains("//") || Path.IsPathRooted(path))
+        return Results.BadRequest("Invalid file path");
+
+    var normalized = Path.GetFullPath(Path.Combine("/files", path));
+    if (!normalized.StartsWith("/files/", StringComparison.OrdinalIgnoreCase))
+        return Results.Forbid();
+
     var fullPath = $"/files/{path}";
 
     if (path.Contains("resume", StringComparison.OrdinalIgnoreCase) || path.StartsWith("resumes/"))
