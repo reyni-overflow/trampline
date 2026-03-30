@@ -151,7 +151,7 @@
             if (raw[i] === '|' && raw[i + 1] === '|') {
                 const end = raw.indexOf('||', i + 2);
                 if (end !== -1) {
-                    result += `<span class="md-spoiler" onclick="this.classList.toggle('revealed')" role="button" tabindex="0">${parseInline(raw.slice(i + 2, end))}</span>`;
+                    result += `<span class="md-spoiler" role="button" tabindex="0">${parseInline(raw.slice(i + 2, end))}</span>`;
                     i = end + 2;
                     continue;
                 }
@@ -389,6 +389,33 @@
             .join('; ');
     }
 
+    let container = $state<HTMLDivElement>();
+
+    $effect(() => {
+        if (!container) return;
+
+        function handleClick(e: MouseEvent) {
+            const target = (e.target as HTMLElement).closest('.md-spoiler');
+            if (target) target.classList.toggle('revealed');
+        }
+
+        function handleKeydown(e: KeyboardEvent) {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            const target = (e.target as HTMLElement).closest('.md-spoiler');
+            if (target) {
+                e.preventDefault();
+                target.classList.toggle('revealed');
+            }
+        }
+
+        container.addEventListener('click', handleClick);
+        container.addEventListener('keydown', handleKeydown);
+        return () => {
+            container!.removeEventListener('click', handleClick);
+            container!.removeEventListener('keydown', handleKeydown);
+        };
+    });
+
     let html = $derived.by(() => {
         DOMPurify.addHook('uponSanitizeAttribute', (_node, data) => {
             if (data.attrName === 'style') {
@@ -462,7 +489,6 @@
                 'rowspan',
                 'role',
                 'tabindex',
-                'onclick',
                 'viewBox',
                 'width',
                 'height',
@@ -491,7 +517,7 @@
     });
 </script>
 
-<div class="md-content">
+<div class="md-content" bind:this={container}>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     {@html html}
 </div>
