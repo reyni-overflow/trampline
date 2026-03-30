@@ -74,7 +74,7 @@ public class TokenService(
         RefreshToken token = new()
         {
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(10),
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
             Id = Guid.NewGuid(),
             Token = PasswordHasher.HashToken(base64Token),
             UserId = user.Id,
