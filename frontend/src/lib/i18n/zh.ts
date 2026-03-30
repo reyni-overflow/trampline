@@ -480,6 +480,30 @@ export const zh: Record<string, string> = {
     'dashApps.emptyEventsStatus': '没有活动申请',
     'dashApps.emptyEventsHint': '您还没有申请参加任何活动',
     'dashApps.browseEvents': '浏览活动',
+    'dashApps.withdraw': '撤回',
+    'dashApps.withdrawn': '申请已撤回',
+    'dashApps.confirmWithdraw': '您确定要撤回此申请吗？',
+
+    // === Dashboard stats ===
+    'dashStats.pageTitle': '统计',
+    'dashStats.title': '统计',
+    'dashStats.views': '浏览量',
+    'dashStats.totalResponses': '总回复数',
+    'dashStats.pendingResponses': '待回复',
+    'dashStats.activeJobs': '活跃职位',
+    'dashStats.responsesByJob': '按职位回复',
+    'dashStats.popularTags': '热门标签',
+    'dashStats.jobsLabel': '个职位',
+    'dashStats.eventsLabel': '个活动',
+    'dashStats.jobsViewsResponses': '职位 — 浏览量和回复',
+    'dashStats.colJob': '职位',
+    'dashStats.colStatus': '状态',
+    'dashStats.colViews': '浏览量',
+    'dashStats.colResponses': '回复',
+    'dashStats.colCreated': '创建日期',
+    'dashStats.active': '活跃',
+    'dashStats.inactive': '不活跃',
+    'dashStats.emptyState': '暂无数据。请创建职位或活动。',
 
     // === Dashboard favorites ===
     'dashFavs.title': '收藏',
@@ -1614,6 +1638,9 @@ export const zh: Record<string, string> = {
     // === Dashboard profile ===
     'dashProfile.confirmChange': '确认更改',
     'dashProfile.invalidRepoUrl': '链接必须以 http:// 或 https:// 开头',
+    'dashProfile.phone': '电话',
+    'dashProfile.phonePlaceholder': '+86 138 0000 0000',
+    'dashProfile.phoneSaved': '电话已更新',
     'dashProfile.verificationWarningText':
         '修改数据后验证将被冻结，直到管理员重新审核。您的职位、活动和导师计划将从搜索中隐藏。',
     'dashProfile.verificationWarningTitle': '注意',

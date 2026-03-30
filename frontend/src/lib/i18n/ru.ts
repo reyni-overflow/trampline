@@ -498,6 +498,27 @@ export const ru: Record<string, string> = {
         'При изменении данных верификация будет заморожена до повторной проверки куратором. Ваши вакансии, мероприятия и менторские программы будут скрыты из поиска.',
     'dashProfile.confirmChange': 'Подтвердить изменение',
 
+    // === Dashboard stats ===
+    'dashStats.pageTitle': 'Статистика',
+    'dashStats.title': 'Статистика',
+    'dashStats.views': 'Просмотры',
+    'dashStats.totalResponses': 'Всего откликов',
+    'dashStats.pendingResponses': 'Ожидают ответа',
+    'dashStats.activeJobs': 'Активных вакансий',
+    'dashStats.responsesByJob': 'Отклики по вакансиям',
+    'dashStats.popularTags': 'Популярные теги',
+    'dashStats.jobsLabel': 'вакансий',
+    'dashStats.eventsLabel': 'событий',
+    'dashStats.jobsViewsResponses': 'Вакансии — просмотры и отклики',
+    'dashStats.colJob': 'Вакансия',
+    'dashStats.colStatus': 'Статус',
+    'dashStats.colViews': 'Просмотры',
+    'dashStats.colResponses': 'Отклики',
+    'dashStats.colCreated': 'Создана',
+    'dashStats.active': 'Активна',
+    'dashStats.inactive': 'Неактивна',
+    'dashStats.emptyState': 'Нет данных для отображения. Создайте вакансию или мероприятие.',
+
     // === Dashboard applications ===
     'dashApps.title': 'Мои отклики',
     'dashApps.pageTitle': 'Мои отклики · Трамплин',
@@ -517,6 +538,9 @@ export const ru: Record<string, string> = {
     'dashApps.emptyEventsStatus': 'Заявок на мероприятия нет',
     'dashApps.emptyEventsHint': 'Вы ещё не подавали заявки на мероприятия',
     'dashApps.browseEvents': 'Смотреть мероприятия',
+    'dashApps.withdraw': 'Отозвать',
+    'dashApps.withdrawn': 'Отклик отозван',
+    'dashApps.confirmWithdraw': 'Вы уверены, что хотите отозвать отклик?',
 
     // === Dashboard favorites ===
     'dashFavs.title': 'Избранное',
@@ -1695,6 +1719,9 @@ export const ru: Record<string, string> = {
     'dashProfile.deletePhoto': 'Удалить',
     'dashProfile.photoDeleted': 'Фото удалено',
     'dashProfile.invalidRepoUrl': 'Ссылка должна начинаться с http:// или https://',
+    'dashProfile.phone': 'Телефон',
+    'dashProfile.phonePlaceholder': '+7 (999) 123-45-67',
+    'dashProfile.phoneSaved': 'Телефон обновлён',
 
     // === Event media ===
     'editEvent.media': 'Медиа',

@@ -489,6 +489,30 @@ export const en: Record<string, string> = {
     'dashApps.emptyEventsStatus': 'No event applications',
     'dashApps.emptyEventsHint': "You haven't applied to any events yet",
     'dashApps.browseEvents': 'Browse events',
+    'dashApps.withdraw': 'Withdraw',
+    'dashApps.withdrawn': 'Application withdrawn',
+    'dashApps.confirmWithdraw': 'Are you sure you want to withdraw this application?',
+
+    // === Dashboard stats ===
+    'dashStats.pageTitle': 'Statistics',
+    'dashStats.title': 'Statistics',
+    'dashStats.views': 'Views',
+    'dashStats.totalResponses': 'Total responses',
+    'dashStats.pendingResponses': 'Pending responses',
+    'dashStats.activeJobs': 'Active jobs',
+    'dashStats.responsesByJob': 'Responses by job',
+    'dashStats.popularTags': 'Popular tags',
+    'dashStats.jobsLabel': 'jobs',
+    'dashStats.eventsLabel': 'events',
+    'dashStats.jobsViewsResponses': 'Jobs — views and responses',
+    'dashStats.colJob': 'Job',
+    'dashStats.colStatus': 'Status',
+    'dashStats.colViews': 'Views',
+    'dashStats.colResponses': 'Responses',
+    'dashStats.colCreated': 'Created',
+    'dashStats.active': 'Active',
+    'dashStats.inactive': 'Inactive',
+    'dashStats.emptyState': 'No data to display. Create a job or event.',
 
     // === Dashboard favorites ===
     'dashFavs.title': 'Favorites',
@@ -1689,6 +1713,9 @@ export const en: Record<string, string> = {
     // === Dashboard profile ===
     'dashProfile.confirmChange': 'Confirm change',
     'dashProfile.invalidRepoUrl': 'Link must start with http:// or https://',
+    'dashProfile.phone': 'Phone',
+    'dashProfile.phonePlaceholder': '+1 (555) 123-4567',
+    'dashProfile.phoneSaved': 'Phone updated',
     'dashProfile.verificationWarningText':
         'Changing your data will freeze verification until re-checked by a curator. Your vacancies, events, and mentorship programs will be hidden from search.',
     'dashProfile.verificationWarningTitle': 'Warning',

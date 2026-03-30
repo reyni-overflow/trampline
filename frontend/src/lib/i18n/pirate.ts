@@ -495,6 +495,30 @@ export const pirate: Record<string, string> = {
     'dashApps.emptyEventsStatus': 'Заявок на сборища нет',
     'dashApps.emptyEventsHint': 'Ты ещё не записывался на сборища',
     'dashApps.browseEvents': 'Глянуть сборища',
+    'dashApps.withdraw': 'Отступить',
+    'dashApps.withdrawn': 'Абордаж отменён',
+    'dashApps.confirmWithdraw': 'Уверен, что хочешь отступить, салага?',
+
+    // === Dashboard stats ===
+    'dashStats.pageTitle': 'Статистика',
+    'dashStats.title': 'Статистика',
+    'dashStats.views': 'Подзорная труба',
+    'dashStats.totalResponses': 'Всего абордажей',
+    'dashStats.pendingResponses': 'Ждут ответа',
+    'dashStats.activeJobs': 'Активных вакансий',
+    'dashStats.responsesByJob': 'Абордажи по вакансиям',
+    'dashStats.popularTags': 'Популярные метки',
+    'dashStats.jobsLabel': 'вакансий',
+    'dashStats.eventsLabel': 'сборищ',
+    'dashStats.jobsViewsResponses': 'Вакансии — просмотры и абордажи',
+    'dashStats.colJob': 'Вакансия',
+    'dashStats.colStatus': 'Статус',
+    'dashStats.colViews': 'Просмотры',
+    'dashStats.colResponses': 'Абордажи',
+    'dashStats.colCreated': 'Создана',
+    'dashStats.active': 'В плавании',
+    'dashStats.inactive': 'На якоре',
+    'dashStats.emptyState': 'Нет данных. Создайте вакансию или сборище, капитан!',
 
     // === Dashboard favorites ===
     'dashFavs.title': 'Сокровища',
@@ -1671,6 +1695,9 @@ export const pirate: Record<string, string> = {
     // === Dashboard profile ===
     'dashProfile.confirmChange': 'Подтвердить изменение',
     'dashProfile.invalidRepoUrl': 'Ссылка должна начинаться с http:// или https://',
+    'dashProfile.phone': 'Рация',
+    'dashProfile.phonePlaceholder': '+7 (999) 123-45-67',
+    'dashProfile.phoneSaved': 'Рация обновлена',
     'dashProfile.verificationWarningText':
         'При изменении данных верификация будет заморожена. Ваши вакансии, мероприятия и программы наставничества будут скрыты.',
     'dashProfile.verificationWarningTitle': 'Внимание, матрос!',
