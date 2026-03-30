@@ -46,6 +46,8 @@ public class AppDbContext : DbContext
 
     public DbSet<MentorshipApplication> MentorshipApplications { get; set; }
 
+    public DbSet<PushSubscription> PushSubscriptions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

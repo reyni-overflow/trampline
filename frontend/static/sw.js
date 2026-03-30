@@ -24,6 +24,27 @@ self.addEventListener('activate', (e) => {
 });
 
 
+self.addEventListener('push', (e) => {
+    if (!e.data) return;
+    const data = e.data.json();
+    e.waitUntil(
+        self.registration.showNotification(data.title || 'Трамплин', {
+            body: data.body || '',
+            icon: data.icon || '/favicon.svg',
+            badge: '/favicon.svg',
+            data: { url: data.url }
+        })
+    );
+});
+
+self.addEventListener('notificationclick', (e) => {
+    e.notification.close();
+    const url = e.notification.data?.url;
+    if (url) {
+        e.waitUntil(clients.openWindow(url));
+    }
+});
+
 self.addEventListener('fetch', (e) => {
     if (e.request.mode === 'navigate') {
         e.respondWith(

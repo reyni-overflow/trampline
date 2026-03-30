@@ -32,5 +32,22 @@ export const notificationsApi = {
 
     async markAllAsRead(): Promise<void> {
         await api.put('/notification/read-all');
+    },
+
+    async getVapidKey(): Promise<{ publicKey: string }> {
+        return api.get<{ publicKey: string }>('/notification/vapid-key');
+    },
+
+    async pushSubscribe(subscription: PushSubscription): Promise<void> {
+        const json = subscription.toJSON();
+        await api.post('/notification/push-subscribe', {
+            endpoint: json.endpoint,
+            p256dh: json.keys?.p256dh ?? '',
+            auth: json.keys?.auth ?? ''
+        });
+    },
+
+    async pushUnsubscribe(endpoint: string): Promise<void> {
+        await api.post('/notification/push-unsubscribe', { endpoint });
     }
 };

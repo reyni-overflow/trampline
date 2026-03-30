@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.RateLimiting;
+using Trampline.Core.Models;
 using Trampline.Infrastructure.Postgres.Data;
 
 namespace Trampline.Web.Controllers;
@@ -105,4 +106,51 @@ public class NotificationController(AppDbContext dbContext) : ControllerBase
 
         return Ok();
     }
+
+    [AllowAnonymous]
+    [HttpGet("vapid-key")]
+    public IActionResult GetVapidPublicKey([FromServices] IConfiguration config)
+    {
+        var key = config["Vapid:PublicKey"];
+        if (string.IsNullOrEmpty(key))
+            return NotFound();
+        return Ok(new { publicKey = key });
+    }
+
+    [HttpPost("push-subscribe")]
+    public async Task<IActionResult> PushSubscribeAsync(
+        [FromBody] PushSubscribeRequest request, CancellationToken ct)
+    {
+        var userId = GetUserId();
+        if (userId == null) return BadRequest();
+
+        var existing = await dbContext.PushSubscriptions
+            .FirstOrDefaultAsync(s => s.UserId == userId.Value && s.Endpoint == request.Endpoint, ct);
+
+        if (existing == null)
+        {
+            var sub = PushSubscription.Create(userId.Value, request.Endpoint, request.P256dh, request.Auth);
+            dbContext.PushSubscriptions.Add(sub);
+            await dbContext.SaveChangesAsync(ct);
+        }
+
+        return Ok();
+    }
+
+    [HttpPost("push-unsubscribe")]
+    public async Task<IActionResult> PushUnsubscribeAsync(
+        [FromBody] PushUnsubscribeRequest request, CancellationToken ct)
+    {
+        var userId = GetUserId();
+        if (userId == null) return BadRequest();
+
+        await dbContext.PushSubscriptions
+            .Where(s => s.UserId == userId.Value && s.Endpoint == request.Endpoint)
+            .ExecuteDeleteAsync(ct);
+
+        return Ok();
+    }
 }
+
+public record PushSubscribeRequest(string Endpoint, string P256dh, string Auth);
+public record PushUnsubscribeRequest(string Endpoint);
