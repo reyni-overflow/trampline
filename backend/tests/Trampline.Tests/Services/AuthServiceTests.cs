@@ -6,6 +6,7 @@ using Moq;
 using Trampline.Application.Services;
 using Trampline.Contracts.DTOs.Requests;
 using Trampline.Core.Models;
+using Trampline.Core.Repositories;
 using Trampline.Shared.Results;
 
 namespace Trampline.Tests.Services;
@@ -19,13 +20,17 @@ public class AuthServiceTests
     private readonly Mock<IHostEnvironment> _envMock = new();
     private readonly Mock<IEmailService> _emailServiceMock = new();
     private readonly Mock<Trampline.Core.Storage.IStorageService> _storageMock = new();
+    private readonly Mock<IJobRepository> _jobRepoMock = new();
+    private readonly Mock<IEventRepository> _eventRepoMock = new();
+    private readonly Mock<IMentorshipRepository> _mentorshipRepoMock = new();
     private readonly AuthService _sut;
     private readonly UserAgent _defaultAgent = new("127.0.0.1", "TestAgent");
 
     public AuthServiceTests()
     {
         _sut = new AuthService(_userServiceMock.Object, _loggerMock.Object,
-            _tokenServiceMock.Object, _cacheMock.Object, _envMock.Object, _emailServiceMock.Object, _storageMock.Object);
+            _tokenServiceMock.Object, _cacheMock.Object, _envMock.Object, _emailServiceMock.Object, _storageMock.Object,
+            _jobRepoMock.Object, _eventRepoMock.Object, _mentorshipRepoMock.Object);
     }
 
     private User CreateTestUser(Role role = Role.Worker, bool isBlocked = false)

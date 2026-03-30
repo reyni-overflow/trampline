@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Trampline.Contracts.DTOs.Requests;
 using Trampline.Contracts.DTOs.Responses;
 using Trampline.Core.Models;
+using Trampline.Core.Repositories;
 using Trampline.Core.Storage;
 using Trampline.Shared.Results;
 
@@ -16,7 +17,10 @@ public class AuthService(
     IDistributedCache cache,
     IHostEnvironment env,
     IEmailService emailService,
-    IStorageService storage) : IAuthService
+    IStorageService storage,
+    IJobRepository jobRepository,
+    IEventRepository eventRepository,
+    IMentorshipRepository mentorshipRepository) : IAuthService
 {
     private static readonly string DummyHash = PasswordHasher.Hash("timing_equalization_dummy");
 
@@ -229,6 +233,32 @@ public class AuthService(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to clean up files for user {UserId}", userId);
+        }
+
+        if (user.Role == Role.Employee)
+        {
+            var jobs = await jobRepository.GetAllByUserIdAsync(userId, 1, 10000, cancellationToken);
+            foreach (var job in jobs)
+            {
+                job.SoftDelete();
+                await jobRepository.UpdateAsync(job, cancellationToken);
+            }
+
+            var events = await eventRepository.GetAllByUserIdAsync(userId, 1, 10000, cancellationToken);
+            foreach (var evt in events)
+            {
+                evt.SoftDelete();
+                await eventRepository.UpdateAsync(evt, cancellationToken);
+            }
+
+            var mentorships = await mentorshipRepository.GetAllByUserIdAsync(userId, 1, 10000, cancellationToken);
+            foreach (var ms in mentorships)
+            {
+                ms.SoftDelete();
+                await mentorshipRepository.UpdateAsync(ms, cancellationToken);
+            }
+
+            logger.LogInformation("Deactivated all opportunities for deleted employer {UserId}", userId);
         }
 
         user.SoftDelete();
