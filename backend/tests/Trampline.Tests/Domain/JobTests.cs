@@ -274,14 +274,13 @@ public class JobTests
     {
         var job = CreateTestJob();
 
-        job.Update("New Title", "New Description", "New Address", "New City", "New Country", false);
+        job.Update("New Title", "New Description", "New Address", "New City", "New Country");
 
         job.Title.Should().Be("New Title");
         job.Description.Should().Be("New Description");
         job.Address.Should().Be("New Address");
         job.City.Should().Be("New City");
         job.Country.Should().Be("New Country");
-        job.IsActive.Should().BeFalse();
         job.UpdatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 }

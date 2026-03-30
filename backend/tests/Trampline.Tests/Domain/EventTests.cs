@@ -150,13 +150,12 @@ public class EventTests
     {
         var evt = CreateTestEvent();
 
-        evt.Update("Новое название", "Новое описание", "Новый адрес", "Казань", "Россия", false);
+        evt.Update("Новое название", "Новое описание", "Новый адрес", "Казань", "Россия");
 
         evt.Title.Should().Be("Новое название");
         evt.Description.Should().Be("Новое описание");
         evt.Address.Should().Be("Новый адрес");
         evt.City.Should().Be("Казань");
         evt.Country.Should().Be("Россия");
-        evt.IsActive.Should().BeFalse();
     }
 }

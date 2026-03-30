@@ -23,6 +23,7 @@ export interface MentorshipResponse {
     photos: string[];
     videos: string[];
     isActive: boolean;
+    isPublished: boolean;
     isFavorited?: boolean;
     views: number;
     companyName?: string;
@@ -52,7 +53,7 @@ export interface UpdateMentorshipRequest {
     address?: string;
     city?: string;
     country?: string;
-    isActive?: boolean;
+    isPublished?: boolean;
     maxParticipants?: number;
     duration?: string;
     startDate?: string;

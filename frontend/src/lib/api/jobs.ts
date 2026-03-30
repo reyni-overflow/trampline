@@ -1,4 +1,5 @@
 import { api } from './client';
+import { cached } from '$lib/utils/cache';
 
 export interface TagResponse {
     id: string;
@@ -37,6 +38,7 @@ export interface JobResponse {
     deletedAt: string | null;
     endedAt: string;
     isActive: boolean;
+    isPublished: boolean;
     views: number;
     isFavorited?: boolean;
     companyName?: string;
@@ -60,7 +62,7 @@ export interface UpdateJobRequest {
     address?: string;
     city?: string;
     country?: string;
-    isActive?: boolean;
+    isPublished?: boolean;
     salaryFrom?: number;
     salaryTo?: number;
     tags?: TagRequest[];
@@ -185,13 +187,9 @@ export const jobsApi = {
         return api.put(`/job/application/${applicationId}/status`, { status });
     },
 
-    getTags() {
-        return api.get<TagResponse[]>('/job/tags');
-    },
+    getTags: cached('tags', () => api.get<TagResponse[]>('/job/tags'), 120_000),
 
-    getTagStats() {
-        return api.get<TagStatsResponse[]>('/job/tags/stats');
-    },
+    getTagStats: cached('tagStats', () => api.get<TagStatsResponse[]>('/job/tags/stats'), 120_000),
 
     uploadPhotos(jobId: string, files: File[]) {
         return api.upload<string[]>(`/job/${jobId}/photo`, files, 'files');

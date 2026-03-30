@@ -358,7 +358,7 @@ public class JobServiceTests
             Address = "New Address",
             City = "New City",
             Country = "Russia",
-            IsActive = true,
+            IsPublished = true,
             Tags = Array.Empty<TagRequest>(),
         };
 

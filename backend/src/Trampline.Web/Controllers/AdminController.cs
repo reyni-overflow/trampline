@@ -660,8 +660,9 @@ public class AdminController(
         var job = await jobRepository.GetByIdAsync(id, ct);
         if (job == null) return NotFound();
 
-        job.Update(request.Title, request.Description, request.Address, request.City, request.Country,
-            request.IsActive);
+        job.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+        if (request.IsPublished.HasValue)
+            job.SetPublished(request.IsPublished.Value);
         job.UpdateSalary(request.SalaryFrom, request.SalaryTo);
 
         if (request.Tags.Length > 0)
@@ -687,8 +688,9 @@ public class AdminController(
         var evt = await eventRepository.GetByIdAsync(id, ct);
         if (evt == null) return NotFound();
 
-        evt.Update(request.Title, request.Description, request.Address, request.City, request.Country,
-            request.IsActive);
+        evt.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+        if (request.IsPublished.HasValue)
+            evt.SetPublished(request.IsPublished.Value);
         evt.UpdateSalary(request.SalaryFrom, request.SalaryTo);
 
         await eventRepository.UpdateAsync(evt, ct);
@@ -702,8 +704,9 @@ public class AdminController(
         var mentorship = await mentorshipRepository.GetByIdAsync(id, ct);
         if (mentorship == null) return NotFound();
 
-        mentorship.Update(request.Title, request.Description, request.Address, request.City, request.Country,
-            request.IsActive);
+        mentorship.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+        if (request.IsPublished.HasValue)
+            mentorship.SetPublished(request.IsPublished.Value);
         mentorship.UpdateSalary(request.SalaryFrom, request.SalaryTo);
 
         await mentorshipRepository.UpdateAsync(mentorship, ct);

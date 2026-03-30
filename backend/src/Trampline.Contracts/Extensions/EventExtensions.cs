@@ -23,6 +23,7 @@ public static class EventExtensions
             EndedAt = evt.EndedAt,
             StartDate = evt.StartDate,
             IsActive = evt.IsActive,
+            IsPublished = evt.IsPublished,
             Views = evt.Views,
             Format = evt.Format,
             SalaryFrom = evt.SalaryFrom,

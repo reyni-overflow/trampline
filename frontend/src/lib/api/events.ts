@@ -18,6 +18,7 @@ export interface EventResponse {
     salaryTo: number | null;
     views: number;
     isActive: boolean;
+    isPublished: boolean;
     tags: { id: string; name: string; category: string; lvl: number }[];
     photos: string[];
     videos: string[];
@@ -48,7 +49,7 @@ export interface UpdateEventRequest {
     address?: string;
     city?: string;
     country?: string;
-    isActive?: boolean;
+    isPublished?: boolean;
     salaryFrom?: number;
     salaryTo?: number;
     tags?: TagRequest[];

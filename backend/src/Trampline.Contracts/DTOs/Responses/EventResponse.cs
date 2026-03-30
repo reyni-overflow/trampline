@@ -50,6 +50,8 @@ public record EventResponse
 
     public bool IsActive { get; set; }
 
+    public bool IsPublished { get; set; }
+
     public bool IsFavorited { get; set; }
 
     public int Views { get; set; } = 0;

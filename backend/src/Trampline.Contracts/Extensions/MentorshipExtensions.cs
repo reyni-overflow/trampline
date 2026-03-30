@@ -25,6 +25,7 @@ public static class MentorshipExtensions
             MaxParticipants = mentorship.MaxParticipants,
             Duration = mentorship.Duration,
             IsActive = mentorship.IsActive,
+            IsPublished = mentorship.IsPublished,
             Views = mentorship.Views,
             Format = mentorship.Format,
             SalaryFrom = mentorship.SalaryFrom,

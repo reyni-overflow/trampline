@@ -12,7 +12,7 @@ public record UpdateMentorshipRequest
 
     public string Country { get; set; } = string.Empty;
 
-    public bool IsActive { get; set; }
+    public bool? IsPublished { get; set; }
 
     public decimal? SalaryFrom { get; init; }
 

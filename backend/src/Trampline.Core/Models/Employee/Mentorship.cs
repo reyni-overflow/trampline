@@ -46,6 +46,8 @@ public class Mentorship
 
     public bool IsActive { get; set; } = true;
 
+    public bool IsPublished { get; set; } = true;
+
     public int Views => UserViews.Count;
 
     private HashSet<Guid> _userViews { get; set; } = new();
@@ -173,8 +175,10 @@ public class Mentorship
 
     public void SetActive(bool active) => IsActive = active;
 
+    public void SetPublished(bool published) => IsPublished = published;
+
     public void Update(string title, string description, string address,
-        string city, string country, bool isActive)
+        string city, string country)
     {
         UpdatedAt = DateTime.UtcNow;
         Title = title;
@@ -182,6 +186,5 @@ public class Mentorship
         Address = address;
         City = city;
         Country = country;
-        IsActive = isActive;
     }
 }

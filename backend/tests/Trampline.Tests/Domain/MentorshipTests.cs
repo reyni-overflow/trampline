@@ -379,14 +379,13 @@ public class MentorshipTests
     {
         var mentorship = CreateTestMentorship();
 
-        mentorship.Update("New Title", "New Description", "New Address", "New City", "New Country", false);
+        mentorship.Update("New Title", "New Description", "New Address", "New City", "New Country");
 
         mentorship.Title.Should().Be("New Title");
         mentorship.Description.Should().Be("New Description");
         mentorship.Address.Should().Be("New Address");
         mentorship.City.Should().Be("New City");
         mentorship.Country.Should().Be("New Country");
-        mentorship.IsActive.Should().BeFalse();
         mentorship.UpdatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 

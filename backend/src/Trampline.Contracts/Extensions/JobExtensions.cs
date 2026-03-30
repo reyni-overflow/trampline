@@ -23,6 +23,7 @@ public static class JobExtensions
             DeletedAt = job.DeletedAt,
             EndedAt = job.EndedAt,
             IsActive = job.IsActive,
+            IsPublished = job.IsPublished,
             Views = job.Views,
             Format = job.Format,
             SalaryFrom = job.SalaryFrom,
