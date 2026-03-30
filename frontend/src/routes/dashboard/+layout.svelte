@@ -96,6 +96,11 @@
             label: $t('dashContacts.title'),
             icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
         },
+        {
+            href: '/dashboard/search',
+            label: $t('workerSearch.nav'),
+            icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>'
+        },
         { href: '/settings', label: $t('dash.settings'), icon: settingsIcon }
     ]);
 
