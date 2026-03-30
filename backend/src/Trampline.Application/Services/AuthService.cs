@@ -18,6 +18,8 @@ public class AuthService(
     IEmailService emailService,
     IStorageService storage) : IAuthService
 {
+    private static readonly string DummyHash = PasswordHasher.Hash("timing_equalization_dummy");
+
     public async Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request, UserAgent agent, CancellationToken cancellationToken)
     {
         if (request.Role == Role.Admin)
@@ -38,11 +40,19 @@ public class AuthService(
 
         try
         {
-            await emailService.SendWelcomeEmailAsync(request.Email, request.Name);
+            var codeBytes = System.Security.Cryptography.RandomNumberGenerator.GetBytes(4);
+            var code = (Math.Abs(BitConverter.ToInt32(codeBytes)) % 900000 + 100000).ToString();
+
+            var cacheKey = $"email_verify:{request.Email.ToLowerInvariant()}";
+            await cache.SetStringAsync(cacheKey, code,
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },
+                cancellationToken);
+
+            await emailService.SendVerificationCodeAsync(request.Email, code, cancellationToken);
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Failed to send welcome email to {Email}", request.Email);
+            logger.LogWarning(ex, "Failed to send verification email to {Email}", request.Email);
         }
 
         return Result<AuthResponse>.Success(new AuthResponse()
@@ -77,10 +87,11 @@ public class AuthService(
 
         if (find == null)
         {
+            PasswordHasher.Verify(request.Password, DummyHash);
             await cache.SetStringAsync(attemptsKey, (attempts + 1).ToString(),
                 new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) }, cancellationToken);
             logger.LogWarning("Failed login attempt for {Contact}, attempt {Attempt}", contact, attempts + 1);
-            return Result<AuthResponse>.Failure(new ErrorDetail(nameof(request.Contact), "Invalid credentials", 401));
+            return Result<AuthResponse>.Failure(new ErrorDetail("credentials", "Invalid credentials", 401));
         }
 
         var isPassword = PasswordHasher.Verify(request.Password, find.PasswordHash);
@@ -90,7 +101,7 @@ public class AuthService(
             await cache.SetStringAsync(attemptsKey, (attempts + 1).ToString(),
                 new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) }, cancellationToken);
             logger.LogWarning("Failed login attempt for {Contact}, attempt {Attempt}", contact, attempts + 1);
-            return Result<AuthResponse>.Failure(new ErrorDetail(nameof(request.Password), "Invalid credentials", 401));
+            return Result<AuthResponse>.Failure(new ErrorDetail("credentials", "Invalid credentials", 401));
         }
 
         if (find.IsBlocked)
@@ -291,6 +302,55 @@ public class AuthService(
         await cache.RemoveAsync(attemptsKey, cancellationToken);
 
         logger.LogInformation("Password reset completed for {Email}", email);
+        return Result.Success();
+    }
+
+    public async Task<Result<string>> SendVerificationCodeAsync(string email, CancellationToken cancellationToken)
+    {
+        var codeBytes = System.Security.Cryptography.RandomNumberGenerator.GetBytes(4);
+        var code = (Math.Abs(BitConverter.ToInt32(codeBytes)) % 900000 + 100000).ToString();
+
+        var cacheKey = $"email_verify:{email.ToLowerInvariant()}";
+        await cache.SetStringAsync(cacheKey, code,
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },
+            cancellationToken);
+
+        await emailService.SendVerificationCodeAsync(email, code, cancellationToken);
+        logger.LogInformation("Verification code sent to {Email}", email);
+
+        if (!emailService.IsConfigured)
+            return Result<string>.Success(code);
+
+        return Result<string>.Success("Код отправлен на указанную почту");
+    }
+
+    public async Task<Result> VerifyEmailAsync(string email, string code, CancellationToken cancellationToken)
+    {
+        var attemptsKey = $"email_verify_attempts:{email.ToLowerInvariant()}";
+        var attemptsStr = await cache.GetStringAsync(attemptsKey, cancellationToken);
+        var attempts = int.TryParse(attemptsStr, out var a) ? a : 0;
+
+        if (attempts >= 5)
+        {
+            logger.LogWarning("Too many email verification attempts for {Email}", email);
+            return Result.Failure(new ErrorDetail("code", "Too many attempts. Please request a new code.", 429));
+        }
+
+        var cacheKey = $"email_verify:{email.ToLowerInvariant()}";
+        var storedCode = await cache.GetStringAsync(cacheKey, cancellationToken);
+
+        if (string.IsNullOrEmpty(storedCode) || storedCode != code)
+        {
+            await cache.SetStringAsync(attemptsKey, (attempts + 1).ToString(),
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },
+                cancellationToken);
+            return Result.Failure(new ErrorDetail("code", "Invalid or expired verification code", 400));
+        }
+
+        await cache.RemoveAsync(cacheKey, cancellationToken);
+        await cache.RemoveAsync(attemptsKey, cancellationToken);
+
+        logger.LogInformation("Email verified for {Email}", email);
         return Result.Success();
     }
 }
