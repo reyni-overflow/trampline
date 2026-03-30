@@ -581,6 +581,33 @@ public class AuthController(
 
     [AllowAnonymous]
     [EnableRateLimiting("auth")]
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmailAsync([FromBody] VerifyEmailRequest request, CancellationToken cancellationToken)
+    {
+        var result = await authService.VerifyEmailAsync(request.Email, request.Code, cancellationToken);
+
+        if (result.IsFailure)
+            return result.ToActionResult();
+
+        return Ok(new { message = "Email verified successfully" });
+    }
+
+    [AllowAnonymous]
+    [EnableRateLimiting("auth")]
+    [HttpPost("resend-verification")]
+    public async Task<IActionResult> ResendVerificationAsync([FromBody] ForgotPasswordRequest request, CancellationToken cancellationToken)
+    {
+        var result = await authService.SendVerificationCodeAsync(request.Email, cancellationToken);
+
+        var code = result.Value;
+        if (!environment.IsProduction() && code != null && code.Length == 6 && code.All(char.IsDigit))
+            return Ok(new { message = "Verification code sent", debugCode = code });
+
+        return Ok(new { message = "Verification code sent" });
+    }
+
+    [AllowAnonymous]
+    [EnableRateLimiting("auth")]
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken)
     {

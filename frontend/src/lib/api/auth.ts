@@ -118,6 +118,16 @@ export const authApi = {
         return api.post('/auth/reset-password', { email, code, newPassword });
     },
 
+    verifyEmail(email: string, code: string) {
+        return api.post<{ message: string }>('/auth/verify-email', { email, code });
+    },
+
+    resendVerification(email: string) {
+        return api.post<{ message: string; debugCode?: string }>('/auth/resend-verification', {
+            email
+        });
+    },
+
     changePassword(currentPassword: string, newPassword: string) {
         return api.put('/auth/change-password', { currentPassword, newPassword });
     },

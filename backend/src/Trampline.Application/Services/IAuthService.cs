@@ -20,4 +20,8 @@ public interface IAuthService
     Task<Result<string>> ForgotPasswordAsync(string email, CancellationToken cancellationToken);
 
     Task<Result> ResetPasswordAsync(string email, string code, string newPassword, CancellationToken cancellationToken);
+
+    Task<Result<string>> SendVerificationCodeAsync(string email, CancellationToken cancellationToken);
+
+    Task<Result> VerifyEmailAsync(string email, string code, CancellationToken cancellationToken);
 }

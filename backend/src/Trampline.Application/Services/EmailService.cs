@@ -27,6 +27,21 @@ public class EmailService(ILogger<EmailService> logger, IOptions<SmtpOption> opt
         await SendAsync(toEmail, subject, body, ct);
     }
 
+    public async Task SendVerificationCodeAsync(string toEmail, string code, CancellationToken ct = default)
+    {
+        var subject = "Подтверждение email — Трамплин";
+        var body = WrapInLayout($"""
+            <h2 style="color: #1a1a2e; margin: 0 0 16px;">Подтверждение email</h2>
+            <p style="color: #333; font-size: 15px; line-height: 1.5;">Ваш код подтверждения:</p>
+            <div style="font-size: 32px; font-weight: bold; letter-spacing: 8px; text-align: center; padding: 20px; background: #f0f4ff; border: 1px solid #d0d9f0; border-radius: 8px; margin: 20px 0; color: #1a1a2e;">
+                {code}
+            </div>
+            <p style="color: #666; font-size: 13px; line-height: 1.5;">Код действителен в течение 15 минут. Если вы не регистрировались на платформе, проигнорируйте это письмо.</p>
+            """);
+
+        await SendAsync(toEmail, subject, body, ct);
+    }
+
     public async Task SendWelcomeEmailAsync(string toEmail, string userName, CancellationToken ct = default)
     {
         var subject = "Добро пожаловать на Трамплин!";
