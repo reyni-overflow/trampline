@@ -416,7 +416,9 @@
                                 <p class="company-activity">{company?.activity ?? ''}</p>
                             </div>
                         </div>
-                        {#if company?.isVerified}
+                        {#if (company?.verificationLevel ?? 0) >= 2}
+                            <Badge variant="info">{$t('companies.trustedVerified')}</Badge>
+                        {:else if company?.isVerified}
                             <Badge variant="success">{$t('companies.verified')}</Badge>
                         {/if}
                         {#if company?.info?.email}

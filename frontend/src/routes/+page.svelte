@@ -620,7 +620,7 @@
         <div class="container">
             <h2 class="section-title">{$t('landing.companiesOnPlatform')}</h2>
             <div class="companies-row">
-                {#each companies as company (company)}
+                {#each companies as company, i (company + i)}
                     <div class="company-logo">
                         <Avatar name={company} size={48} />
                         <span class="company-name">{company}</span>
