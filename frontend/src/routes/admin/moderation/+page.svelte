@@ -330,7 +330,7 @@
                         <span class="mod-company">{job.company}</span>
                         {#if job.salary}<span class="mod-salary">{job.salary}</span>{/if}
                         <div class="mod-tags">
-                            {#each job.tags as tag (tag.name)}<Tag>{tag.name}</Tag>{/each}
+                            {#each job.tags as tag, _ti (tag.name + _ti)}<Tag>{tag.name}</Tag>{/each}
                         </div>
                         <span class="mod-date"
                             >{new Date(job.date).toLocaleDateString(getLocaleDateString(), {
@@ -380,7 +380,7 @@
                         {#if event.address}<span class="mod-company">{event.address}</span>{/if}
                         {#if event.salary}<span class="mod-salary">{event.salary}</span>{/if}
                         <div class="mod-tags">
-                            {#each event.tags as tag (tag.name)}<Tag>{tag.name}</Tag>{/each}
+                            {#each event.tags as tag, _ti (tag.name + _ti)}<Tag>{tag.name}</Tag>{/each}
                         </div>
                         <span class="mod-date"
                             >{new Date(event.date).toLocaleDateString(getLocaleDateString(), {
@@ -432,7 +432,7 @@
                         {#if mentorship.salary}<span class="mod-salary">{mentorship.salary}</span
                             >{/if}
                         <div class="mod-tags">
-                            {#each mentorship.tags as tag (tag.name)}<Tag>{tag.name}</Tag>{/each}
+                            {#each mentorship.tags as tag, _ti (tag.name + _ti)}<Tag>{tag.name}</Tag>{/each}
                         </div>
                         <span class="mod-date"
                             >{new Date(mentorship.date).toLocaleDateString(getLocaleDateString(), {

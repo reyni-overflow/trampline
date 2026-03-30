@@ -223,7 +223,7 @@
                 <span class="field-label">{$t('createEvent.tags')}</span>
                 <div class="tags-edit">
                     <div class="tags-list">
-                        {#each tags as tag (tag)}
+                        {#each tags as tag, _ki (tag + _ki)}
                             <Tag removable onremove={() => removeTag(tag)}>{tag}</Tag>
                         {/each}
                     </div>
@@ -293,7 +293,7 @@
                 </p>
                 {#if tags.length > 0}
                     <div class="preview-tags">
-                        {#each tags as tag (tag)}
+                        {#each tags as tag, _ki (tag + _ki)}
                             <Tag>{tag}</Tag>
                         {/each}
                     </div>

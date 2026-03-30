@@ -160,7 +160,7 @@
                             </div>
                         </a>
                         <div class="resp-skills">
-                            {#each resp.skills as skill (skill)}
+                            {#each resp.skills as skill, _ki (skill + _ki)}
                                 <Tag>{skill}</Tag>
                             {/each}
                         </div>

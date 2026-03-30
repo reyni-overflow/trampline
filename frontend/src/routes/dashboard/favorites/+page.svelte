@@ -226,7 +226,7 @@
                             </p>
                             {#if event.tags?.length}
                                 <div class="event-fav-tags">
-                                    {#each event.tags.slice(0, 3) as tag (tag.name)}
+                                    {#each event.tags.slice(0, 3) as tag, _ti (tag.name + _ti)}
                                         <Tag>{tag.name}</Tag>
                                     {/each}
                                 </div>

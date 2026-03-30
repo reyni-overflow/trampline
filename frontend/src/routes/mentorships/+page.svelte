@@ -365,7 +365,7 @@
                                 <p class="mentorship-description">{mentorship.description}</p>
                                 <div class="mentorship-bottom">
                                     <div class="mentorship-tags">
-                                        {#each mentorship.tags as tag (tag)}
+                                        {#each mentorship.tags as tag, _ki (tag + _ki)}
                                             <Tag>{tag}</Tag>
                                         {/each}
                                     </div>

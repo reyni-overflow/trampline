@@ -347,7 +347,7 @@
 
                     {#if data.tags?.length}
                         <div class="job-tags">
-                            {#each data.tags as tag (tag.name)}
+                            {#each data.tags as tag, _ti (tag.name + _ti)}
                                 <Tag clickable onclick={() => {}}>{tag.name}</Tag>
                             {/each}
                         </div>

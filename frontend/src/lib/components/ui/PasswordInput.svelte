@@ -127,7 +127,7 @@
     {#if showRules && value && (focused || hasExternalError)}
         <div class="rules-panel">
             <div class="strength-bar">
-                {#each [0, 1, 2, 3] as i (i)}
+                {#each [0, 1, 2, 3] as i, _ki (i + _ki)}
                     <span
                         class="strength-segment"
                         style="background: {i < strength ? strengthColor : 'var(--bg-tertiary)'}"

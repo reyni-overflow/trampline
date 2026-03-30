@@ -293,7 +293,7 @@
             <span class="field-label">{$t('editJob.tags')}</span>
             {#if tags.length > 0}
                 <div class="tags-list">
-                    {#each tags as tag (tag)}
+                    {#each tags as tag, _ki (tag + _ki)}
                         <Tag
                             removable
                             onremove={() => {
@@ -336,7 +336,7 @@
                     </button>
                     {#if suggestions.length > 0}
                         <div class="tag-suggestions">
-                            {#each suggestions as s (s)}
+                            {#each suggestions as s, _ki (s + _ki)}
                                 <button
                                     type="button"
                                     class="tag-suggestion-item"
@@ -354,7 +354,7 @@
                 <span class="media-sub-label">{$t('editJob.photos')}</span>
                 {#if photos.length > 0}
                     <div class="media-list">
-                        {#each photos as photo (photo)}
+                        {#each photos as photo, _ki (photo + _ki)}
                             <div class="media-item">
                                 <span>{photo.split('/').pop()}</span>
                                 <button
@@ -396,7 +396,7 @@
                 <span class="media-sub-label">{$t('editJob.videos')}</span>
                 {#if videos.length > 0}
                     <div class="media-list">
-                        {#each videos as video (video)}
+                        {#each videos as video, _ki (video + _ki)}
                             <div class="media-item">
                                 <span>{video.split('/').pop()}</span>
                                 <button

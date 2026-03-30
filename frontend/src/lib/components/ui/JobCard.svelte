@@ -96,7 +96,7 @@
             <div class="card-footer-left">
                 {#if job.tags?.length}
                     <div class="card-tags">
-                        {#each job.tags.slice(0, 4) as tag (tag.name)}
+                        {#each job.tags.slice(0, 4) as tag, ti (tag.name + ti)}
                             <Tag>{tag?.name}</Tag>
                         {/each}
                         {#if job.tags.length > 4}
@@ -169,7 +169,7 @@
             <p class="card-company">{job.city}, {job.country}</p>
             {#if job.tags?.length}
                 <div class="card-tags">
-                    {#each job.tags.slice(0, 5) as tag (tag.name)}
+                    {#each job.tags.slice(0, 5) as tag, ti (tag.name + ti)}
                         <Tag>{tag?.name}</Tag>
                     {/each}
                 </div>

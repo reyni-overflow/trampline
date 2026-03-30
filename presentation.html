@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Трамплин — Презентация проекта</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #000000;
+    --bg-surface: #0a0a0a;
+    --bg-card: #111111;
+    --bg-elevated: #1a1a1a;
+    --text: #ffffff;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --accent: #FACC15;
+    --accent-dim: rgba(250, 204, 21, 0.15);
+    --accent-hover: #EAB308;
+    --blue: #3B82F6;
+    --purple: #8B5CF6;
+    --teal: #06B6D4;
+    --green: #10B981;
+    --pink: #EC4899;
+    --orange: #F97316;
+    --red: #EF4444;
+    --border: #262626;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 22mm;
+    background: var(--bg);
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page:last-child { page-break-after: auto; }
+
+  /* Page number */
+  .page::after {
+    content: attr(data-page);
+    position: absolute;
+    bottom: 12mm;
+    right: 22mm;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* Page header stripe */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8mm;
+    padding-bottom: 4mm;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+
+  .page-header-logo .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .page-header-section {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .lead {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .accent { color: var(--accent); }
+  .blue { color: var(--blue); }
+  .purple { color: var(--purple); }
+  .green { color: var(--green); }
+  .teal { color: var(--teal); }
+  .pink { color: var(--pink); }
+  .orange { color: var(--orange); }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--orange) 50%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+
+  .card-accent {
+    border-left: 3px solid var(--accent);
+  }
+
+  /* Grid layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Tags / Badges */
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--accent-dim);
+    color: var(--accent);
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+
+  .tag-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .tag-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
+  .tag-green { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tag-teal { background: rgba(6,182,212,0.15); color: var(--teal); }
+  .tag-pink { background: rgba(236,72,153,0.15); color: var(--pink); }
+  .tag-orange { background: rgba(249,115,22,0.15); color: var(--orange); }
+
+  /* Stat counter */
+  .stat {
+    text-align: center;
+    padding: 14px 8px;
+  }
+
+  .stat-number {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* Screenshot placeholder */
+  .screenshot {
+    background: var(--bg-elevated);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 100px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .screenshot-icon {
+    font-size: 28px;
+    opacity: 0.5;
+  }
+
+  .screenshot-lg { min-height: 160px; }
+  .screenshot-xl { min-height: 220px; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 14px 0;
+  }
+
+  /* Feature list */
+  .feature-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .feature-icon-accent { background: var(--accent-dim); }
+  .feature-icon-blue { background: rgba(59,130,246,0.15); }
+  .feature-icon-purple { background: rgba(139,92,246,0.15); }
+  .feature-icon-green { background: rgba(16,185,129,0.15); }
+  .feature-icon-teal { background: rgba(6,182,212,0.15); }
+  .feature-icon-pink { background: rgba(236,72,153,0.15); }
+
+  .feature-text h3 { margin-bottom: 3px; font-size: 14px; }
+  .feature-text p { margin-bottom: 0; font-size: 12px; }
+
+  /* Table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .table th {
+    text-align: left;
+    padding: 8px 10px;
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+
+  .table tr:last-child td { border-bottom: none; }
+
+  /* Flow / Architecture */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .flow-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 90px;
+  }
+
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  /* Cover decorative elements */
+  .cover-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* Timeline */
+  .timeline-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 5px;
+    position: relative;
+  }
+
+  .timeline-item:not(:last-child) .timeline-dot::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 4px;
+    width: 2px;
+    height: calc(100% + 14px);
+    background: var(--border);
+  }
+
+  .timeline-content h3 { font-size: 13px; margin-bottom: 2px; }
+  .timeline-content p { font-size: 12px; margin-bottom: 0; }
+
+  /* Inline code */
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    background: var(--bg-elevated);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  /* List */
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  li {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 4px;
+    line-height: 1.6;
+  }
+
+  li strong { color: var(--text); }
+
+  /* Compact spacer */
+  .sp-1 { height: 4px; }
+  .sp-2 { height: 8px; }
+  .sp-3 { height: 14px; }
+  .sp-4 { height: 20px; }
+  .sp-6 { height: 30px; }
+
+  /* Color swatches */
+  .swatch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 12px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .swatch-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Two-column with sidebar */
+  .layout-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 160px;
+    gap: 16px;
+  }
+
+  .layout-sidebar-left {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 16px;
+  }
+
+  /* Accent bar on card top */
+  .card-top-accent {
+    border-top: 2px solid var(--accent);
+  }
+
+  .mb-1 { margin-bottom: 6px; }
+  .mb-2 { margin-bottom: 10px; }
+  .mb-3 { margin-bottom: 16px; }
+  .mt-1 { margin-top: 6px; }
+  .mt-2 { margin-top: 10px; }
+  .mt-3 { margin-top: 16px; }
+
+  /* Checkmark list */
+  .check-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .check-list li {
+    padding-left: 22px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  /* Footnote */
+  .footnote {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 1 — COVER -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative;">
+  <div class="cover-glow" style="background:var(--accent); top:-50px; left:-100px;"></div>
+  <div class="cover-glow" style="background:var(--purple); bottom:-50px; right:-100px;"></div>
+  <div class="cover-glow" style="background:var(--blue); top:40%; left:50%; transform:translateX(-50%);"></div>
+
+  <div style="position:relative; z-index:1;">
+    <div style="margin-bottom:20px;">
+      <svg width="72" height="72" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100" height="100" rx="22" fill="#FACC15"/>
+        <path d="M30 65V45L50 30L70 45V65" stroke="#000" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M50 30V18" stroke="#000" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="50" cy="14" r="4" fill="#000"/>
+      </svg>
+    </div>
+    <h4 style="color:var(--text-muted); letter-spacing:4px; margin-bottom:16px;">ПРОЕКТ</h4>
+    <h1 style="font-size:64px; letter-spacing:-3px; margin-bottom:12px;">
+      <span class="gradient-text">Трамплин</span>
+    </h1>
+    <p class="lead" style="max-width:440px; margin:0 auto 30px;">
+      Интерактивная карьерная платформа<br>
+      для студентов, выпускников и работодателей
+    </p>
+
+    <div class="divider" style="width:60px; margin:0 auto 30px; background:var(--accent);"></div>
+
+    <p style="color:var(--text-muted); font-size:12px; margin-bottom:4px;">
+      Международная олимпиада «IT-Планета 2026»
+    </p>
+    <p style="color:var(--text-muted); font-size:12px; margin-bottom:4px;">
+      Конкурс «Прикладное программирование if...else» · Второй этап
+    </p>
+    <div class="sp-6"></div>
+    <p style="color:var(--text-muted); font-size:11px;">
+      <!-- КОМАНДА: замените на имена участников -->
+      Команда: <span style="color:var(--text);">NameError</span>
+               <span style="color:var(--text);">reyni-overflow, programisto, просто Ян</span>
+    </p>
+    <p style="color:var(--text-muted); font-size:11px;">
+      Образовательная организация: <span style="color:var(--text);">ВИВТ</span>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 2 — СОДЕРЖАНИЕ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="2">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">Содержание</div>
+  </div>
+
+  <h2>Содержание</h2>
+  <div class="sp-3"></div>
+
+  <table class="table" style="font-size:14px;">
+    <tr><td style="color:var(--accent); font-weight:700; width:30px;">01</td><td><strong style="color:var(--text);">О проекте</strong> — концепция, цели, целевая аудитория</td><td style="text-align:right; color:var(--text-muted);">3</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">02</td><td><strong style="color:var(--text);">Ключевые возможности</strong> — обзор функциональности платформы</td><td style="text-align:right; color:var(--text-muted);">4</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">03</td><td><strong style="color:var(--text);">Роли пользователей</strong> — соискатель, работодатель, куратор</td><td style="text-align:right; color:var(--text-muted);">5–6</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">04</td><td><strong style="color:var(--text);">Интерфейс</strong> — публичные страницы, карта, каталоги</td><td style="text-align:right; color:var(--text-muted);">7–9</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">05</td><td><strong style="color:var(--text);">Дизайн-система</strong> — темы, акценты, типографика, компоненты</td><td style="text-align:right; color:var(--text-muted);">10–11</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">06</td><td><strong style="color:var(--text);">Стек технологий</strong> — frontend, backend, инфраструктура</td><td style="text-align:right; color:var(--text-muted);">12–13</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">07</td><td><strong style="color:var(--text);">Архитектура</strong> — слои, API, базы данных</td><td style="text-align:right; color:var(--text-muted);">14–15</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">08</td><td><strong style="color:var(--text);">Безопасность</strong> — аутентификация, хранение сессий, защита данных</td><td style="text-align:right; color:var(--text-muted);">16–17</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">09</td><td><strong style="color:var(--text);">Инфраструктура</strong> — контейнеризация, хранение файлов, кэширование</td><td style="text-align:right; color:var(--text-muted);">18–19</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">10</td><td><strong style="color:var(--text);">Авторские решения</strong> — верификация, модерация, нетворкинг</td><td style="text-align:right; color:var(--text-muted);">20–21</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">11</td><td><strong style="color:var(--text);">Расширенные функции</strong> — PWA, i18n, уведомления, доступность</td><td style="text-align:right; color:var(--text-muted);">22–23</td></tr>
+    <tr><td style="color:var(--accent); font-weight:700;">12</td><td><strong style="color:var(--text);">Итоги и ссылки</strong> — результаты, демо, репозиторий</td><td style="text-align:right; color:var(--text-muted);">24</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 3 — О ПРОЕКТЕ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="3">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">01 · О проекте</div>
+  </div>
+
+  <h4>Концепция</h4>
+  <h2>Карьерная экосистема нового поколения</h2>
+
+  <p class="lead" style="margin-bottom:20px;">
+    «Трамплин» — это интерактивная карьерная платформа, объединяющая студентов, выпускников
+    и работодателей IT-индустрии. В отличие от классических job-бордов, Трамплин создаёт
+    полноценную экосистему: здесь не просто ищут работу, а строят карьеру с нуля —
+    находят менторов, участвуют в мероприятиях компаний и получают предложения о стажировках.
+  </p>
+
+  <div class="grid-3 mb-3">
+    <div class="card card-accent">
+      <h3 style="font-size:13px;">Проблема</h3>
+      <p style="margin:0; font-size:12px;">Существующие решения слишком формальны или не учитывают специфику поиска первой работы и стажировки для студентов.</p>
+    </div>
+    <div class="card card-accent">
+      <h3 style="font-size:13px;">Решение</h3>
+      <p style="margin:0; font-size:12px;">Единая платформа с картой возможностей, менторскими программами, карьерными мероприятиями и нетворкингом между соискателями.</p>
+    </div>
+    <div class="card card-accent">
+      <h3 style="font-size:13px;">Ценность</h3>
+      <p style="margin:0; font-size:12px;">Студенты строят профиль, накапливают контакты и получают рекомендации — задолго до окончания вуза.</p>
+    </div>
+  </div>
+
+  <h4>Целевая аудитория</h4>
+  <div class="grid-3" style="margin-bottom:16px;">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:32px; margin-bottom:6px;">🎓</div>
+      <h3 style="font-size:13px;">Соискатели</h3>
+      <p style="margin:0; font-size:11px;">Студенты и выпускники, ищущие стажировки, первую работу, менторов</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:32px; margin-bottom:6px;">🏢</div>
+      <h3 style="font-size:13px;">Работодатели</h3>
+      <p style="margin:0; font-size:11px;">IT-компании, публикующие вакансии, стажировки и проводящие мероприятия</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:32px; margin-bottom:6px;">🛡️</div>
+      <h3 style="font-size:13px;">Кураторы</h3>
+      <p style="margin:0; font-size:11px;">Представители вузов, модераторы контента и верификаторы компаний</p>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="stat">
+      <div class="stat-number accent">30+</div>
+      <div class="stat-label">Страниц</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number blue">44</div>
+      <div class="stat-label">UI-компонента</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number purple">13</div>
+      <div class="stat-label">API-контроллеров</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number green">4</div>
+      <div class="stat-label">Языка i18n</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 4 — КЛЮЧЕВЫЕ ВОЗМОЖНОСТИ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="4">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">02 · Ключевые возможности</div>
+  </div>
+
+  <h4>Функциональность</h4>
+  <h2>Всё для карьерного старта</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2">
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-accent">🗺️</div>
+      <div class="feature-text">
+        <h3>Интерактивная карта</h3>
+        <p>Вакансии, стажировки и мероприятия на карте Leaflet с кластеризацией, фильтрами и цветовой кодировкой маркеров.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-blue">🔍</div>
+      <div class="feature-text">
+        <h3>Полнотекстовый поиск</h3>
+        <p>PostgreSQL FTS с поддержкой русского языка, GIN-индексами и релевантным ранжированием.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-purple">👥</div>
+      <div class="feature-text">
+        <h3>Нетворкинг</h3>
+        <p>Профессиональные контакты, рекомендации на вакансии, настройки приватности профиля.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-green">📋</div>
+      <div class="feature-text">
+        <h3>Система откликов</h3>
+        <p>8 статусов отклика, сопроводительные письма, отслеживание прогресса в реальном времени.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-teal">🎯</div>
+      <div class="feature-text">
+        <h3>Менторские программы</h3>
+        <p>Поиск ментора по направлению, подача заявки, управление программой для работодателя.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-pink">📅</div>
+      <div class="feature-text">
+        <h3>Карьерные мероприятия</h3>
+        <p>Хакатоны, дни открытых дверей, митапы, CTF с календарным видом и регистрацией.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-accent">🔔</div>
+      <div class="feature-text">
+        <h3>Уведомления в реальном времени</h3>
+        <p>SignalR WebSocket + Web Push (VAPID). Мгновенные оповещения о статусах, откликах, контактах.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-blue">🛡️</div>
+      <div class="feature-text">
+        <h3>Верификация компаний</h3>
+        <p>Проверка ИНН через DaData API, модерация кураторами, бейджи доверия.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-purple">⌨️</div>
+      <div class="feature-text">
+        <h3>Command Palette</h3>
+        <p>Ctrl+K — мгновенный глобальный поиск по всем сущностям платформы с навигацией.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon feature-icon-green">📊</div>
+      <div class="feature-text">
+        <h3>Сравнение вакансий</h3>
+        <p>Параллельное сравнение до 3 вакансий: зарплата, формат, навыки, местоположение.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 5 — РОЛЬ: СОИСКАТЕЛЬ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="5">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">03 · Роли · Соискатель</div>
+  </div>
+
+  <h4>Личный кабинет</h4>
+  <h2>Соискатель <span style="color:var(--text-muted); font-weight:400;">· Построй карьеру</span></h2>
+  <div class="sp-2"></div>
+
+  <div class="layout-sidebar">
+    <div>
+      <p>Личный кабинет соискателя — это центр управления карьерой. Здесь студент формирует профессиональный профиль, отслеживает отклики, управляет контактами и находит возможности.</p>
+      <div class="sp-2"></div>
+
+      <div class="grid-2" style="margin-bottom:14px;">
+        <div class="card" style="padding:14px;">
+          <h3 style="font-size:12px; color:var(--accent);">Профиль</h3>
+          <p style="font-size:11px; margin:0;">ФИО, вуз, курс, навыки-теги, резюме (PDF), репозитории GitHub, описание «О себе», аватар</p>
+        </div>
+        <div class="card" style="padding:14px;">
+          <h3 style="font-size:12px; color:var(--blue);">Отклики</h3>
+          <p style="font-size:11px; margin:0;">Таблица со статусами: ожидание → просмотрено → приглашение → стажировка. Фильтрация, сортировка</p>
+        </div>
+        <div class="card" style="padding:14px;">
+          <h3 style="font-size:12px; color:var(--purple);">Избранное</h3>
+          <p style="font-size:11px; margin:0;">Вкладки: вакансии и компании. Сохранение в localStorage для неавторизованных, синхронизация после входа</p>
+        </div>
+        <div class="card" style="padding:14px;">
+          <h3 style="font-size:12px; color:var(--green);">Контакты</h3>
+          <p style="font-size:11px; margin:0;">Профессиональные контакты, входящие заявки, возможность рекомендации на вакансии</p>
+        </div>
+      </div>
+
+      <h3 style="font-size:13px;">Приватность и нетворкинг</h3>
+      <ul class="check-list" style="font-size:12px;">
+        <li>Скрыть отклики от других соискателей</li>
+        <li>Скрыть резюме (доступно только работодателям при отклике)</li>
+        <li>Полностью приватный профиль или открытый для нетворкинга</li>
+        <li>Прогресс-бар заполненности профиля с подсказками</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="screenshot" style="height:100%;">
+        <div class="screenshot-icon">📱</div>
+        Скриншот<br>ЛК соискателя
+      </div>
+    </div>
+  </div>
+
+  <div class="sp-3"></div>
+  <div class="screenshot screenshot-lg">
+    <div class="screenshot-icon">🖥️</div>
+    Скриншот: Панель управления соискателя — обзор со статистикой, откликами и рекомендованными вакансиями
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 6 — РОЛЬ: РАБОТОДАТЕЛЬ + КУРАТОР -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="6">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">03 · Роли · Работодатель и Куратор</div>
+  </div>
+
+  <h4>Работодатель</h4>
+  <h2 style="font-size:22px;">Управление вакансиями и поиск талантов</h2>
+  <div class="sp-1"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <ul class="check-list" style="font-size:12px;">
+        <li>Профиль компании: описание, сфера, фото офиса, видео-презентация</li>
+        <li>Верификация через ИНН (DaData API) + модерация куратором</li>
+        <li>Создание вакансий с live-превью карточки в реальном времени</li>
+        <li>Управление статусами откликов (8 статусов)</li>
+        <li>Публикация мероприятий и менторских программ</li>
+        <li>Поиск и фильтрация по своим вакансиям и откликам</li>
+        <li>Социальные сети компании (динамический список)</li>
+      </ul>
+    </div>
+    <div class="screenshot" style="min-height:140px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Создание вакансии с live-превью
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h4>Куратор платформы</h4>
+  <h2 style="font-size:22px;">Модерация, верификация и управление</h2>
+  <div class="sp-1"></div>
+
+  <div class="grid-2">
+    <div>
+      <p>Административная панель с выделенным layout и навигацией. Полный контроль над контентом и пользователями платформы.</p>
+      <div class="sp-2"></div>
+      <div class="grid-2">
+        <div class="card" style="padding:12px;">
+          <h3 style="font-size:11px; color:var(--accent);">Дашборд</h3>
+          <p style="font-size:10px; margin:0;">Статистика: пользователи, компании, вакансии, ожидающие модерации</p>
+        </div>
+        <div class="card" style="padding:12px;">
+          <h3 style="font-size:11px; color:var(--blue);">Пользователи</h3>
+          <p style="font-size:10px; margin:0;">Таблица, поиск, фильтр по роли, блокировка, смена роли</p>
+        </div>
+        <div class="card" style="padding:12px;">
+          <h3 style="font-size:11px; color:var(--green);">Верификация</h3>
+          <p style="font-size:10px; margin:0;">Заявки компаний: ИНН, DaData-проверка, одобрение/отклонение</p>
+        </div>
+        <div class="card" style="padding:12px;">
+          <h3 style="font-size:11px; color:var(--purple);">Модерация</h3>
+          <p style="font-size:10px; margin:0;">Вакансии на проверке, превью карточек, теги, кураторы</p>
+        </div>
+      </div>
+      <div class="sp-2"></div>
+      <p style="font-size:11px;">
+        <strong>Аудит-лог:</strong> все административные действия логируются с указанием
+        пользователя, роли, действия, IP-адреса и времени.
+      </p>
+    </div>
+    <div class="screenshot" style="min-height:180px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Панель администратора — управление пользователями
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 7 — ИНТЕРФЕЙС: ГЛАВНАЯ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="7">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">04 · Интерфейс · Главная</div>
+  </div>
+
+  <h4>Landing page</h4>
+  <h2>Главная страница</h2>
+  <p style="margin-bottom:14px;">Лендинг-презентация платформы, вдохновлённая otto.com и Habr Карьера. Не каталог, а вовлекающая история с CTA.</p>
+
+  <div class="screenshot screenshot-xl" style="margin-bottom:14px;">
+    <div class="screenshot-icon">🖥️</div>
+    Скриншот: Главная страница — Hero-секция с анимированным фоном, CTA-кнопками «Найти возможности» и «Я работодатель»
+  </div>
+
+  <div class="grid-3 mb-3">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--accent);">Hero-секция</h3>
+      <p style="font-size:11px; margin:0;">Крупный заголовок, подзаголовок, CTA-кнопки, анимированные геометрические фигуры на фоне</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--blue);">«Как это работает»</h3>
+      <p style="font-size:11px; margin:0;">3 шага с иконками: профиль → исследование → отклик. Простая визуализация пути пользователя</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--purple);">Цифры платформы</h3>
+      <p style="font-size:11px; margin:0;">Анимированные счётчики при скролле: компании, вакансии, соискатели, мероприятия</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--green);">Популярные направления</h3>
+      <p style="font-size:11px; margin:0;">Горизонтальный скролл тегов: Frontend, Backend, Data Science, DevOps, Design, Mobile, QA, PM. Клик → фильтр</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--pink);">Отзывы пользователей</h3>
+      <p style="font-size:11px; margin:0;">Карусель с автопрокруткой, аватары-инициалы на цветном фоне, постироничные тексты</p>
+    </div>
+  </div>
+
+  <div class="sp-2"></div>
+  <div class="grid-2">
+    <div class="screenshot" style="min-height:100px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Секция «Как это работает»
+    </div>
+    <div class="screenshot" style="min-height:100px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Секция отзывов (карусель)
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 8 — ИНТЕРФЕЙС: КАТАЛОГ + КАРТА -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="8">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">04 · Интерфейс · Каталоги</div>
+  </div>
+
+  <h4>Каталог вакансий</h4>
+  <h2 style="font-size:22px;">Поиск, фильтрация и отображение</h2>
+  <div class="sp-1"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <p>Основная рабочая страница платформы. Поддерживает два режима отображения: список и сетка, а также split-view с интерактивной картой.</p>
+      <div class="sp-2"></div>
+      <ul class="check-list" style="font-size:12px;">
+        <li>Панель фильтров: sticky sidebar, collapsible</li>
+        <li>Фильтры: поиск, тип, формат, город, зарплата (dual range)</li>
+        <li>Переключение: список ↔ сетка ↔ split-view с картой</li>
+        <li>Сортировка: по дате / зарплате / откликам</li>
+        <li>Пагинация с адаптивным мобильным видом</li>
+        <li>Skeleton loading при загрузке данных</li>
+        <li>Добавление в избранное одним кликом</li>
+      </ul>
+    </div>
+    <div class="screenshot" style="min-height:160px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Каталог вакансий — список с фильтрами
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h4>Интерактивная карта</h4>
+  <h2 style="font-size:22px;">Все возможности на карте</h2>
+  <div class="sp-1"></div>
+
+  <div class="grid-2">
+    <div class="screenshot" style="min-height:160px;">
+      <div class="screenshot-icon">🗺️</div>
+      Скриншот: Полноэкранная карта с маркерами, кластерами и боковой панелью фильтров
+    </div>
+    <div>
+      <p>Полноэкранная карта на базе Leaflet с динамическими тайлами, адаптирующимися к теме оформления.</p>
+      <div class="sp-2"></div>
+
+      <div style="margin-bottom:8px;">
+        <span class="tag-blue tag">Вакансии — синие</span>
+        <span class="tag-purple tag">Мероприятия — фиолетовые</span>
+      </div>
+      <div style="margin-bottom:8px;">
+        <span class="tag-green tag">Менторство — зелёные</span>
+        <span class="tag tag">Избранное — акцентные</span>
+      </div>
+      <div class="sp-2"></div>
+
+      <ul class="check-list" style="font-size:12px;">
+        <li>Кластеризация маркеров (leaflet.markercluster)</li>
+        <li>Кастомные маркеры с инициалом компании</li>
+        <li>Popup с модульной карточкой возможности</li>
+        <li>Геолокация пользователя (пульсирующий маркер)</li>
+        <li>Тёмные и светлые тайлы (Stadia / OSM)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 9 — ИНТЕРФЕЙС: КАРТОЧКИ + КОМПАНИИ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="9">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">04 · Интерфейс · Карточки</div>
+  </div>
+
+  <h4>Карточка возможности</h4>
+  <h2 style="font-size:22px;">Детальная страница вакансии</h2>
+  <div class="sp-1"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <p>Полная информация о вакансии/стажировке с интерактивными элементами.</p>
+      <div class="sp-2"></div>
+      <table class="table" style="font-size:11px;">
+        <tr><td style="color:var(--accent); width:100px;">Основное</td><td>Название, компания, тип, формат, описание (Markdown)</td></tr>
+        <tr><td style="color:var(--accent);">Условия</td><td>Зарплата, адрес, город, дата публикации, срок действия</td></tr>
+        <tr><td style="color:var(--accent);">Теги</td><td>Технологии, уровень (Junior/Middle), тип занятости</td></tr>
+        <tr><td style="color:var(--accent);">Действия</td><td>Откликнуться, в избранное, поделиться (Web Share API)</td></tr>
+        <tr><td style="color:var(--accent);">Sidebar</td><td>Карточка компании, мини-карта, похожие вакансии по тегам</td></tr>
+      </table>
+    </div>
+    <div class="screenshot" style="min-height:160px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Страница вакансии с Markdown-описанием и мини-картой
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h4>Компании и мероприятия</h4>
+  <div class="grid-2 mt-2">
+    <div>
+      <h3 style="font-size:14px;">Каталог компаний</h3>
+      <p style="font-size:12px;">Сетка карточек с аватарами, сферами деятельности, бейджами верификации. Поиск, фильтр по сфере, пагинация.</p>
+      <div class="sp-2"></div>
+      <h3 style="font-size:14px;">Профиль компании</h3>
+      <p style="font-size:12px;">Аватар, описание, соцсети, фото-галерея с lightbox, мини-карта офиса, список активных вакансий.</p>
+      <div class="screenshot mt-2" style="min-height:80px;">
+        <div class="screenshot-icon">🖥️</div>
+        Скриншот: Профиль компании с фото-галереей
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;">Карьерные мероприятия</h3>
+      <p style="font-size:12px;">Лента мероприятий: хакатоны, дни открытых дверей, вебинары, митапы, воркшопы, CTF. Два режима отображения:</p>
+      <ul class="check-list" style="font-size:12px;">
+        <li>Список с карточками (дата-колонка, бейджи, организатор)</li>
+        <li>Календарный вид (сетка по месяцам)</li>
+        <li>Фильтры: формат (онлайн/офлайн), город, поиск</li>
+        <li>Кнопка «Поделиться» и «Участвовать»</li>
+      </ul>
+      <div class="screenshot mt-2" style="min-height:80px;">
+        <div class="screenshot-icon">📅</div>
+        Скриншот: Календарный вид мероприятий
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 10 — ДИЗАЙН-СИСТЕМА (1) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="10">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">05 · Дизайн-система</div>
+  </div>
+
+  <h4>Visual Design</h4>
+  <h2>Дизайн-система Трамплин</h2>
+  <p style="margin-bottom:14px;">Полностью кастомная дизайн-система на чистом CSS с CSS Custom Properties. Без Tailwind и CSS-препроцессоров.</p>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:14px;">Темы оформления</h3>
+      <p style="font-size:12px;">Две базовые темы с автоопределением через <code>prefers-color-scheme</code>:</p>
+      <div class="sp-1"></div>
+      <div class="grid-2">
+        <div class="card" style="padding:10px; text-align:center;">
+          <div style="width:36px; height:36px; border-radius:8px; background:#000; border:1px solid #333; margin:0 auto 6px;"></div>
+          <div style="font-size:11px; font-weight:600;">Тёмная</div>
+          <div style="font-size:10px; color:var(--text-muted);">OLED Black #000</div>
+        </div>
+        <div class="card" style="padding:10px; text-align:center;">
+          <div style="width:36px; height:36px; border-radius:8px; background:#fff; border:1px solid #333; margin:0 auto 6px;"></div>
+          <div style="font-size:11px; font-weight:600;">Светлая</div>
+          <div style="font-size:10px; color:var(--text-muted);">Pure White #FFF</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;">Акцентные цвета <span style="color:var(--text-muted); font-weight:400;">(9 вариантов)</span></h3>
+      <p style="font-size:12px; margin-bottom:10px;">Пользователь выбирает акцент из палитры. Сохраняется в <code>localStorage</code>.</p>
+      <div>
+        <span class="swatch"><span class="swatch-dot" style="background:#fff;"></span> Нейтральный</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#FACC15;"></span> Жёлтый</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#3B82F6;"></span> Синий</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#8B5CF6;"></span> Фиолетовый</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#06B6D4;"></span> Бирюзовый</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#10B981;"></span> Зелёный</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#EC4899;"></span> Розовый</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#F97316;"></span> Оранжевый</span>
+        <span class="swatch"><span class="swatch-dot" style="background:#EF4444;"></span> Красный</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Типографика</h3>
+  <div class="grid-2 mb-3">
+    <div>
+      <p style="font-size:12px;"><strong>Шрифт:</strong> Manrope Variable (self-hosted, кириллица + латиница, woff2)</p>
+      <p style="font-size:12px;"><strong>Fluid font-size:</strong> <code>clamp(16px, calc(12px + 0.35vw), 24px)</code></p>
+      <p style="font-size:12px;"><strong>Масштабирование:</strong> от 1280px до 4K дисплеев</p>
+    </div>
+    <div>
+      <p style="font-size:12px;"><strong>Пространственная система:</strong> base unit <code>0.25rem</code></p>
+      <p style="font-size:12px;"><strong>Breakpoints:</strong> 640px → 768px → 1024px → 1280px → 1536px</p>
+      <p style="font-size:12px;"><strong>Подход:</strong> Desktop-first с адаптивностью до мобильных</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Библиотека компонентов <span style="color:var(--text-muted); font-weight:400;">· 44 компонента</span></h3>
+  <div class="grid-3">
+    <div>
+      <p style="font-size:11px; color:var(--accent); font-weight:600; margin-bottom:4px;">Формы (10)</p>
+      <p style="font-size:11px; margin:0;">Button, Input, PasswordInput, Textarea, Select, Checkbox, Toggle, RangeSlider, ContactInput, FileUpload</p>
+    </div>
+    <div>
+      <p style="font-size:11px; color:var(--blue); font-weight:600; margin-bottom:4px;">Отображение (10)</p>
+      <p style="font-size:11px; margin:0;">Avatar, Badge, Tag, Skeleton, Pagination, JobCard, CompanyCard, Tooltip, ViewToggle, ShareButton</p>
+    </div>
+    <div>
+      <p style="font-size:11px; color:var(--purple); font-weight:600; margin-bottom:4px;">Составные (10+)</p>
+      <p style="font-size:11px; margin:0;">Modal, Dropdown, Tabs, Toast, CommandPalette, MapView, NotificationBell, MarkdownEditor, AccentPicker, CookieConsent</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 11 — ДИЗАЙН: КОМПОНЕНТЫ + АНИМАЦИИ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="11">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">05 · Дизайн · Анимации и UX</div>
+  </div>
+
+  <h4>Микро-взаимодействия</h4>
+  <h2 style="font-size:22px;">Анимации и UX-паттерны</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--accent);">Анимации</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>Spring easing: <code>cubic-bezier(0.16, 1, 0.3, 1)</code></li>
+        <li>Crossfade между skeleton и контентом</li>
+        <li>Fade-in при скролле (IntersectionObserver)</li>
+        <li>Микро-анимация кнопок: scale 0.97 при клике</li>
+        <li>Анимированные счётчики на лендинге</li>
+        <li>Пульсирующий маркер геолокации на карте</li>
+        <li>Sliding indicator у Tabs-компонента</li>
+        <li>Поддержка <code>prefers-reduced-motion</code></li>
+      </ul>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--blue);">UX-паттерны</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>Backdrop-blur в Header, сжатие при скролле</li>
+        <li>Toast-уведомления: FIFO, max 3, auto-dismiss</li>
+        <li>Модальные окна: overlay, ESC-закрытие, focus trap</li>
+        <li>Inline-валидация форм (на blur)</li>
+        <li>Drag & Drop загрузка файлов (resume)</li>
+        <li>Debounced поиск (300ms)</li>
+        <li>Skeleton shimmer при загрузке</li>
+        <li>Кастомный скроллбар (тонкий, с акцентом)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="screenshot" style="min-height:120px;">
+      <div class="screenshot-icon">🖥️</div>
+      Скриншот: Тёмная тема — каталог вакансий
+    </div>
+    <div class="screenshot" style="min-height:120px;">
+      <div class="screenshot-icon">☀️</div>
+      Скриншот: Светлая тема — каталог вакансий
+    </div>
+  </div>
+
+  <div class="sp-3"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Доступность (Accessibility)</h3>
+  <div class="grid-3">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--green);">Клавиатура</h3>
+      <p style="font-size:10px; margin:0;">Полная навигация с клавиатуры, focus-visible стили, skip-to-content, aria-live регионы</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--teal);">Контраст</h3>
+      <p style="font-size:10px; margin:0;">WCAG AA минимум (4.5:1), контрастные бейджи статусов, проверенные цветовые пары</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--purple);">Семантика</h3>
+      <p style="font-size:10px; margin:0;">ARIA-атрибуты для кастомных компонентов, семантические HTML5-теги, alt-тексты</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 12 — СТЕК ТЕХНОЛОГИЙ: FRONTEND -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="12">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">06 · Стек технологий · Frontend</div>
+  </div>
+
+  <h4>Frontend</h4>
+  <h2>Современный SPA на Svelte 5</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:14px;">Почему Svelte 5?</h3>
+      <p style="font-size:12px;">Svelte 5 — это компиляторный фреймворк, который генерирует минимальный JavaScript без виртуального DOM. Новая система реактивности Runes ($state, $derived, $effect) даёт предсказуемый и производительный код.</p>
+      <div class="sp-2"></div>
+      <ul class="check-list" style="font-size:12px;">
+        <li><strong>Нет Virtual DOM</strong> — прямая манипуляция DOM, минимальный бандл</li>
+        <li><strong>Runes</strong> — $state, $derived, $props вместо магических синтаксисов</li>
+        <li><strong>Scoped CSS</strong> — стили автоматически изолированы в компонентах</li>
+        <li><strong>SvelteKit</strong> — маршрутизация, layouts, SSG, обработка ошибок</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; margin-bottom:10px;">Основные зависимости</h3>
+      <table class="table" style="font-size:11px;">
+        <tr><td><strong>Svelte</strong></td><td>v5.54.0</td></tr>
+        <tr><td><strong>SvelteKit</strong></td><td>v2.55.0</td></tr>
+        <tr><td><strong>Vite</strong></td><td>v8.0.3</td></tr>
+        <tr><td><strong>TypeScript</strong></td><td>v5.9.3</td></tr>
+        <tr><td><strong>Leaflet</strong></td><td>v1.9.4</td></tr>
+        <tr><td><strong>SignalR</strong></td><td>v10.0.0</td></tr>
+        <tr><td><strong>DOMPurify</strong></td><td>v3.3.3</td></tr>
+        <tr><td><strong>QRCode</strong></td><td>v1.5.4</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Архитектура фронтенда</h3>
+  <div class="grid-3">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--accent);">Маршрутизация</h3>
+      <p style="font-size:11px; margin:0;"><strong>46 страниц</strong> с file-based routing. Layouts для dashboard (по роли), admin, публичных страниц. Адаптер static для SPA.</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--blue);">State Management</h3>
+      <p style="font-size:11px; margin:0;">Svelte Stores: auth, theme, toast, favorites, filters, auth-modal. Реактивные подписки, localStorage persistence.</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--purple);">API-клиент</h3>
+      <p style="font-size:11px; margin:0;">Centralized HttpClient: auto-refresh 401, abort controller, FormData, error mapping to i18n keys, request dedup.</p>
+    </div>
+  </div>
+
+  <div class="sp-3"></div>
+
+  <div class="flow-row">
+    <div class="flow-box" style="border-color:var(--accent);">Svelte 5<br><span style="font-size:10px; color:var(--text-muted);">Runes</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--blue);">SvelteKit<br><span style="font-size:10px; color:var(--text-muted);">Router + SSG</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--purple);">Vite 8<br><span style="font-size:10px; color:var(--text-muted);">Build</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--green);">Nginx<br><span style="font-size:10px; color:var(--text-muted);">Serve + Proxy</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 13 — СТЕК ТЕХНОЛОГИЙ: BACKEND -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="13">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">06 · Стек технологий · Backend</div>
+  </div>
+
+  <h4>Backend</h4>
+  <h2>ASP.NET Core 10 · Clean Architecture</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:14px;">Почему .NET 10?</h3>
+      <p style="font-size:12px;">ASP.NET Core — один из самых производительных серверных фреймворков. Строгая типизация C#, богатая экосистема, Entity Framework Core для ORM, встроенная поддержка WebSocket через SignalR.</p>
+      <div class="sp-2"></div>
+      <ul class="check-list" style="font-size:12px;">
+        <li><strong>Высокая производительность</strong> — Kestrel, async/await, пулы потоков</li>
+        <li><strong>Type-safe</strong> — C# generics, nullable reference types</li>
+        <li><strong>EF Core</strong> — Code-First миграции, Fluent API, LINQ</li>
+        <li><strong>SignalR</strong> — встроенный WebSocket для реальных уведомлений</li>
+        <li><strong>FluentValidation</strong> — декларативная валидация DTO</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; margin-bottom:10px;">Слои архитектуры</h3>
+      <div style="margin-bottom:10px;">
+        <div class="flow-box" style="border-color:var(--accent); margin-bottom:8px; text-align:left;">
+          <strong>Trampline.Web</strong><br>
+          <span style="font-size:10px; color:var(--text-muted);">Контроллеры, Middleware, SignalR Hub</span>
+        </div>
+        <div class="flow-box" style="border-color:var(--blue); margin-bottom:8px; text-align:left;">
+          <strong>Trampline.Application</strong><br>
+          <span style="font-size:10px; color:var(--text-muted);">Сервисы, бизнес-логика, валидаторы</span>
+        </div>
+        <div class="flow-box" style="border-color:var(--purple); margin-bottom:8px; text-align:left;">
+          <strong>Trampline.Contracts</strong><br>
+          <span style="font-size:10px; color:var(--text-muted);">DTO, Request/Response модели</span>
+        </div>
+        <div class="flow-box" style="border-color:var(--green); margin-bottom:8px; text-align:left;">
+          <strong>Trampline.Core</strong><br>
+          <span style="font-size:10px; color:var(--text-muted);">Доменные модели, интерфейсы</span>
+        </div>
+        <div class="flow-box" style="border-color:var(--teal); margin-bottom:8px; text-align:left;">
+          <strong>Trampline.Infrastructure.*</strong><br>
+          <span style="font-size:10px; color:var(--text-muted);">PostgreSQL репозитории, Redis кэш</span>
+        </div>
+        <div class="flow-box" style="border-color:var(--text-muted); text-align:left;">
+          <strong>Trampline.Shared</strong><br>
+          <span style="font-size:10px; color:var(--text-muted);">Общие утилиты, базовые классы</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:8px;">API-эндпоинты <span style="color:var(--text-muted); font-weight:400;">· 13 контроллеров</span></h3>
+  <div class="grid-4" style="font-size:11px;">
+    <div class="card" style="padding:8px;">
+      <div style="color:var(--accent); font-weight:600; font-size:10px;">AUTH</div>
+      <div style="color:var(--text-muted); font-size:10px;">Регистрация, вход, 2FA, восстановление, верификация email</div>
+    </div>
+    <div class="card" style="padding:8px;">
+      <div style="color:var(--blue); font-weight:600; font-size:10px;">JOB / EVENT / MENTORSHIP</div>
+      <div style="color:var(--text-muted); font-size:10px;">CRUD, поиск, фильтры, отклики, теги</div>
+    </div>
+    <div class="card" style="padding:8px;">
+      <div style="color:var(--purple); font-weight:600; font-size:10px;">ADMIN</div>
+      <div style="color:var(--text-muted); font-size:10px;">Пользователи, аудит, модерация, блокировка</div>
+    </div>
+    <div class="card" style="padding:8px;">
+      <div style="color:var(--green); font-weight:600; font-size:10px;">WORKER / EMPLOYEE</div>
+      <div style="color:var(--text-muted); font-size:10px;">Профили, загрузка файлов, контакты, избранное</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 14 — АРХИТЕКТУРА (1) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="14">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">07 · Архитектура</div>
+  </div>
+
+  <h4>System Design</h4>
+  <h2>Архитектура системы</h2>
+  <div class="sp-2"></div>
+
+  <div class="card mb-3" style="padding:16px;">
+    <h3 style="font-size:13px; text-align:center; margin-bottom:14px;">Общая схема взаимодействия</h3>
+    <div class="flow-row" style="margin-bottom:8px;">
+      <div class="flow-box" style="border-color:var(--accent); min-width:120px;">
+        <strong>Браузер</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">Svelte SPA + PWA</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--orange); min-width:120px;">
+        <strong>Traefik 3.6</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">TLS + Routing</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--green); min-width:120px;">
+        <strong>Nginx</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">SPA + CSP + Proxy</span>
+      </div>
+    </div>
+    <div class="flow-row" style="margin-bottom:8px;">
+      <div class="flow-box" style="border-color:var(--orange); min-width:120px;">
+        <strong>Traefik 3.6</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">API Route</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--blue); min-width:120px;">
+        <strong>ASP.NET Core 10</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">REST API + SignalR</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--purple); min-width:60px;">
+        <strong>PostgreSQL 17</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">Данные</span>
+      </div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-box" style="border-color:var(--red); min-width:60px;">
+        <strong>Valkey 9</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">Кэш</span>
+      </div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-box" style="border-color:var(--teal); min-width:60px;">
+        <strong>MinIO</strong><br>
+        <span style="font-size:10px; color:var(--text-muted);">Файлы</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Маршрутизация запросов</h3>
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--accent);">trampline.localhost</h3>
+      <p style="font-size:11px; margin:0;">
+        <strong>Frontend:</strong> SPA → Nginx (port 8080)<br>
+        <code>/api/*</code> → проксируется на Backend<br>
+        <code>/api/hubs/*</code> → WebSocket upgrade (SignalR)<br>
+        <code>/files/photos/*</code>, <code>/files/videos/*</code> → MinIO proxy (7d cache)
+      </p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:12px; color:var(--blue);">api.trampline.localhost</h3>
+      <p style="font-size:11px; margin:0;">
+        <strong>Backend:</strong> ASP.NET Core (port 8080)<br>
+        Rate limiting: 100 req/s avg, 50 burst<br>
+        Security headers: CSP, HSTS, X-Frame-Options<br>
+        HTTPS redirect через Traefik middleware
+      </p>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Middleware Pipeline</h3>
+  <div class="flow-row" style="flex-wrap:wrap;">
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">Forwarded Headers</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">Exception Handler</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">Compression</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">CORS</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">Auth</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">CSRF</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="font-size:10px; padding:6px 10px;">Rate Limit</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 15 — АРХИТЕКТУРА: БД + МОДЕЛИ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="15">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">07 · Архитектура · Данные</div>
+  </div>
+
+  <h4>Database</h4>
+  <h2>Модели данных и БД</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:13px;">Основные сущности</h3>
+      <table class="table" style="font-size:11px;">
+        <tr><td style="color:var(--accent); font-weight:600;">User</td><td>Аккаунт, роль, email, аватар, TOTP, soft delete</td></tr>
+        <tr><td style="color:var(--blue); font-weight:600;">WorkerProfile</td><td>ФИО, вуз, навыки, резюме, репозитории</td></tr>
+        <tr><td style="color:var(--purple); font-weight:600;">EmployeeProfile</td><td>Компания, описание, фото, видео, верификация</td></tr>
+        <tr><td style="color:var(--green); font-weight:600;">Job</td><td>Вакансия: теги, зарплата, геолокация, статус</td></tr>
+        <tr><td style="color:var(--teal); font-weight:600;">Event</td><td>Мероприятие: дата, формат, участники</td></tr>
+        <tr><td style="color:var(--pink); font-weight:600;">Mentorship</td><td>Менторская программа: фокус, длительность</td></tr>
+        <tr><td style="color:var(--orange); font-weight:600;">Application</td><td>Отклик: статус, cover letter, isRead</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:13px;">Вспомогательные модели</h3>
+      <table class="table" style="font-size:11px;">
+        <tr><td style="color:var(--text-muted); font-weight:600;">UserSession</td><td>Токен, устройство, User-Agent, revocation</td></tr>
+        <tr><td style="color:var(--text-muted); font-weight:600;">RefreshToken</td><td>Хеш SHA256, IP, agent, location</td></tr>
+        <tr><td style="color:var(--text-muted); font-weight:600;">AuditLog</td><td>Действие, пользователь, IP, timestamp</td></tr>
+        <tr><td style="color:var(--text-muted); font-weight:600;">Notification</td><td>Тип, заголовок, ссылка, isRead</td></tr>
+        <tr><td style="color:var(--text-muted); font-weight:600;">Favorite</td><td>Тип (Job/Company/Event), userId</td></tr>
+        <tr><td style="color:var(--text-muted); font-weight:600;">Tag</td><td>Имя, категория, уровень популярности</td></tr>
+        <tr><td style="color:var(--text-muted); font-weight:600;">Review</td><td>Автор, рейтинг, текст, модерация</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">PostgreSQL: продвинутые функции</h3>
+  <div class="grid-3">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--accent);">Full-Text Search</h3>
+      <p style="font-size:10px; margin:0;">
+        <code>ToTsVector</code> + <code>WebSearchToTsQuery</code><br>
+        Русский и Simple-языки<br>
+        GIN-индексы для скорости<br>
+        Fallback на LIKE для коротких запросов
+      </p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--blue);">Code-First миграции</h3>
+      <p style="font-size:10px; margin:0;">
+        EF Core Fluent API конфигурации<br>
+        Автоматическая миграция при старте<br>
+        Global query filter (soft delete)<br>
+        Relationship tracking
+      </p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--green);">Оптимизация</h3>
+      <p style="font-size:10px; margin:0;">
+        Пагинация (max 100/page)<br>
+        Включение связей через Include<br>
+        Уникальный счётчик просмотров (HashSet)<br>
+        Сортировка по дате создания
+      </p>
+    </div>
+  </div>
+
+  <div class="sp-3"></div>
+  <h3 style="font-size:14px; margin-bottom:8px;">Статусы отклика — конечный автомат</h3>
+  <div class="flow-row">
+    <div class="flow-box" style="border-color:var(--text-muted);">Pending</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--blue);">Viewed</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--accent);">Invited</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--teal);">InProgress</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--green);">Hired</div>
+  </div>
+  <div class="flow-row" style="margin-top:4px;">
+    <span style="font-size:10px; color:var(--text-muted);">Альтернативные пути:</span>
+    <div class="flow-box" style="border-color:var(--red); font-size:10px; padding:4px 10px;">Rejected</div>
+    <div class="flow-box" style="border-color:var(--orange); font-size:10px; padding:4px 10px;">Reserved</div>
+    <div class="flow-box" style="border-color:var(--text-muted); font-size:10px; padding:4px 10px;">Withdrawn</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 16 — БЕЗОПАСНОСТЬ (1) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="16">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">08 · Безопасность</div>
+  </div>
+
+  <h4>Security</h4>
+  <h2>Аутентификация и авторизация</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:14px;">JWT + Refresh Token</h3>
+      <p style="font-size:12px;">Двухуровневая система токенов с безопасным хранением в HttpOnly-cookies.</p>
+      <div class="sp-2"></div>
+      <table class="table" style="font-size:11px;">
+        <tr><td style="color:var(--accent); font-weight:600; width:110px;">JWT Access</td><td>30 минут, Bearer + Cookie (HttpOnly, Secure, SameSite)</td></tr>
+        <tr><td style="color:var(--blue); font-weight:600;">Refresh Token</td><td>7 дней, SHA256-хеш в БД, prefix «sk-», Cookie</td></tr>
+        <tr><td style="color:var(--purple); font-weight:600;">JWT Claims</td><td>jti, sub, role, email, avatar, profile id</td></tr>
+        <tr><td style="color:var(--green); font-weight:600;">Key Rotation</td><td>Поддержка текущего + предыдущего ключа</td></tr>
+        <tr><td style="color:var(--red); font-weight:600;">JWT Blacklist</td><td>Redis: <code>jwt_blacklist:{jti}</code>, TTL = остаток жизни</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:14px;">Сессии</h3>
+      <p style="font-size:12px;">Полноценное управление сессиями с детальным трекингом.</p>
+      <div class="sp-2"></div>
+      <ul class="check-list" style="font-size:12px;">
+        <li><strong>UserSession</strong> — 10 дней жизни</li>
+        <li>Трекинг: устройство, User-Agent, IP, город</li>
+        <li>Отзыв сессии с указанием причины</li>
+        <li>Просмотр активных сессий в настройках</li>
+        <li>При смене пароля — отзыв всех сессий</li>
+        <li>При удалении аккаунта — очистка всех токенов</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Двухфакторная аутентификация (TOTP)</h3>
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <p style="font-size:12px; margin-bottom:8px;">Полноценная реализация TOTP (RFC 6238) для второго фактора аутентификации.</p>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>Генерация 20-байтового секрета (Base32)</li>
+        <li>HMAC-SHA1, 30-секундное окно, 6 цифр</li>
+        <li>Допуск ±1 окно для компенсации расхождения часов</li>
+        <li>Шифрование секрета: AES-256-CBC</li>
+        <li>QR-код для настройки в Authenticator-приложении</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--accent);">Поток 2FA</h3>
+      <div style="font-size:11px; color:var(--text-secondary);">
+        <div style="margin-bottom:4px;">1. Пользователь вводит логин/пароль ✓</div>
+        <div style="margin-bottom:4px;">2. Сервер проверяет, включён ли 2FA</div>
+        <div style="margin-bottom:4px;">3. Если да → Redis: pending challenge (5 мин TTL)</div>
+        <div style="margin-bottom:4px;">4. Клиент запрашивает 6-значный код</div>
+        <div style="margin-bottom:4px;">5. Сервер верифицирует код → выдаёт JWT + Refresh</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px; margin-bottom:8px;">Хеширование паролей</h3>
+  <div class="flow-row">
+    <div class="flow-box" style="border-color:var(--accent);">Пароль</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--blue);">Salt<br><span style="font-size:10px; color:var(--text-muted);">16 байт random</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--purple);">PBKDF2-SHA256<br><span style="font-size:10px; color:var(--text-muted);">100 000 итераций</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--green);">Hash<br><span style="font-size:10px; color:var(--text-muted);">32 байта</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:var(--text-muted);">base64(salt):base64(hash)</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 17 — БЕЗОПАСНОСТЬ (2) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="17">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">08 · Безопасность · Защита</div>
+  </div>
+
+  <h4>Defence in Depth</h4>
+  <h2>Многоуровневая защита</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--accent);">Rate Limiting</h3>
+      <p style="font-size:11px; margin-bottom:8px;">7 политик с фиксированным окном:</p>
+      <table class="table" style="font-size:10px;">
+        <tr><td style="font-weight:600;">auth</td><td>10 req/min</td><td>Login, register, refresh</td></tr>
+        <tr><td style="font-weight:600;">api</td><td>60 req/min</td><td>Общие эндпоинты</td></tr>
+        <tr><td style="font-weight:600;">write</td><td>30 req/min</td><td>Создание/обновление</td></tr>
+        <tr><td style="font-weight:600;">upload</td><td>10 req/min</td><td>Загрузка файлов</td></tr>
+        <tr><td style="font-weight:600;">admin</td><td>120 req/min</td><td>Администрирование</td></tr>
+        <tr><td style="font-weight:600;">files</td><td>120 req/min</td><td>Отдача файлов</td></tr>
+        <tr><td style="font-weight:600;">health</td><td>30 req/min</td><td>Health check</td></tr>
+      </table>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--blue);">CSRF-защита</h3>
+      <p style="font-size:11px; margin-bottom:6px;">Custom middleware:</p>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>Мутирующие методы (POST/PUT/DELETE) требуют заголовок <code>X-Requested-With: XMLHttpRequest</code></li>
+        <li>Валидация Origin против списка разрешённых</li>
+        <li>Исключения: /hubs, /health, /swagger</li>
+      </ul>
+      <div class="sp-2"></div>
+      <h3 style="font-size:13px; color:var(--green);">Login Security</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>10 попыток → блокировка на 15 минут</li>
+        <li>Timing-attack protection (dummy hash)</li>
+        <li>Soft delete аккаунтов</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-3 mb-3">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--purple);">Security Headers</h3>
+      <p style="font-size:10px; margin:0;">
+        X-Frame-Options: SAMEORIGIN<br>
+        X-Content-Type-Options: nosniff<br>
+        X-XSS-Protection: 1; mode=block<br>
+        Referrer-Policy: strict-origin<br>
+        HSTS: max-age=31536000<br>
+        Permissions-Policy: camera=(), mic=()
+      </p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--orange);">Content Security Policy</h3>
+      <p style="font-size:10px; margin:0;">
+        Строгая CSP-политика на Nginx:<br>
+        script-src 'self' + inline<br>
+        img-src: self + OSM tiles<br>
+        connect-src: API + WSS<br>
+        frame-src: 'none'<br>
+        DOMPurify для HTML-санитизации
+      </p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--red);">Файловая безопасность</h3>
+      <p style="font-size:10px; margin:0;">
+        Magic bytes проверка типа<br>
+        Сканирование на скрипты/iframes<br>
+        PDF: детекция JS/OpenAction/XFA<br>
+        Лимит: 100 МБ, MIME allowlist<br>
+        Path traversal защита<br>
+        Resume: только владелец/admin
+      </p>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px;">
+    <h3 style="font-size:13px; margin-bottom:8px;">Полный стек безопасности</h3>
+    <div class="flow-row">
+      <div class="flow-box" style="border-color:var(--orange); font-size:10px;">Traefik<br>TLS + Rate Limit</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--green); font-size:10px;">Nginx<br>CSP + HSTS</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--blue); font-size:10px;">ASP.NET<br>CORS + CSRF</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--purple); font-size:10px;">Auth<br>JWT + 2FA</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent); font-size:10px;">Data<br>Encryption</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 18 — ИНФРАСТРУКТУРА (1) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="18">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">09 · Инфраструктура</div>
+  </div>
+
+  <h4>Infrastructure</h4>
+  <h2>Контейнеризация и деплой</h2>
+  <div class="sp-2"></div>
+
+  <p class="lead" style="margin-bottom:14px;">Вся инфраструктура определена в Docker Compose: 7 сервисов, 5 volumes, bridge-сеть. Общее потребление RAM: ~2 ГБ.</p>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:14px;">Docker-сервисы</h3>
+      <table class="table" style="font-size:11px;">
+        <tr>
+          <td style="color:var(--accent); font-weight:600;">Traefik 3.6</td>
+          <td>Reverse proxy, TLS, маршрутизация, rate limiting</td>
+          <td style="color:var(--text-muted);">256 МБ</td>
+        </tr>
+        <tr>
+          <td style="color:var(--green); font-weight:600;">Frontend</td>
+          <td>Nginx-unprivileged, read-only FS, SPA serving</td>
+          <td style="color:var(--text-muted);">128 МБ</td>
+        </tr>
+        <tr>
+          <td style="color:var(--blue); font-weight:600;">Backend</td>
+          <td>ASP.NET Core 10, non-root, healthcheck</td>
+          <td style="color:var(--text-muted);">512 МБ</td>
+        </tr>
+        <tr>
+          <td style="color:var(--purple); font-weight:600;">PostgreSQL 17</td>
+          <td>Alpine, persistent volume, pg_isready</td>
+          <td style="color:var(--text-muted);">512 МБ</td>
+        </tr>
+        <tr>
+          <td style="color:var(--red); font-weight:600;">Valkey 9</td>
+          <td>Redis-совместимый, LRU, password auth</td>
+          <td style="color:var(--text-muted);">192 МБ</td>
+        </tr>
+        <tr>
+          <td style="color:var(--teal); font-weight:600;">MinIO</td>
+          <td>S3-совместимое хранилище файлов</td>
+          <td style="color:var(--text-muted);">512 МБ</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-muted); font-weight:600;">Certs</td>
+          <td>Alpine init, генерация TLS-сертификатов (mkcert)</td>
+          <td style="color:var(--text-muted);">—</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:14px;">Docker best practices</h3>
+      <ul class="check-list" style="font-size:12px;">
+        <li><strong>Multi-stage builds</strong> — frontend (2 стадии), backend (3 стадии)</li>
+        <li><strong>Non-root</strong> — nginx-unprivileged, ASP.NET $APP_UID</li>
+        <li><strong>Read-only FS</strong> — frontend с tmpfs для /var/cache</li>
+        <li><strong>Health checks</strong> — на каждом сервисе</li>
+        <li><strong>Resource limits</strong> — memory limits на каждый контейнер</li>
+        <li><strong>Dependency ordering</strong> — depends_on с conditions</li>
+        <li><strong>Alpine images</strong> — минимальный размер образов</li>
+        <li><strong>Persistent volumes</strong> — данные, ключи, файлы, сертификаты</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:8px;">Response Compression</h3>
+  <div class="grid-2">
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--accent);">Backend: Brotli + Gzip</h3>
+      <p style="font-size:10px; margin:0;">ASP.NET Core Response Compression middleware. Brotli приоритетнее. Применяется для HTTPS-соединений.</p>
+    </div>
+    <div class="card" style="padding:12px;">
+      <h3 style="font-size:11px; color:var(--green);">Nginx: Gzip</h3>
+      <p style="font-size:10px; margin:0;">Gzip от 256 байт. Статика с immutable cache (1 год). Фото/видео из MinIO — 7-дневный кэш.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 19 — ИНФРАСТРУКТУРА (2): ХРАНЕНИЕ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="19">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">09 · Инфраструктура · Хранение</div>
+  </div>
+
+  <h4>Storage & Cache</h4>
+  <h2>Хранение файлов и кэширование</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <h3 style="font-size:14px;">Файловое хранилище</h3>
+      <p style="font-size:12px;">Абстракция <code>IStorageService</code> с двумя реализациями:</p>
+      <div class="sp-2"></div>
+      <div class="card mb-2" style="padding:12px;">
+        <h3 style="font-size:12px; color:var(--accent);">Local Storage (default)</h3>
+        <p style="font-size:11px; margin:0;">
+          Файлы по категориям: <code>videos/</code>, <code>photos/</code>, <code>resumes/</code>, <code>files/</code><br>
+          Защита от path traversal<br>
+          Docker volume: <code>uploads:/app/files</code>
+        </p>
+      </div>
+      <div class="card" style="padding:12px;">
+        <h3 style="font-size:12px; color:var(--teal);">MinIO (S3-compatible)</h3>
+        <p style="font-size:11px; margin:0;">
+          Корпоративный вариант с S3 API<br>
+          Auto-create bucket «trampline»<br>
+          Public read для photos/ и videos/<br>
+          Консоль управления на порту 9001
+        </p>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;">Redis / Valkey кэш</h3>
+      <p style="font-size:12px;">Valkey 9 (Redis-совместимый, open source) для кэширования и rate limiting.</p>
+      <div class="sp-2"></div>
+      <table class="table" style="font-size:11px;">
+        <thead><tr><th>Ключ</th><th>TTL</th><th>Назначение</th></tr></thead>
+        <tr><td><code>jwt_blacklist:{jti}</code></td><td>≤30m</td><td>Отозванные JWT</td></tr>
+        <tr><td><code>login_attempts:{email}</code></td><td>15m</td><td>Попытки входа (max 10)</td></tr>
+        <tr><td><code>email_code:{email}</code></td><td>15m</td><td>Код верификации email</td></tr>
+        <tr><td><code>password_reset:{email}</code></td><td>15m</td><td>Код сброса пароля</td></tr>
+        <tr><td><code>reset_attempts:{email}</code></td><td>15m</td><td>Попытки сброса (max 5)</td></tr>
+        <tr><td><code>totp_pending:{userId}</code></td><td>5m</td><td>Ожидание 2FA-кода</td></tr>
+      </table>
+      <div class="sp-2"></div>
+      <p style="font-size:11px; color:var(--text-muted);">
+        <strong>Политика:</strong> allkeys-lru, 128 МБ макс.<br>
+        <strong>Протокол:</strong> Password auth, no-persist.
+      </p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Data Protection Keys</h3>
+  <div class="card" style="padding:12px;">
+    <p style="font-size:12px; margin:0;">
+      ASP.NET Core Data Protection API для шифрования конфиденциальных данных (cookies, TOTP-секреты).
+      Ключи хранятся в persistent Docker volume <code>dp-keys:/app/data-protection-keys</code>.
+      Автоматическая ротация, кроссплатформенность (Windows/Linux).
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 20 — АВТОРСКИЕ РЕШЕНИЯ (1) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="20">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">10 · Авторские решения</div>
+  </div>
+
+  <h4>Наши решения</h4>
+  <h2>Авторские решения и аргументация</h2>
+  <p style="margin-bottom:14px;">Ряд функций был оставлен на усмотрение разработчика. Ниже — наши решения в зонах неопределённости задания и аргументация выбора.</p>
+
+  <div class="card card-accent mb-3" style="padding:16px;">
+    <h3 style="font-size:14px; color:var(--accent);">1. Верификация компаний через DaData API</h3>
+    <p style="font-size:12px; margin-bottom:8px;">
+      <strong>Решение:</strong> Работодатель указывает ИНН при регистрации. Система автоматически проверяет его через DaData API (база ФНС РФ), извлекает наименование, адрес и статус юрлица. Куратор видит результат проверки и принимает решение.
+    </p>
+    <p style="font-size:12px; margin:0;">
+      <strong>Аргументация:</strong> ИНН — универсальный идентификатор российских юрлиц, проверка через ФНС даёт достоверные данные.
+      Автоматизация снижает нагрузку на куратора, при этом финальное решение остаётся за человеком.
+      Бейдж «Верифицирована» повышает доверие соискателей к вакансиям.
+    </p>
+  </div>
+
+  <div class="card card-accent mb-3" style="padding:16px;">
+    <h3 style="font-size:14px; color:var(--blue);">2. Модерация контента — превентивный подход</h3>
+    <p style="font-size:12px; margin-bottom:8px;">
+      <strong>Решение:</strong> Вакансии и мероприятия публикуются после проверки куратором (pre-moderation). Куратор видит превью карточки с тегами и зарплатой, может одобрить или отклонить с комментарием. Аудит-лог фиксирует все действия.
+    </p>
+    <p style="font-size:12px; margin:0;">
+      <strong>Аргументация:</strong> Для образовательной платформы, ориентированной на студентов, важно исключить мошеннические вакансии и неуместный контент до его публикации. Все действия модератора логируются для подотчётности.
+    </p>
+  </div>
+
+  <div class="card card-accent mb-3" style="padding:16px;">
+    <h3 style="font-size:14px; color:var(--purple);">3. Нетворкинг-система</h3>
+    <p style="font-size:12px; margin-bottom:8px;">
+      <strong>Решение:</strong> Профессиональные контакты с двусторонним подтверждением. Контакты видят интересы друг друга и могут рекомендовать на вакансии. Три уровня приватности: скрыть отклики, скрыть резюме, полностью приватный профиль.
+    </p>
+    <p style="font-size:12px; margin:0;">
+      <strong>Аргументация:</strong> Студентам важно не только найти работу, но и построить профессиональные связи. Рекомендации от коллег — один из самых эффективных способов трудоустройства. Гибкая приватность учитывает, что не все готовы открыто искать работу.
+    </p>
+  </div>
+
+  <div class="card card-accent" style="padding:16px;">
+    <h3 style="font-size:14px; color:var(--green);">4. Система тегов — crowdsourced</h3>
+    <p style="font-size:12px; margin:0;">
+      <strong>Решение:</strong> Стартовый набор тегов по IT-специализациям (языки, фреймворки, роли). Работодатели могут предлагать новые теги, кураторы — одобрять их и управлять списком. Теги отсортированы по популярности.
+      <br><strong>Аргументация:</strong> IT-стек постоянно меняется, crowdsourced-модель позволяет платформе оставаться актуальной без ручного обновления каталога технологий.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 21 — АВТОРСКИЕ РЕШЕНИЯ (2) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="21">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">10 · Авторские решения · Продолжение</div>
+  </div>
+
+  <h4>Дополнительные решения</h4>
+  <h2 style="font-size:22px;">Авторские решения (продолжение)</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--teal);">5. Модульная карточка на карте</h3>
+      <p style="font-size:11px; margin-bottom:6px;"><strong>Решение:</strong> При наведении на маркер — popup с названием, компанией, зарплатой, ключевыми навыками и ссылкой «Подробнее».</p>
+      <p style="font-size:11px; margin:0;"><strong>Почему:</strong> Баланс информативности и компактности. Пользователь может оценить вакансию, не покидая карту.</p>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--pink);">6. Избранное для неавторизованных</h3>
+      <p style="font-size:11px; margin-bottom:6px;"><strong>Решение:</strong> localStorage для гостей, серверная синхронизация после регистрации. Избранные компании выделяются на карте акцентным цветом.</p>
+      <p style="font-size:11px; margin:0;"><strong>Почему:</strong> Снижает барьер входа — можно начать пользоваться без регистрации.</p>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--orange);">7. Markdown для описаний</h3>
+      <p style="font-size:11px; margin-bottom:6px;"><strong>Решение:</strong> Редактор Markdown с тулбаром (жирный, курсив, списки, ссылки, код) и live-preview. Рендеринг с DOMPurify-санитизацией.</p>
+      <p style="font-size:11px; margin:0;"><strong>Почему:</strong> Работодатели привыкли к Markdown (GitHub/GitLab). Форматирование делает описания вакансий структурированными и читаемыми, а санитизация защищает от XSS.</p>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--accent);">8. Профиль компании — медиаконтент</h3>
+      <p style="font-size:11px; margin-bottom:6px;"><strong>Решение:</strong> Фото-галерея офиса с lightbox-модалкой, видео-презентация, динамический список соцсетей.</p>
+      <p style="font-size:11px; margin:0;"><strong>Почему:</strong> Визуальный контент критически важен для привлечения молодых специалистов. Фото офиса и корпоративные видео помогают сформировать представление о компании.</p>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--blue);">9. Real-time уведомления</h3>
+      <p style="font-size:11px; margin-bottom:6px;"><strong>Решение:</strong> Тройная доставка: SignalR (в приложении) + Web Push (VAPID) + БД (persistent). 8 типов событий.</p>
+      <p style="font-size:11px; margin:0;"><strong>Почему:</strong> Студенты не сидят на платформе постоянно. Push-уведомления гарантируют, что важные обновления (приглашение на собеседование) не будут пропущены.</p>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--purple);">10. Command Palette (Ctrl+K)</h3>
+      <p style="font-size:11px; margin-bottom:6px;"><strong>Решение:</strong> Глобальный поиск по Ctrl+K: вакансии, компании, мероприятия, страницы. Debounced запросы, навигация клавиатурой, история поиска.</p>
+      <p style="font-size:11px; margin:0;"><strong>Почему:</strong> Паттерн, знакомый IT-аудитории (VS Code, GitHub, Notion). Ускоряет навигацию для опытных пользователей.</p>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px;">
+    <h3 style="font-size:13px; color:var(--green);">11. Сравнение вакансий</h3>
+    <p style="font-size:11px; margin:0;">
+      <strong>Решение:</strong> Возможность добавить до 3 вакансий в сравнение. Фиксированная панель внизу, side-by-side таблица: зарплата, формат, навыки, местоположение.
+      <br><strong>Почему:</strong> Помогает принять обоснованное решение при выборе между несколькими стажировками или вакансиями — частая ситуация для начинающего специалиста.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 22 — РАСШИРЕННЫЕ ФУНКЦИИ (1) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="22">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">11 · Расширенные функции</div>
+  </div>
+
+  <h4>Beyond the Requirements</h4>
+  <h2>Расширенные функции</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--accent);">Progressive Web App</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li><strong>manifest.json</strong> — standalone display, иконки, категории</li>
+        <li><strong>Service Worker</strong> — cache-first для ассетов, network-first для навигации</li>
+        <li><strong>Offline</strong> — fallback-страница /offline.html</li>
+        <li><strong>Push</strong> — подписка через VAPID, обработка кликов</li>
+        <li><strong>Installable</strong> — приложение устанавливается на рабочий стол</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--blue);">Локализация (i18n)</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li><strong>4 языка:</strong> Русский (default), English, 中文, Pirate 🏴‍☠️</li>
+        <li><strong>~960 ключей</strong> на каждый язык</li>
+        <li><strong>Lazy loading</strong> — подгрузка при смене языка</li>
+        <li><strong>Plural forms</strong> — русские one/few/many правила</li>
+        <li><strong>Параметры</strong> — интерполяция <code>{name}</code> в строках</li>
+        <li><strong>localStorage</strong> + html lang attribute</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-3">
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--green);">SEO и метаданные</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>Per-page <code>&lt;title&gt;</code> и <code>&lt;meta description&gt;</code></li>
+        <li>Open Graph теги для социальных сетей</li>
+        <li>JSON-LD структурированные данные</li>
+        <li>Canonical URLs</li>
+        <li><code>robots.txt</code> + <code>sitemap.xml</code></li>
+      </ul>
+    </div>
+    <div class="card" style="padding:14px;">
+      <h3 style="font-size:13px; color:var(--purple);">Email-сервис</h3>
+      <ul style="font-size:11px; padding-left:16px;">
+        <li>SMTP с HTML-шаблонами (брендированная вёрстка)</li>
+        <li>Коды верификации email (15 мин TTL)</li>
+        <li>Восстановление пароля (код + rate limiting)</li>
+        <li>Welcome email при регистрации</li>
+        <li>Graceful degradation (console log без SMTP)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card" style="padding:12px; text-align:center;">
+      <div style="font-size:24px; margin-bottom:4px;">📱</div>
+      <h3 style="font-size:12px;">Адаптивность</h3>
+      <p style="font-size:10px; margin:0;">5 breakpoints, мобильное меню (slide-in), адаптивная пагинация, touch-friendly</p>
+    </div>
+    <div class="card" style="padding:12px; text-align:center;">
+      <div style="font-size:24px; margin-bottom:4px;">🖨️</div>
+      <h3 style="font-size:12px;">Print-стили</h3>
+      <p style="font-size:10px; margin:0;">@media print — оптимизированная печать вакансий и профилей</p>
+    </div>
+    <div class="card" style="padding:12px; text-align:center;">
+      <div style="font-size:24px; margin-bottom:4px;">🍪</div>
+      <h3 style="font-size:12px;">GDPR Cookie Consent</h3>
+      <p style="font-size:10px; margin:0;">Баннер согласия на cookies с настройками</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 23 — РАСШИРЕННЫЕ ФУНКЦИИ (2) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="23">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">11 · Расширенные функции · UX</div>
+  </div>
+
+  <h4>User Experience</h4>
+  <h2 style="font-size:22px;">Улучшения пользовательского опыта</h2>
+  <div class="sp-2"></div>
+
+  <div class="grid-2 mb-3">
+    <div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-accent">🔗</div>
+        <div class="feature-text">
+          <h3>Share API</h3>
+          <p>Web Share API для шеринга вакансий и мероприятий. Fallback: копирование ссылки в буфер обмена.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-blue">📍</div>
+        <div class="feature-text">
+          <h3>Геолокация</h3>
+          <p>Определение местоположения пользователя на карте. Пульсирующий маркер. Fly-to анимация.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-purple">📱</div>
+        <div class="feature-text">
+          <h3>QR-код профиля</h3>
+          <p>Генерация QR-кода публичного профиля для обмена контактами на мероприятиях.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-green">📈</div>
+        <div class="feature-text">
+          <h3>Прогресс-бар профиля</h3>
+          <p>Визуальный индикатор заполненности с подсказками — мотивирует дополнить профиль.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-teal">✨</div>
+        <div class="feature-text">
+          <h3>Онбординг</h3>
+          <p>Чеклист для нового пользователя: заполнить профиль, добавить навыки, найти первую вакансию.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-pink">🗂️</div>
+        <div class="feature-text">
+          <h3>Split-view вакансий</h3>
+          <p>Параллельное отображение списка и карты с синхронизацией выбора.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-accent">🖼️</div>
+        <div class="feature-text">
+          <h3>Фото-галерея компании</h3>
+          <p>Lightbox-модалка с навигацией, фото офиса, корпоративной жизни.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon feature-icon-blue">🤖</div>
+        <div class="feature-text">
+          <h3>Умные рекомендации</h3>
+          <p>Похожие вакансии на основе совпадения тегов навыков.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px; margin-bottom:10px;">Качество кода</h3>
+  <div class="grid-4">
+    <div class="stat">
+      <div class="stat-number green">0</div>
+      <div class="stat-label">Subscription leaks</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number green">0</div>
+      <div class="stat-label">Timer leaks</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number green">0</div>
+      <div class="stat-label">Event listener leaks</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number accent">960×4</div>
+      <div class="stat-label">i18n ключей</div>
+    </div>
+  </div>
+
+  <div class="sp-3"></div>
+
+  <div class="card" style="padding:12px;">
+    <p style="font-size:11px; margin:0; text-align:center; color:var(--text-muted);">
+      <strong>Тестирование:</strong> Vitest (unit) + Testing Library (components) + Playwright (E2E) ·
+      <strong>Линтинг:</strong> ESLint + Prettier + TypeScript strict ·
+      <strong>CSS:</strong> Чистый CSS, 0 зависимостей от CSS-фреймворков
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 24 — ИТОГИ И ССЫЛКИ -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="page" data-page="24" style="display:flex; flex-direction:column; position:relative;">
+  <div class="page-header">
+    <div class="page-header-logo"><div class="dot"></div> ТРАМПЛИН</div>
+    <div class="page-header-section">12 · Итоги</div>
+  </div>
+
+  <div class="cover-glow" style="background:var(--accent); bottom:-100px; left:-50px;"></div>
+  <div class="cover-glow" style="background:var(--blue); bottom:-50px; right:-100px;"></div>
+
+  <div style="position:relative; z-index:1; flex:1; display:flex; flex-direction:column;">
+    <h4>Результат</h4>
+    <h2>Итоги проекта</h2>
+    <div class="sp-2"></div>
+
+    <p class="lead" style="margin-bottom:20px;">
+      Платформа «Трамплин» — полноценная карьерная экосистема, реализованная как современное
+      веб-приложение с акцентом на безопасность, производительность и пользовательский опыт.
+    </p>
+
+    <div class="grid-4 mb-3">
+      <div class="card card-top-accent" style="padding:12px; text-align:center;">
+        <div class="stat-number accent" style="font-size:28px;">30+</div>
+        <div class="stat-label">Страниц</div>
+      </div>
+      <div class="card" style="padding:12px; text-align:center; border-top:2px solid var(--blue);">
+        <div class="stat-number blue" style="font-size:28px;">44</div>
+        <div class="stat-label">UI компонентов</div>
+      </div>
+      <div class="card" style="padding:12px; text-align:center; border-top:2px solid var(--purple);">
+        <div class="stat-number purple" style="font-size:28px;">7</div>
+        <div class="stat-label">Docker-сервисов</div>
+      </div>
+      <div class="card" style="padding:12px; text-align:center; border-top:2px solid var(--green);">
+        <div class="stat-number green" style="font-size:28px;">13</div>
+        <div class="stat-label">API-контроллеров</div>
+      </div>
+    </div>
+
+    <div class="grid-2 mb-3">
+      <div class="card" style="padding:16px;">
+        <h3 style="font-size:14px; margin-bottom:10px;">Стек технологий</h3>
+        <div>
+          <span class="tag">Svelte 5</span>
+          <span class="tag-blue tag">SvelteKit</span>
+          <span class="tag-purple tag">TypeScript</span>
+          <span class="tag-green tag">.NET 10</span>
+          <span class="tag-teal tag">C#</span>
+          <span class="tag-orange tag">PostgreSQL 17</span>
+          <span class="tag-pink tag">Valkey 9</span>
+          <span class="tag tag">Traefik 3.6</span>
+          <span class="tag-blue tag">Docker</span>
+          <span class="tag-green tag">Nginx</span>
+          <span class="tag-purple tag">SignalR</span>
+          <span class="tag-teal tag">Leaflet</span>
+          <span class="tag-orange tag">MinIO</span>
+          <span class="tag-pink tag">Vite 8</span>
+        </div>
+      </div>
+      <div class="card" style="padding:16px;">
+        <h3 style="font-size:14px; margin-bottom:10px;">Ключевые преимущества</h3>
+        <ul class="check-list" style="font-size:12px; margin:0;">
+          <li>Полнофункциональная платформа с 3 ролями</li>
+          <li>Real-time уведомления (WebSocket + Push)</li>
+          <li>Многоуровневая безопасность + 2FA</li>
+          <li>PWA + Offline support</li>
+          <li>4 языка локализации</li>
+          <li>Контейнеризация production-ready</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:10px 0;"></div>
+
+    <div class="grid-2" style="margin-top:auto;">
+      <div class="card" style="padding:16px; border-color:var(--accent);">
+        <h3 style="font-size:14px; color:var(--accent); margin-bottom:8px;">Репозиторий</h3>
+        <p style="font-size:13px; margin-bottom:4px; color:var(--text);">
+          github.com/reyni-overflow/trampline
+        </p>
+        <p style="font-size:11px; margin:0; color:var(--text-muted);">
+          Исходный код frontend + backend + инфраструктура
+        </p>
+      </div>
+      <div class="card" style="padding:16px; border-color:var(--blue);">
+        <h3 style="font-size:14px; color:var(--blue); margin-bottom:8px;">Видеоролик</h3>
+        <p style="font-size:13px; margin-bottom:4px; color:var(--text);">
+          <!-- Замените на актуальную ссылку -->
+          [ССЫЛКА НА ВИДЕОРОЛИК]
+        </p>
+        <p style="font-size:11px; margin:0; color:var(--text-muted);">
+          Демонстрация всех функций (до 5 минут)
+        </p>
+      </div>
+    </div>
+
+    <div class="sp-3"></div>
+
+    <div style="text-align:center; padding-top:10px;">
+      <p style="font-size:16px; font-weight:700; color:var(--text); margin-bottom:4px;">Спасибо за внимание!</p>
+      <p style="font-size:12px; color:var(--text-muted); margin:0;">
+        Международная олимпиада «IT-Планета 2026» · Конкурс «Прикладное программирование if...else»
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

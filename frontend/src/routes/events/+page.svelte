@@ -344,7 +344,7 @@
                         </button>
                     </div>
                     <div class="cal-weekdays">
-                        {#each $t('events.weekdays').split(',') as d (d)}
+                        {#each $t('events.weekdays').split(',') as d, _ki (d + _ki)}
                             <span class="cal-wd">{d}</span>
                         {/each}
                     </div>
@@ -508,7 +508,7 @@
                                 <p class="event-description">{event.description}</p>
                                 <div class="event-bottom">
                                     <div class="event-tags">
-                                        {#each event.tags as tag (tag)}
+                                        {#each event.tags as tag, _ki (tag + _ki)}
                                             <Tag>{tag}</Tag>
                                         {/each}
                                     </div>

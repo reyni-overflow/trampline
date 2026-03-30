@@ -302,7 +302,7 @@
                 <div class="tags-edit">
                     {#if tags.length > 0}
                         <div class="tags-list">
-                            {#each tags as tag (tag)}
+                            {#each tags as tag, _ki (tag + _ki)}
                                 <Tag removable onremove={() => removeTag(tag)}>{tag}</Tag>
                             {/each}
                         </div>
@@ -341,7 +341,7 @@
                             </button>
                             {#if suggestions.length > 0}
                                 <div class="tag-suggestions">
-                                    {#each suggestions as s (s)}
+                                    {#each suggestions as s, _ki (s + _ki)}
                                         <button
                                             type="button"
                                             class="tag-suggestion-item"
@@ -387,7 +387,7 @@
                 </p>
                 {#if tags.length > 0}
                     <div class="preview-tags">
-                        {#each tags as tag (tag)}
+                        {#each tags as tag, _ki (tag + _ki)}
                             <Tag>{tag}</Tag>
                         {/each}
                     </div>

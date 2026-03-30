@@ -176,7 +176,7 @@
                         {/if}
                         {#if worker.skills && worker.skills.length > 0}
                             <div class="worker-skills">
-                                {#each worker.skills.slice(0, 4) as skill (skill)}
+                                {#each worker.skills.slice(0, 4) as skill, _ki (skill + _ki)}
                                     <Tag>{skill}</Tag>
                                 {/each}
                                 {#if worker.skills.length > 4}

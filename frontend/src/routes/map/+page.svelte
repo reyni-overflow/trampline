@@ -221,7 +221,7 @@
                 {/if}
                 {#if selectedItem.tags?.length}
                     <div class="selected-tags">
-                        {#each selectedItem.tags as tag (tag)}
+                        {#each selectedItem.tags as tag, _ki (tag + _ki)}
                             <span class="selected-tag">{tag}</span>
                         {/each}
                     </div>

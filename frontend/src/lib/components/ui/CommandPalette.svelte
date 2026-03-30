@@ -400,7 +400,7 @@
                 {:else if recentSearches.length > 0}
                     <div class="cmd-group">
                         <div class="cmd-group-label">{$t('cmdPalette.recentSearches')}</div>
-                        {#each recentSearches as term (term)}
+                        {#each recentSearches as term, _ki (term + _ki)}
                             <button
                                 class="cmd-item"
                                 type="button"

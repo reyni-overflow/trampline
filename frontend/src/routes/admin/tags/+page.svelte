@@ -112,7 +112,7 @@
     </div>
 
     <div class="tags-grid">
-        {#each filtered.sort((a, b) => b.count - a.count) as tag (tag.name)}
+        {#each filtered.sort((a, b) => b.count - a.count) as tag, _ti (tag.name + _ti)}
             <div class="tag-card">
                 <div class="tag-main">
                     <Tag>{tag.name}</Tag>

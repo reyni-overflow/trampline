@@ -552,7 +552,7 @@
             <div class="directions-tags">
                 {#each groupedTags as group (group.label)}
                     {#if activeCategory === group.label}
-                        {#each group.tags as tag (tag.name)}
+                        {#each group.tags as tag, _ti (tag.name + _ti)}
                             <Tag
                                 clickable
                                 onclick={() => goto(`/jobs?tags=${encodeURIComponent(tag.name)}`)}
@@ -659,7 +659,7 @@
         <div class="review-rating-group">
             <span class="review-rating-label">{$t('landing.reviewRating')}</span>
             <div class="review-stars">
-                {#each [1, 2, 3, 4, 5] as star (star)}
+                {#each [1, 2, 3, 4, 5] as star, _ki (star + _ki)}
                     <button
                         class="star-btn"
                         class:active={star <= reviewRating}

@@ -166,7 +166,7 @@
                                 </div>
                             </a>
                             <div class="contact-skills">
-                                {#each contact.skills as skill (skill)}
+                                {#each contact.skills as skill, _ki (skill + _ki)}
                                     <Tag>{skill}</Tag>
                                 {/each}
                             </div>
@@ -226,7 +226,7 @@
                                 </div>
                             </a>
                             <div class="contact-skills">
-                                {#each req.skills as skill (skill)}
+                                {#each req.skills as skill, _ki (skill + _ki)}
                                     <Tag>{skill}</Tag>
                                 {/each}
                             </div>

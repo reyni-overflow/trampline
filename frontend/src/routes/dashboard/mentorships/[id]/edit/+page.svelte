@@ -277,7 +277,7 @@
         <div class="tags-section">
             <span class="field-label">{$t('editMentorship.tags')}</span>
             <div class="tags-list">
-                {#each tags as tag (tag)}
+                {#each tags as tag, _ki (tag + _ki)}
                     <Tag
                         removable
                         onremove={() => {

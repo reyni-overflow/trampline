@@ -190,7 +190,7 @@
         </div>
         {#if company.socials.length > 0}
             <div class="social-links">
-                {#each company.socials as social (social)}
+                {#each company.socials as social, _ki (social + _ki)}
                     <a href={social} class="social-chip" target="_blank" rel="noopener"
                         >{social.replace(/^https?:\/\//, '')}</a
                     >
@@ -208,7 +208,7 @@
         <section class="company-section">
             <h2 class="section-heading">{$t('company.gallery')}</h2>
             <div class="gallery-grid">
-                {#each company.photos as photo, i (photo)}
+                {#each company.photos as photo, i (photo + i)}
                     <button
                         class="gallery-item"
                         type="button"

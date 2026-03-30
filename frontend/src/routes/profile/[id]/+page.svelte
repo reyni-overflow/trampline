@@ -255,7 +255,7 @@
                     <section class="profile-section">
                         <h2 class="section-heading">{$t('profile.skills')}</h2>
                         <div class="skills-list">
-                            {#each profile.skills as skill (skill)}
+                            {#each profile.skills as skill, _ki (skill + _ki)}
                                 <Tag>{skill}</Tag>
                             {/each}
                         </div>

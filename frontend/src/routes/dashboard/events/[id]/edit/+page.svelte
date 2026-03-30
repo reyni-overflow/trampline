@@ -224,7 +224,7 @@
         <div class="tags-section">
             <span class="field-label">{$t('editEvent.tags')}</span>
             <div class="tags-list">
-                {#each tags as tag (tag)}
+                {#each tags as tag, _ki (tag + _ki)}
                     <Tag
                         removable
                         onremove={() => {
@@ -250,7 +250,7 @@
                 <span class="media-sub-label">{$t('editEvent.photos')}</span>
                 {#if photos.length > 0}
                     <div class="media-list">
-                        {#each photos as photo (photo)}
+                        {#each photos as photo, _ki (photo + _ki)}
                             <div class="media-item">
                                 <span>{photo.split('/').pop()}</span>
                                 <button
@@ -292,7 +292,7 @@
                 <span class="media-sub-label">{$t('editEvent.videos')}</span>
                 {#if videos.length > 0}
                     <div class="media-list">
-                        {#each videos as video (video)}
+                        {#each videos as video, _ki (video + _ki)}
                             <div class="media-item">
                                 <span>{video.split('/').pop()}</span>
                                 <button

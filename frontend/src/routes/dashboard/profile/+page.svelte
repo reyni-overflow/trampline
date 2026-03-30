@@ -573,7 +573,7 @@
             <h2>{$t('dashProfile.skills')}</h2>
             <div class="tags-edit">
                 <div class="tags-list">
-                    {#each skills as skill (skill)}
+                    {#each skills as skill, _ki (skill + _ki)}
                         <Tag removable onremove={() => removeSkill(skill)}>{skill}</Tag>
                     {/each}
                 </div>
@@ -610,7 +610,7 @@
         <section class="form-section">
             <h2>{$t('dashProfile.repositories')}</h2>
             <div class="repos-list">
-                {#each repos as repo (repo)}
+                {#each repos as repo, _ki (repo + _ki)}
                     <div class="repo-item">
                         <span>{repo}</span>
                         <button class="remove-link" type="button" onclick={() => removeRepo(repo)}
@@ -689,7 +689,7 @@
             <h2>{$t('dashProfile.socials')}</h2>
             {#if companySocials.length > 0}
                 <div class="repos-list">
-                    {#each companySocials as social (social)}
+                    {#each companySocials as social, _ki (social + _ki)}
                         <div class="repo-item">
                             <span>{social}</span>
                             <button
@@ -717,7 +717,7 @@
             <h2>{$t('dashProfile.photos')}</h2>
             {#if companyPhotos.length > 0}
                 <div class="repos-list">
-                    {#each companyPhotos as photo (photo)}
+                    {#each companyPhotos as photo, _ki (photo + _ki)}
                         <div class="repo-item">
                             <span>{photo.split('/').pop()}</span>
                             <button
@@ -744,7 +744,7 @@
             <h2>{$t('dashProfile.videos')}</h2>
             {#if companyVideos.length > 0}
                 <div class="repos-list">
-                    {#each companyVideos as video (video)}
+                    {#each companyVideos as video, _ki (video + _ki)}
                         <div class="repo-item">
                             <span>{video.split('/').pop()}</span>
                             <button
