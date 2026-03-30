@@ -122,6 +122,11 @@
             label: $t('workerSearch.nav'),
             icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>'
         },
+        {
+            href: '/dashboard/stats',
+            label: 'Статистика',
+            icon: '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>'
+        },
         { href: '/settings', label: $t('dash.settings'), icon: settingsIcon }
     ]);
 

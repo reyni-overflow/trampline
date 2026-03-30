@@ -21,11 +21,13 @@
         url as urlRule,
         validate
     } from '$lib/utils/validation';
+    import { exportProfileToPdf } from '$lib/utils/pdf-export';
     import { onMount, onDestroy } from 'svelte';
 
     let role = $state('Worker');
     let saving = $state(false);
     let _loaded = $state(false);
+    let userEmail = $state('');
 
     let errors = $state<Record<string, string>>({});
 
@@ -66,6 +68,7 @@
             if (!v) return;
             role = v.role;
             avatar = v.avatar || null;
+            userEmail = v.email || '';
             if (v.workerProfile) {
                 const wp = v.workerProfile;
                 name = wp.name || '';
@@ -395,7 +398,43 @@
 
 <div class="profile-edit">
     {#if role === 'Worker'}
-        <h1 class="page-heading">{$t('dashProfile.title')}</h1>
+        <div class="page-heading-row">
+            <h1 class="page-heading">{$t('dashProfile.title')}</h1>
+            <Button
+                variant="outline"
+                size="sm"
+                onclick={() =>
+                    exportProfileToPdf({
+                        name,
+                        lastName,
+                        patronymic,
+                        about,
+                        photo: avatar,
+                        skills,
+                        repos,
+                        university,
+                        course,
+                        email: userEmail
+                    })}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="margin-right: 0.35rem; vertical-align: -2px;"
+                >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Скачать PDF
+            </Button>
+        </div>
 
         {@const completionSteps = [
             { done: !!avatar, label: $t('profileCompletion.addAvatar') },
@@ -767,6 +806,13 @@
         flex-direction: column;
         gap: var(--space-8);
         max-width: 40rem;
+    }
+
+    .page-heading-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
     }
 
     .page-heading {
