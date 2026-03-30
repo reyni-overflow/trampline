@@ -174,6 +174,9 @@ public class AuthController(
                 Nickname = user.Nickname,
                 Avatar = user.Avatar,
                 Role = user.Role,
+                IsPrivate = user.IsPrivate,
+                HideApplications = user.HideApplications,
+                HideResume = user.HideResume,
                 IsTotpEnabled = user.IsTotpEnabled,
                 MustChangePassword = user.MustChangePassword,
                 EmployeeProfile = user.EmployeeProfile != null
@@ -205,6 +208,9 @@ public class AuthController(
                 Nickname = user.Nickname,
                 Avatar = user.Avatar,
                 Role = user.Role,
+                IsPrivate = user.IsPrivate,
+                HideApplications = user.HideApplications,
+                HideResume = user.HideResume,
                 IsTotpEnabled = user.IsTotpEnabled,
                 MustChangePassword = user.MustChangePassword,
                 WorkerProfile = user.WorkerProfile != null
@@ -232,6 +238,9 @@ public class AuthController(
                 Nickname = user.Nickname,
                 Avatar = user.Avatar,
                 Role = user.Role,
+                IsPrivate = user.IsPrivate,
+                HideApplications = user.HideApplications,
+                HideResume = user.HideResume,
                 IsTotpEnabled = user.IsTotpEnabled,
                 MustChangePassword = user.MustChangePassword,
                 IsSuperAdmin = user.IsSuperAdmin,
@@ -426,7 +435,9 @@ public class AuthController(
         var user = await userService.GetByIdAsync(new Guid(userId), cancellationToken);
         if (user == null) return NotFound();
 
-        user.SetPrivate(request.IsPrivate);
+        if (request.IsPrivate.HasValue) user.SetPrivate(request.IsPrivate.Value);
+        if (request.HideApplications.HasValue) user.SetHideApplications(request.HideApplications.Value);
+        if (request.HideResume.HasValue) user.SetHideResume(request.HideResume.Value);
         await userService.UpdateAsync(user, cancellationToken);
 
         return Ok();

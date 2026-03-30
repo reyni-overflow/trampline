@@ -14,6 +14,12 @@ public record UserResponse
 
     public Role Role { get; init; }
 
+    public bool IsPrivate { get; init; }
+
+    public bool HideApplications { get; init; }
+
+    public bool HideResume { get; init; }
+
     public bool IsTotpEnabled { get; init; }
 
     public bool IsSuperAdmin { get; init; }

@@ -25,6 +25,10 @@ public class User
 
     public bool IsPrivate { get; private set; } = false;
 
+    public bool HideApplications { get; private set; } = false;
+
+    public bool HideResume { get; private set; } = false;
+
     public bool IsBlocked { get; private set; } = false;
 
     public string? TotpSecret { get; private set; }
@@ -131,6 +135,10 @@ public class User
     public void ChangePrivate() => IsPrivate = !IsPrivate;
 
     public void SetPrivate(bool isPrivate) => IsPrivate = isPrivate;
+
+    public void SetHideApplications(bool hide) => HideApplications = hide;
+
+    public void SetHideResume(bool hide) => HideResume = hide;
 
     public void Block() => IsBlocked = true;
 

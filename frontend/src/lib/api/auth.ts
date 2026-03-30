@@ -28,6 +28,9 @@ export interface UserResponse {
     nickname: string;
     avatar: string | null;
     role: 'Worker' | 'Employee' | 'Admin';
+    isPrivate?: boolean;
+    hideApplications?: boolean;
+    hideResume?: boolean;
     isTotpEnabled?: boolean;
     isSuperAdmin?: boolean;
     mustChangePassword?: boolean;
@@ -108,6 +111,10 @@ export const authApi = {
         return api.delete(`/auth/sessions/${sessionId}`);
     },
 
+    getSessionDetail(token: string) {
+        return api.get<SessionResponse>(`/auth/sessions/${token}`);
+    },
+
     forgotPassword(email: string) {
         return api.post<{ message: string; debugCode?: string }>('/auth/forgot-password', {
             email
@@ -140,8 +147,8 @@ export const authApi = {
         return api.upload<string>('/auth/avatar', [file], 'file');
     },
 
-    updatePrivacy(isPrivate: boolean) {
-        return api.put('/auth/privacy', { isPrivate });
+    updatePrivacy(data: { isPrivate?: boolean; hideApplications?: boolean; hideResume?: boolean }) {
+        return api.put('/auth/privacy', data);
     },
 
     totpSetup() {
