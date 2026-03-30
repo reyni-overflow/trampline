@@ -16,7 +16,6 @@
     import { t } from '$lib/i18n';
 
     let activeTab = $state('jobs');
-    let _loading = $state(true);
     let tabs = $derived([
         { id: 'jobs', label: $t('dashFavs.jobs') },
         { id: 'companies', label: $t('dashFavs.companies') },
@@ -67,8 +66,6 @@
             favEvents = eventResults;
         } catch (err) {
             handleApiError(err);
-        } finally {
-            _loading = false;
         }
     });
 

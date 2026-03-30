@@ -13,7 +13,6 @@
 
     let search = $state('');
     let activeTab = $state('contacts');
-    let _loading = $state(true);
     let tabs = $derived([
         { id: 'contacts', label: $t('dashContacts.myContacts') },
         { id: 'incoming', label: $t('dashContacts.incoming') },
@@ -63,8 +62,6 @@
             contacts = [];
             incoming = [];
             recommendations = [];
-        } finally {
-            _loading = false;
         }
     });
 

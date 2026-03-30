@@ -20,7 +20,6 @@
     let roleFilter = $state('');
     let showBlocked = $state(false);
     let page = $state(1);
-    let _loading = $state(false);
     let roleChangeTarget = $state<string | null>(null);
 
     let editTarget = $state<{ id: string; role: string; name: string } | null>(null);
@@ -71,7 +70,6 @@
               : $t('adminUsers.worker');
 
     async function loadUsers() {
-        _loading = true;
         try {
             const data = await adminApi.getUsers(page, 20);
             apiUsers = data.map((u) => ({
@@ -84,8 +82,6 @@
             }));
         } catch (err) {
             handleApiError(err);
-        } finally {
-            _loading = false;
         }
     }
 

@@ -26,7 +26,6 @@
         }[]
     >([]);
     let loading = $state(true);
-    let _totalCompanies = $state(0);
 
     const activityOptions = $derived([
         { value: '', label: $t('companies.allFields') },
@@ -66,7 +65,6 @@
                 jobCount: e.jobs?.filter((j) => j.isActive).length ?? 0,
                 link: e.link
             }));
-            _totalCompanies = data.totalCount;
             totalPages = Math.max(1, Math.ceil(data.totalCount / pageSize));
         } catch {
             companies = [];
