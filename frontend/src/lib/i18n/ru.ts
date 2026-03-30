@@ -1725,5 +1725,5 @@ export const ru: Record<string, string> = {
     // === Roles ===
     'roles.worker': 'Соискатель',
     'roles.employee': 'Работодатель',
-    'roles.admin': 'Куратор',
+    'roles.admin': 'Куратор'
 };

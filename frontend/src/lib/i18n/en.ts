@@ -1689,14 +1689,16 @@ export const en: Record<string, string> = {
     // === Dashboard profile ===
     'dashProfile.confirmChange': 'Confirm change',
     'dashProfile.invalidRepoUrl': 'Link must start with http:// or https://',
-    'dashProfile.verificationWarningText': 'Changing your data will freeze verification until re-checked by a curator. Your vacancies, events, and mentorship programs will be hidden from search.',
+    'dashProfile.verificationWarningText':
+        'Changing your data will freeze verification until re-checked by a curator. Your vacancies, events, and mentorship programs will be hidden from search.',
     'dashProfile.verificationWarningTitle': 'Warning',
 
     // === Job extras ===
     'job.backToHome': 'Home',
     'job.browseJobs': 'All jobs',
     'job.deadline': 'Valid until:',
-    'job.notFoundText': 'It may have been deleted or not yet published. Try searching for other jobs.',
+    'job.notFoundText':
+        'It may have been deleted or not yet published. Try searching for other jobs.',
     'job.notFoundTitle': 'Job not found',
 
     // === Mentorship ===
@@ -1709,7 +1711,8 @@ export const en: Record<string, string> = {
     'mentorship.coverLetterHintCount': '{count} / 5000 characters',
     'mentorship.coverLetterMax': 'Cover letter must not exceed 5000 characters',
     'mentorship.coverLetterMinLength': 'Cover letter must be at least 50 characters',
-    'mentorship.coverLetterPlaceholder': 'Describe your motivation and experience (min. 50 characters)...',
+    'mentorship.coverLetterPlaceholder':
+        'Describe your motivation and experience (min. 50 characters)...',
     'mentorship.maxParticipants': 'Max participants',
     'mentorship.mentor': 'Mentor',
     'mentorship.removeFromFavorites': 'Removed from favorites',
@@ -1731,7 +1734,8 @@ export const en: Record<string, string> = {
     // === Settings password validation ===
     'settings.currentPasswordRequired': 'Enter your current password',
     'settings.newPasswordRequired': 'Enter a new password',
-    'settings.passwordRequirements': 'Password must contain uppercase, lowercase letters and a digit',
+    'settings.passwordRequirements':
+        'Password must contain uppercase, lowercase letters and a digit',
     'settings.passwordSameAsCurrent': 'New password must differ from the current one',
     'settings.unknownOS': 'Unknown OS',
     'settings.webBrowser': 'Web browser'

@@ -1614,7 +1614,8 @@ export const zh: Record<string, string> = {
     // === Dashboard profile ===
     'dashProfile.confirmChange': '确认更改',
     'dashProfile.invalidRepoUrl': '链接必须以 http:// 或 https:// 开头',
-    'dashProfile.verificationWarningText': '修改数据后验证将被冻结，直到管理员重新审核。您的职位、活动和导师计划将从搜索中隐藏。',
+    'dashProfile.verificationWarningText':
+        '修改数据后验证将被冻结，直到管理员重新审核。您的职位、活动和导师计划将从搜索中隐藏。',
     'dashProfile.verificationWarningTitle': '注意',
 
     // === Edit event ===
@@ -1689,5 +1690,5 @@ export const zh: Record<string, string> = {
     'workerSearch.searchPlaceholder': '按姓名搜索...',
     'workerSearch.skillsPlaceholder': '技能，用逗号分隔...',
     'workerSearch.title': '求职者搜索',
-    'workerSearch.universityPlaceholder': '大学...',
+    'workerSearch.universityPlaceholder': '大学...'
 };

@@ -1671,7 +1671,8 @@ export const pirate: Record<string, string> = {
     // === Dashboard profile ===
     'dashProfile.confirmChange': 'Подтвердить изменение',
     'dashProfile.invalidRepoUrl': 'Ссылка должна начинаться с http:// или https://',
-    'dashProfile.verificationWarningText': 'При изменении данных верификация будет заморожена. Ваши вакансии, мероприятия и программы наставничества будут скрыты.',
+    'dashProfile.verificationWarningText':
+        'При изменении данных верификация будет заморожена. Ваши вакансии, мероприятия и программы наставничества будут скрыты.',
     'dashProfile.verificationWarningTitle': 'Внимание, матрос!',
 
     // === Edit event ===
@@ -1704,7 +1705,8 @@ export const pirate: Record<string, string> = {
     'job.backToHome': 'На главную',
     'job.browseJobs': 'Все вакансии',
     'job.deadline': 'Действует до:',
-    'job.notFoundText': 'Возможно, она утонула или ещё не опубликована. Попробуйте поискать другие вакансии.',
+    'job.notFoundText':
+        'Возможно, она утонула или ещё не опубликована. Попробуйте поискать другие вакансии.',
     'job.notFoundTitle': 'Вакансия не найдена',
 
     // === Mentorship ===
