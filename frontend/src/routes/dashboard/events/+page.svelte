@@ -78,7 +78,7 @@
         const event = events.find((e) => e.id === id);
         if (!event) return;
         try {
-            await eventsApi.update(id, { isActive: !event.isActive });
+            await eventsApi.update(id, { isPublished: !event.isActive });
             event.isActive = !event.isActive;
             event.status = event.isActive ? 'active' : 'closed';
             events = [...events];

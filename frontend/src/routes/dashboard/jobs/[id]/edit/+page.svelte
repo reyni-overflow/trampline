@@ -201,7 +201,7 @@
                 address,
                 city,
                 country,
-                isActive,
+                isPublished: isActive,
                 salaryFrom: salaryFrom ? +salaryFrom : undefined,
                 salaryTo: salaryTo ? +salaryTo : undefined,
                 tags: tags.map((name) => ({ name, category: 'tech', lvl: 0 }))

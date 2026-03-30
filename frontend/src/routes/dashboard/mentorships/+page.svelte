@@ -80,7 +80,7 @@
         const mentorship = mentorships.find((m) => m.id === id);
         if (!mentorship) return;
         try {
-            await mentorshipsApi.update(id, { isActive: !mentorship.isActive });
+            await mentorshipsApi.update(id, { isPublished: !mentorship.isActive });
             mentorship.isActive = !mentorship.isActive;
             mentorship.status = mentorship.isActive ? 'active' : 'closed';
             mentorships = [...mentorships];

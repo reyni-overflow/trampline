@@ -82,7 +82,7 @@
         const job = jobs.find((j) => j.id === id);
         if (!job) return;
         try {
-            await jobsApi.update(id, { isActive: !job.isActive });
+            await jobsApi.update(id, { isPublished: !job.isActive });
             job.isActive = !job.isActive;
             job.status = job.isActive ? 'active' : 'closed';
             jobs = [...jobs];

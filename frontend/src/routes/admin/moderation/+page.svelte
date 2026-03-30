@@ -26,7 +26,7 @@
         salary: string | null;
         tags: TagResponse[];
         type: string;
-        isActive: boolean;
+        isPublished: boolean;
         date: string;
     }
 
@@ -38,7 +38,7 @@
         address: string;
         salary: string | null;
         tags: EventResponse['tags'];
-        isActive: boolean;
+        isPublished: boolean;
         date: string;
     }
 
@@ -50,7 +50,7 @@
         address: string;
         salary: string | null;
         tags: MentorshipResponse['tags'];
-        isActive: boolean;
+        isPublished: boolean;
         date: string;
     }
 
@@ -68,19 +68,19 @@
         id: string;
         title: string;
         description: string;
-        isActive: boolean;
+        isPublished: boolean;
     } | null>(null);
     let editingEvent = $state<{
         id: string;
         title: string;
         description: string;
-        isActive: boolean;
+        isPublished: boolean;
     } | null>(null);
     let editingMentorship = $state<{
         id: string;
         title: string;
         description: string;
-        isActive: boolean;
+        isPublished: boolean;
     } | null>(null);
     let saving = $state(false);
 
@@ -111,7 +111,7 @@
             await adminApi.updateJob(editingJob.id, {
                 title: editingJob.title,
                 description: editingJob.description,
-                isActive: editingJob.isActive
+                isPublished: editingJob.isPublished
             });
             apiJobs = apiJobs.map((j) =>
                 j.id === editingJob!.id
@@ -154,7 +154,7 @@
             await adminApi.updateEvent(editingEvent.id, {
                 title: editingEvent.title,
                 description: editingEvent.description,
-                isActive: editingEvent.isActive
+                isPublished: editingEvent.isPublished
             });
             apiEvents = apiEvents.map((e) =>
                 e.id === editingEvent!.id
@@ -197,7 +197,7 @@
             await adminApi.updateMentorship(editingMentorship.id, {
                 title: editingMentorship.title,
                 description: editingMentorship.description,
-                isActive: editingMentorship.isActive
+                isPublished: editingMentorship.isPublished
             });
             apiMentorships = apiMentorships.map((m) =>
                 m.id === editingMentorship!.id
@@ -232,7 +232,7 @@
                 salary: j.salaryFrom || j.salaryTo ? formatSalary(j.salaryFrom, j.salaryTo) : null,
                 tags: j.tags || [],
                 type: j.type || 'Work',
-                isActive: j.isActive ?? true,
+                isPublished: j.isPublished ?? true,
                 date: j.createdAt || j.date || ''
             }));
             apiEvents = eventsData.map((e) => ({
@@ -243,7 +243,7 @@
                 address: e.address || '',
                 salary: e.salaryFrom || e.salaryTo ? formatSalary(e.salaryFrom, e.salaryTo) : null,
                 tags: e.tags || [],
-                isActive: e.isActive ?? true,
+                isPublished: e.isPublished ?? true,
                 date: e.createdAt || ''
             }));
             apiMentorships = mentorshipsData.map((m) => ({
@@ -257,7 +257,7 @@
                         ? formatSalary(m.salaryFrom ?? null, m.salaryTo ?? null)
                         : null,
                 tags: m.tags || [],
-                isActive: m.isActive ?? true,
+                isPublished: m.isPublished ?? true,
                 date: m.createdAt || ''
             }));
         } catch (err) {
@@ -348,7 +348,7 @@
                                     id: job.id,
                                     title: job.title,
                                     description: job.description,
-                                    isActive: job.isActive
+                                    isPublished: job.isPublished
                                 })}>{$t('common.edit')}</Button
                         >
                         <Button size="sm" onclick={() => approveJob(job.id, job.title)}
@@ -398,7 +398,7 @@
                                     id: event.id,
                                     title: event.title,
                                     description: event.description,
-                                    isActive: event.isActive
+                                    isPublished: event.isPublished
                                 })}>{$t('common.edit')}</Button
                         >
                         <Button size="sm" onclick={() => approveEvent(event.id, event.title)}
@@ -450,7 +450,7 @@
                                     id: mentorship.id,
                                     title: mentorship.title,
                                     description: mentorship.description,
-                                    isActive: mentorship.isActive
+                                    isPublished: mentorship.isPublished
                                 })}>{$t('common.edit')}</Button
                         >
                         <Button

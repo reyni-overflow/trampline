@@ -27,6 +27,7 @@ const mockJob = {
     endedAt: '2026-06-01T00:00:00Z',
     deletedAt: null,
     isActive: true,
+    isPublished: true,
     views: 42,
     employeeId: 'emp-1',
     userId: 'user-1',

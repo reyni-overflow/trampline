@@ -100,7 +100,7 @@ describe('API modules', () => {
 
         it('updatePrivacy sends PUT /auth/privacy', async () => {
             const { authApi } = await import('$lib/api/auth');
-            await authApi.updatePrivacy(true);
+            await authApi.updatePrivacy({ isPrivate: true });
             expect(api.put).toHaveBeenCalledWith('/auth/privacy', { isPrivate: true });
         });
     });

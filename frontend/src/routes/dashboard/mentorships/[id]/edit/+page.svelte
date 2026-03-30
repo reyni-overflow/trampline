@@ -169,7 +169,7 @@
                 address,
                 city,
                 country,
-                isActive,
+                isPublished: isActive,
                 tags: tags.map((t) => ({ name: t, category: 'mentorship', lvl: 0 })),
                 startDate: startDate || undefined,
                 endedAt: endDate || undefined,

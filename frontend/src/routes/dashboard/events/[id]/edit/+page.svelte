@@ -153,7 +153,7 @@
                 address,
                 city,
                 country,
-                isActive,
+                isPublished: isActive,
                 tags: tags.map((t) => ({ name: t, category: 'event', lvl: 0 })),
                 startDate: startDate || undefined
             });

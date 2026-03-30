@@ -42,6 +42,7 @@ export interface PendingJobResponse {
     salaryTo: number | null;
     tags: TagResponse[];
     isActive: boolean;
+    isPublished: boolean;
     createdAt: string;
     date?: string;
 }
