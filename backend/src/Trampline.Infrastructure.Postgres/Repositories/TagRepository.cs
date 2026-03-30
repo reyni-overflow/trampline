@@ -41,7 +41,8 @@ public class TagRepository(AppDbContext context) : ITagRepository
 
     public async Task<bool> ExistsAsync(string name, CancellationToken cancellationToken)
     {
-        return await context.Tags.AnyAsync(t => t.Name == name, cancellationToken);
+        var trimmed = name.Trim().ToLower();
+        return await context.Tags.AnyAsync(t => t.Name.ToLower() == trimmed, cancellationToken);
     }
 
     public async Task AddAsync(Tag tag, CancellationToken cancellationToken)
