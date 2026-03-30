@@ -315,45 +315,6 @@ public class EmployeeController(
         });
     }
 
-    [AllowAnonymous]
-    [HttpGet("by-user-id/{id}")]
-    public async Task<IActionResult> GetEmployeeByUserIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        var findUser = await userService.GetByIdAsync(id, cancellationToken);
-
-        if (findUser == null)
-        {
-            return NotFound();
-        }
-
-        if (findUser.IsPrivate)
-        {
-            var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (requesterId == null || new Guid(requesterId) != findUser.Id)
-                return NotFound();
-        }
-
-        var profile = findUser.EmployeeProfile;
-        if (profile == null) return NotFound();
-
-        return Ok(new EmployeeProfileResponse
-        {
-            Id = profile.Id,
-            UserId = profile.UserId,
-            Name = profile.Name,
-            Description = profile.Description,
-            Activity = profile.Activity,
-            Link = profile.Link,
-            Socials = profile.Socials,
-            Photos = profile.Photos,
-            Videos = profile.Videos,
-            IsVerified = profile.IsVerified,
-            VerificationLevel = profile.VerificationLevel,
-            VerifiedName = profile.VerifiedName,
-            Info = profile.Info
-        });
-    }
-
     [HttpGet("verify")]
     public async Task<IActionResult> ConfirmAsync(CancellationToken cancellationToken)
     {

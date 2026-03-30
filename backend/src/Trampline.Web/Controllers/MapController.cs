@@ -30,9 +30,15 @@ public class MapController(AppDbContext dbContext) : ControllerBase
     [HttpGet("markers")]
     public async Task<IActionResult> GetMarkersAsync(CancellationToken ct)
     {
+        var privateUserIds = await dbContext.Users
+            .AsNoTracking()
+            .Where(u => u.IsPrivate)
+            .Select(u => u.Id)
+            .ToListAsync(ct);
+
         var jobs = await dbContext.Jobs
             .AsNoTracking()
-            .Where(j => j.IsActive && j.DeletedAt == null)
+            .Where(j => j.IsActive && j.DeletedAt == null && !privateUserIds.Contains(j.UserId))
             .Select(j => new MapMarkerResponse(
                 j.Id.ToString(),
                 j.Title,
@@ -49,7 +55,7 @@ public class MapController(AppDbContext dbContext) : ControllerBase
 
         var events = await dbContext.Events
             .AsNoTracking()
-            .Where(e => e.IsActive && e.DeletedAt == null)
+            .Where(e => e.IsActive && e.DeletedAt == null && !privateUserIds.Contains(e.UserId))
             .Select(e => new MapMarkerResponse(
                 e.Id.ToString(),
                 e.Title,
@@ -66,7 +72,7 @@ public class MapController(AppDbContext dbContext) : ControllerBase
 
         var mentorships = await dbContext.Mentorships
             .AsNoTracking()
-            .Where(m => m.IsActive && m.DeletedAt == null)
+            .Where(m => m.IsActive && m.DeletedAt == null && !privateUserIds.Contains(m.UserId))
             .Select(m => new MapMarkerResponse(
                 m.Id.ToString(),
                 m.Title,
