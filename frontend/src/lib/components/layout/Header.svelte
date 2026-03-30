@@ -163,7 +163,10 @@
                             >
                         </div>
                         <div class="dropdown-divider"></div>
-                        <a href="/dashboard" class="dropdown-item">{$t('header.myProfile')}</a>
+                        <a
+                            href={currentUser.role === 'Admin' ? '/admin' : '/dashboard'}
+                            class="dropdown-item">{$t('header.myProfile')}</a
+                        >
                         <a href="/settings" class="dropdown-item">{$t('header.settings')}</a>
                         <div class="dropdown-divider"></div>
                         <button class="dropdown-item danger" type="button" onclick={handleLogout}

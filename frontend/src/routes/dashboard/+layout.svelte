@@ -35,6 +35,14 @@
             goto('/');
             authModal.openLogin();
         }
+        if (
+            ready &&
+            authenticated &&
+            currentUser?.role === 'Admin' &&
+            typeof window !== 'undefined'
+        ) {
+            goto('/admin');
+        }
     });
 
     let headerHeight = $state('4rem');
