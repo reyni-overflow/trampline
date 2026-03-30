@@ -60,6 +60,7 @@ function applyAccent(accent: AccentColor) {
 
 function createThemeStore() {
     const { subscribe, set, update } = writable<Theme>(getInitialTheme());
+    let mqHandler: (() => void) | undefined;
 
     return {
         subscribe,
@@ -94,13 +95,15 @@ function createThemeStore() {
 
             if (browser) {
                 const mq = window.matchMedia('(prefers-color-scheme: light)');
-                mq.addEventListener('change', () => {
+                if (mqHandler) mq.removeEventListener('change', mqHandler);
+                mqHandler = () => {
                     let current: Theme = 'system';
                     subscribe((v) => (current = v))();
                     if (current === 'system') {
                         applyTheme(resolveTheme('system'));
                     }
-                });
+                };
+                mq.addEventListener('change', mqHandler);
             }
         }
     };
