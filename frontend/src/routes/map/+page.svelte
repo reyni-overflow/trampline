@@ -7,12 +7,24 @@
     import { formatSalary } from '$lib/utils/format';
     import { getCityCoords } from '$lib/utils/geo';
     import { toast } from '$lib/stores/toast';
-    import { jobsApi, type JobResponse } from '$lib/api/jobs';
-    import { eventsApi, type EventResponse } from '$lib/api/events';
-    import { mentorshipsApi, type MentorshipResponse } from '$lib/api/mentorships';
+    import { api } from '$lib/api/client';
     import { favorites } from '$lib/stores/favorites';
     import { onMount } from 'svelte';
     import { t } from '$lib/i18n';
+
+    interface MapMarkerResponse {
+        id: string;
+        title: string;
+        company: string;
+        type: string;
+        lat: number;
+        lng: number;
+        city: string | null;
+        salaryFrom: number | null;
+        salaryTo: number | null;
+        format: string;
+        tags: string[];
+    }
 
     let geoLoading = $state(false);
 
@@ -39,66 +51,25 @@
 
     onMount(async () => {
         try {
-            const [jobsData, eventsData, mentorshipsData] = await Promise.all([
-                jobsApi.getAll(1, 500).catch(() => ({ items: [] as JobResponse[] })),
-                eventsApi.getAll(1, 500).catch(() => ({ items: [] as EventResponse[] })),
-                mentorshipsApi.getAll(1, 500).catch(() => ({ items: [] as MentorshipResponse[] }))
-            ]);
+            const markers = await api.get<MapMarkerResponse[]>('/map/markers').catch(() => []);
 
-            const jobMarkers: MapItem[] = (jobsData.items || []).map((j, i) => {
-                const coords =
-                    j.geoLat && j.geoLon ? [j.geoLat, j.geoLon] : getCityCoords(j.city, i);
-                return {
-                    id: j.id,
-                    lat: coords[0],
-                    lng: coords[1],
-                    title: j.title,
-                    company: j.companyName || j.city,
-                    salary: formatSalary(j.salaryFrom, j.salaryTo),
-                    tags: j.tags?.map((t) => (typeof t === 'string' ? t : t.name)),
-                    type: j.type,
-                    isFavorite:
-                        favorites.isJobFavorite(j.id) || favorites.isCompanyFavorite(j.employeeId)
-                };
-            });
-
-            const eventMarkers: MapItem[] = (eventsData.items || []).map((e, i) => {
-                const coords =
-                    e.geoLat && e.geoLon ? [e.geoLat, e.geoLon] : getCityCoords(e.city, i);
-                return {
-                    id: e.id,
-                    lat: coords[0],
-                    lng: coords[1],
-                    title: e.title,
-                    company: e.companyName || e.city,
-                    tags: (e.tags || []).map((t) => t.name),
-                    type: 'Event',
-                    isFavorite:
-                        favorites.isEventFavorite(e.id) || favorites.isCompanyFavorite(e.employeeId)
-                };
-            });
-
-            const mentorshipMarkers: MapItem[] = (mentorshipsData.items || []).map((m, i) => {
-                const coords =
-                    m.geoLat && m.geoLon
-                        ? [Number(m.geoLat), Number(m.geoLon)]
-                        : getCityCoords(m.city, i);
+            allMarkers = markers.map((m, i) => {
+                const coords = m.lat && m.lng ? [m.lat, m.lng] : getCityCoords(m.city ?? '', i);
                 return {
                     id: m.id,
                     lat: coords[0],
                     lng: coords[1],
                     title: m.title,
-                    company: m.companyName || m.city,
-                    salary: formatSalary(m.salaryFrom ?? null, m.salaryTo ?? null),
-                    tags: (m.tags || []).map((t) => t.name),
-                    type: 'Mentorship',
+                    company: m.company || m.city || '',
+                    salary: formatSalary(m.salaryFrom, m.salaryTo),
+                    tags: m.tags,
+                    type: m.type,
                     isFavorite:
-                        favorites.isMentorshipFavorite(m.id) ||
-                        favorites.isCompanyFavorite(m.employeeId)
+                        favorites.isJobFavorite(m.id) ||
+                        favorites.isEventFavorite(m.id) ||
+                        favorites.isMentorshipFavorite(m.id)
                 };
             });
-
-            allMarkers = [...jobMarkers, ...eventMarkers, ...mentorshipMarkers];
         } catch {
             /* ignored */
         }
