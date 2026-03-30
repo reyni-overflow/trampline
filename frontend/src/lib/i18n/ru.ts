@@ -86,6 +86,7 @@ export const ru: Record<string, string> = {
     'auth.minChars': 'Минимум 8 символов',
     'auth.passwordRequirements': 'Пароль должен содержать заглавную, строчную букву и цифру',
     'auth.passwordsMismatch': 'Пароли не совпадают',
+    'auth.accountCreated': 'Аккаунт успешно создан!',
 
     // === Forgot Password ===
     'forgotPassword.link': 'Забыли пароль?',
@@ -171,6 +172,15 @@ export const ru: Record<string, string> = {
     'landing.joinThousands': 'Присоединяйтесь к тысячам студентов и компаний на Трамплине',
     'landing.createAccount': 'Создать аккаунт',
     'landing.viewJobs': 'Смотреть вакансии',
+    'landing.tagJobs': '{count} вакансий',
+    'landing.writeReview': 'Оставить отзыв',
+    'landing.reviewModalTitle': 'Написать отзыв',
+    'landing.reviewText': 'Ваш отзыв',
+    'landing.reviewTextPlaceholder': 'Поделитесь опытом...',
+    'landing.reviewRating': 'Оценка',
+    'landing.reviewSubmit': 'Отправить',
+    'landing.reviewCreated': 'Спасибо! Ваш отзыв отправлен на модерацию',
+    'landing.reviewLoginHint': 'Войдите, чтобы оставить отзыв',
 
     // Landing reviews
     'landing.review0Name': 'Алексей К.',
@@ -541,6 +551,9 @@ export const ru: Record<string, string> = {
     'dashContacts.recommendMsg': '{name} рекомендован(а) на вакансию',
     'dashContacts.addedMsg': '{name} добавлен(а) в контакты',
     'dashContacts.rejectedMsg': 'Заявка от {name} отклонена',
+    'dashContacts.removeContact': 'Удалить',
+    'dashContacts.confirmRemove': 'Удалить {name} из контактов?',
+    'dashContacts.removedMsg': '{name} удалён из контактов',
 
     // === Dashboard jobs (employer) ===
     'dashJobs.title': 'Мои вакансии',
@@ -816,6 +829,8 @@ export const ru: Record<string, string> = {
     'mentorship.applicationSent': 'Заявка успешно отправлена!',
     'mentorship.coverLetterMinLength': 'Мотивационное письмо должно содержать минимум 50 символов',
     'mentorship.coverLetterMax': 'Мотивационное письмо не должно превышать 5000 символов',
+    'mentorship.coverLetterHintCount': '{count} / 5000 символов',
+    'mentorships.registered': 'Вы записались на «{title}»',
     'seo.mentorshipsTitle': 'Менторские программы · Трамплин',
     'seo.mentorshipsDesc': 'Найдите ментора и ускорьте свой карьерный рост',
 
@@ -927,6 +942,8 @@ export const ru: Record<string, string> = {
     'adminTags.tagExists': 'Тег уже существует',
     'adminTags.addedMsg': 'Тег «{name}» добавлен',
     'adminTags.deletedMsg': 'Тег «{name}» удалён',
+    'adminTags.events': 'мероприятий',
+    'adminTags.total': 'всего',
 
     // === Admin curators ===
     'adminCurators.title': 'Кураторы',
@@ -1380,6 +1397,7 @@ export const ru: Record<string, string> = {
     'notifications.verificationStatus': 'Статус верификации обновлён',
     'notifications.jobModeration': 'Результат модерации вакансии',
     'notifications.eventModeration': 'Результат модерации мероприятия',
+    'notifications.mentorshipModeration': 'Результат модерации менторства',
     'notifications.generic': 'Новое уведомление',
 
     // === API errors ===
@@ -1651,11 +1669,6 @@ export const ru: Record<string, string> = {
     'adminReviews.approvedMsg': 'Отзыв одобрен',
     'adminReviews.deletedMsg': 'Отзыв удалён',
 
-    // === Tag stats ===
-    'adminTags.events': 'мероприятий',
-    'adminTags.total': 'всего',
-    'landing.tagJobs': '{count} вакансий',
-
     // === Session details ===
     'settings.viewDetails': 'Подробнее',
     'settings.hideDetails': 'Скрыть',
@@ -1666,11 +1679,12 @@ export const ru: Record<string, string> = {
     'settings.sessionStatus': 'Статус',
     'settings.sessionActive': 'Активна',
     'settings.sessionRevoked': 'Отозвана',
-
-    // === Contacts remove ===
-    'dashContacts.removeContact': 'Удалить',
-    'dashContacts.confirmRemove': 'Удалить {name} из контактов?',
-    'dashContacts.removedMsg': '{name} удалён из контактов',
+    'settings.currentPasswordRequired': 'Введите текущий пароль',
+    'settings.newPasswordRequired': 'Введите новый пароль',
+    'settings.passwordRequirements': 'Пароль должен содержать заглавную, строчную букву и цифру',
+    'settings.passwordSameAsCurrent': 'Новый пароль не должен совпадать с текущим',
+    'settings.webBrowser': 'Веб-браузер',
+    'settings.unknownOS': 'Неизвестная ОС',
 
     // === Employee media delete ===
     'dashProfile.deleteVideo': 'Удалить',
@@ -1680,6 +1694,7 @@ export const ru: Record<string, string> = {
     'dashProfile.photoFormats': 'JPG, PNG, WEBP · до 50 МБ',
     'dashProfile.deletePhoto': 'Удалить',
     'dashProfile.photoDeleted': 'Фото удалено',
+    'dashProfile.invalidRepoUrl': 'Ссылка должна начинаться с http:// или https://',
 
     // === Event media ===
     'editEvent.media': 'Медиа',
@@ -1707,29 +1722,8 @@ export const ru: Record<string, string> = {
     'editJob.photoDeleted': 'Фото удалено',
     'editJob.videoDeleted': 'Видео удалено',
 
-    // === Reviews create ===
-    'landing.writeReview': 'Оставить отзыв',
-    'landing.reviewModalTitle': 'Написать отзыв',
-    'landing.reviewText': 'Ваш отзыв',
-    'landing.reviewTextPlaceholder': 'Поделитесь опытом...',
-    'landing.reviewRating': 'Оценка',
-    'landing.reviewSubmit': 'Отправить',
-    'landing.reviewCreated': 'Спасибо! Ваш отзыв отправлен на модерацию',
-    'landing.reviewLoginHint': 'Войдите, чтобы оставить отзыв',
-
     // === Roles ===
     'roles.worker': 'Соискатель',
     'roles.employee': 'Работодатель',
     'roles.admin': 'Куратор',
-
-    // === Settings password validation ===
-    'settings.currentPasswordRequired': 'Введите текущий пароль',
-    'settings.newPasswordRequired': 'Введите новый пароль',
-    'settings.passwordRequirements': 'Пароль должен содержать заглавную, строчную букву и цифру',
-    'settings.passwordSameAsCurrent': 'Новый пароль не должен совпадать с текущим',
-    'settings.webBrowser': 'Веб-браузер',
-    'settings.unknownOS': 'Неизвестная ОС',
-
-    // === Repo validation ===
-    'dashProfile.invalidRepoUrl': 'Ссылка должна начинаться с http:// или https://'
 };

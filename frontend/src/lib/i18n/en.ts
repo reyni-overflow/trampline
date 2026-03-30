@@ -1363,6 +1363,7 @@ export const en: Record<string, string> = {
     'notifications.verificationStatus': 'Verification status updated',
     'notifications.jobModeration': 'Job moderation result',
     'notifications.eventModeration': 'Event moderation result',
+    'notifications.mentorshipModeration': 'Mentorship moderation result',
     'notifications.generic': 'New notification',
 
     // === Command Palette ===
@@ -1652,5 +1653,86 @@ export const en: Record<string, string> = {
     'landing.reviewRating': 'Rating',
     'landing.reviewSubmit': 'Submit',
     'landing.reviewCreated': 'Thank you! Your review is sent for moderation',
-    'landing.reviewLoginHint': 'Log in to write a review'
+    'landing.reviewLoginHint': 'Log in to write a review',
+
+    // === Admin verification ===
+    'adminVerif.autoVerified': 'Auto-verified',
+
+    // === Auth ===
+    'auth.accountCreated': 'Account created successfully!',
+
+    // === Company extras ===
+    'company.event': 'Event',
+    'company.events': 'Events',
+    'company.mentorship': 'Mentorship',
+    'company.mentorships': 'Mentorship programs',
+    'company.noEvents': 'This company has no events yet',
+    'company.noMentorships': 'This company has no mentorship programs yet',
+    'company.upToParticipants': 'up to {count} participants',
+
+    // === Dashboard applications ===
+    'dashApps.mentorshipApplications': 'Mentorship',
+
+    // === Dashboard mentorships ===
+    'dashMentorships.createFirst': 'Create your first program',
+    'dashMentorships.createMentorship': 'Create program',
+    'dashMentorships.mentorshipDeleted': 'Program deleted',
+    'dashMentorships.noActive': 'No active mentorship programs',
+    'dashMentorships.noActiveHint': 'Create your first mentorship program to find mentees',
+    'dashMentorships.noClosed': 'No closed programs',
+    'dashMentorships.noClosedHint': 'Completed mentorship programs will appear here',
+    'dashMentorships.noDrafts': 'No drafts',
+    'dashMentorships.noDraftsHint': 'Saved program drafts will appear here',
+    'dashMentorships.searchPlaceholder': 'Search mentorship programs...',
+    'dashMentorships.statusChanged': 'Program status updated',
+
+    // === Dashboard profile ===
+    'dashProfile.confirmChange': 'Confirm change',
+    'dashProfile.invalidRepoUrl': 'Link must start with http:// or https://',
+    'dashProfile.verificationWarningText': 'Changing your data will freeze verification until re-checked by a curator. Your vacancies, events, and mentorship programs will be hidden from search.',
+    'dashProfile.verificationWarningTitle': 'Warning',
+
+    // === Job extras ===
+    'job.backToHome': 'Home',
+    'job.browseJobs': 'All jobs',
+    'job.deadline': 'Valid until:',
+    'job.notFoundText': 'It may have been deleted or not yet published. Try searching for other jobs.',
+    'job.notFoundTitle': 'Job not found',
+
+    // === Mentorship ===
+    'mentorship.addToFavorites': 'Added to favorites',
+    'mentorship.applicationSent': 'Application sent successfully!',
+    'mentorship.applyHint': 'Tell us why you want to participate in this program',
+    'mentorship.applyTitle': 'Mentorship application',
+    'mentorship.backToMentorships': 'Back to mentorship',
+    'mentorship.coverLetter': 'Cover letter',
+    'mentorship.coverLetterHintCount': '{count} / 5000 characters',
+    'mentorship.coverLetterMax': 'Cover letter must not exceed 5000 characters',
+    'mentorship.coverLetterMinLength': 'Cover letter must be at least 50 characters',
+    'mentorship.coverLetterPlaceholder': 'Describe your motivation and experience (min. 50 characters)...',
+    'mentorship.maxParticipants': 'Max participants',
+    'mentorship.mentor': 'Mentor',
+    'mentorship.removeFromFavorites': 'Removed from favorites',
+    'mentorship.similarMentorships': 'Similar programs',
+    'mentorship.submitApplication': 'Submit application',
+    'mentorships.apply': 'Apply',
+    'mentorships.badge': 'Mentorship',
+    'mentorships.registered': 'You have signed up for "{title}"',
+
+    // === Roles ===
+    'roles.admin': 'Curator',
+    'roles.employee': 'Employer',
+    'roles.worker': 'Job seeker',
+
+    // === SEO mentorships ===
+    'seo.mentorshipsDesc': 'Find a mentor and accelerate your career growth',
+    'seo.mentorshipsTitle': 'Mentorship programs · Trampline',
+
+    // === Settings password validation ===
+    'settings.currentPasswordRequired': 'Enter your current password',
+    'settings.newPasswordRequired': 'Enter a new password',
+    'settings.passwordRequirements': 'Password must contain uppercase, lowercase letters and a digit',
+    'settings.passwordSameAsCurrent': 'New password must differ from the current one',
+    'settings.unknownOS': 'Unknown OS',
+    'settings.webBrowser': 'Web browser'
 };

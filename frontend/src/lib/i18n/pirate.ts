@@ -1302,6 +1302,7 @@ export const pirate: Record<string, string> = {
     'notifications.verificationStatus': 'Статус верификации обновлён',
     'notifications.jobModeration': 'Результат трибунала по вакансии',
     'notifications.eventModeration': 'Результат трибунала по сборищу',
+    'notifications.mentorshipModeration': 'Результат трибунала по менторству',
     'notifications.generic': 'Новый сигнал',
 
     // === API errors ===
@@ -1570,5 +1571,192 @@ export const pirate: Record<string, string> = {
     'landing.reviewRating': 'Оценка',
     'landing.reviewSubmit': 'Отправить',
     'landing.reviewCreated': 'Благодарим! Ваш отзыв на модерации, матрос',
-    'landing.reviewLoginHint': 'Войдите на корабль, чтобы оставить отзыв'
+    'landing.reviewLoginHint': 'Войдите на корабль, чтобы оставить отзыв',
+
+    // === Admin ===
+    'adminReviews.approved': 'Одобрен',
+    'adminReviews.approvedMsg': 'Отзыв одобрен, йо-хо-хо!',
+    'adminReviews.deletedMsg': 'Отзыв выброшен за борт',
+    'adminReviews.noReviews': 'Отзывов пока нет, капитан',
+    'adminReviews.noReviewsHint': 'Когда матросы оставят отзывы, они появятся здесь',
+    'adminReviews.pageTitle': 'Отзывы · Капитанский мостик · Трамплин',
+    'adminReviews.pending': 'На модерации',
+    'adminReviews.title': 'Управление отзывами',
+    'adminTags.events': 'мероприятий',
+    'adminVerif.autoVerified': 'Авто-верификация',
+    'audit.pageTitle': 'Журнал действий · Капитанский мостик · Трамплин',
+
+    // === Auth ===
+    'auth.accountCreated': 'Добро пожаловать на борт, матрос!',
+
+    // === Company extras ===
+    'company.event': 'Мероприятие',
+    'company.events': 'Мероприятия',
+    'company.mentorship': 'Наставничество',
+    'company.mentorships': 'Программы наставничества',
+    'company.noEvents': 'У этой команды пока нет мероприятий',
+    'company.noMentorships': 'У этой команды пока нет программ наставничества',
+    'company.upToParticipants': 'до {count} матросов',
+
+    // === Create event ===
+    'createEvent.address': 'Адрес порта',
+    'createEvent.addressPlaceholder': 'ул. Ленина, 42',
+    'createEvent.backToEvents': 'Назад к мероприятиям',
+    'createEvent.city': 'Порт *',
+    'createEvent.cityPlaceholder': 'Москва',
+    'createEvent.country': 'Страна',
+    'createEvent.countryPlaceholder': 'Россия',
+    'createEvent.descLabel': 'Описание *',
+    'createEvent.descPlaceholder': 'Программа, условия участия, добыча...',
+    'createEvent.draftSaved': 'Черновик сохранён в бутылке',
+    'createEvent.eventName': 'Название мероприятия',
+    'createEvent.format': 'Формат',
+    'createEvent.nameLabel': 'Название мероприятия *',
+    'createEvent.namePlaceholder': 'Хакатон по веб-разработке',
+    'createEvent.pageTitle': 'Создание мероприятия · Трамплин',
+    'createEvent.preview': 'Превью',
+    'createEvent.publish': 'В плавание!',
+    'createEvent.published': 'Мероприятие отправлено в плавание!',
+    'createEvent.saveDraft': 'Черновик',
+    'createEvent.startDate': 'Дата отплытия',
+    'createEvent.tags': 'Метки',
+    'createEvent.tagsPlaceholder': 'Хакатон, Web, AI...',
+    'createEvent.title': 'Создание мероприятия',
+    'createEvent.titleRequired': 'Введите название мероприятия, капитан',
+
+    // === Dashboard ===
+    'dash.myEvents': 'Мероприятия',
+    'dashApps.mentorshipApplications': 'Наставничество',
+
+    // === Dashboard contacts ===
+    'dashContacts.noRecommendations': 'Нет рекомендаций',
+    'dashContacts.noRecommendationsHint': 'Когда вам порекомендуют вакансию, она появится здесь',
+    'dashContacts.recommendations': 'Рекомендации',
+    'dashContacts.recommendedBy': 'Рекомендовал(а):',
+    'dashContacts.viewJob': 'Посмотреть вакансию',
+
+    // === Dashboard events ===
+    'dashEvents.active': 'В плавании',
+    'dashEvents.closed': 'В доке',
+    'dashEvents.createEvent': 'Создать мероприятие',
+    'dashEvents.createFirst': 'Создать первое',
+    'dashEvents.drafts': 'Черновики',
+    'dashEvents.endsAt': 'до',
+    'dashEvents.eventDeleted': 'Мероприятие отправлено на дно',
+    'dashEvents.noActive': 'Нет активных мероприятий, капитан',
+    'dashEvents.noActiveHint': 'Создайте первое мероприятие и начните набирать команду',
+    'dashEvents.noClosed': 'Нет закрытых мероприятий',
+    'dashEvents.noClosedHint': 'Завершённые мероприятия будут здесь',
+    'dashEvents.noDrafts': 'Нет черновиков',
+    'dashEvents.noDraftsHint': 'Неопубликованные черновики появятся здесь',
+    'dashEvents.pageTitle': 'Мои мероприятия · Трамплин',
+    'dashEvents.responses': 'откликов',
+    'dashEvents.searchPlaceholder': 'Поиск по мероприятиям...',
+    'dashEvents.statusChanged': 'Статус мероприятия изменён',
+    'dashEvents.title': 'Мои мероприятия',
+
+    // === Dashboard mentorships ===
+    'dashMentorships.createFirst': 'Набрать первый экипаж',
+    'dashMentorships.createMentorship': 'Создать программу',
+    'dashMentorships.mentorshipDeleted': 'Программа отправлена на дно',
+    'dashMentorships.noActive': 'Нет активных программ наставничества',
+    'dashMentorships.noActiveHint': 'Создайте первую программу, чтобы найти юнг',
+    'dashMentorships.noClosed': 'Нет завершённых программ',
+    'dashMentorships.noClosedHint': 'Завершённые программы появятся здесь',
+    'dashMentorships.noDrafts': 'Нет черновиков',
+    'dashMentorships.noDraftsHint': 'Черновики программ появятся здесь',
+    'dashMentorships.searchPlaceholder': 'Поиск по программам наставничества...',
+    'dashMentorships.statusChanged': 'Статус программы обновлён',
+
+    // === Dashboard profile ===
+    'dashProfile.confirmChange': 'Подтвердить изменение',
+    'dashProfile.invalidRepoUrl': 'Ссылка должна начинаться с http:// или https://',
+    'dashProfile.verificationWarningText': 'При изменении данных верификация будет заморожена. Ваши вакансии, мероприятия и программы наставничества будут скрыты.',
+    'dashProfile.verificationWarningTitle': 'Внимание, матрос!',
+
+    // === Edit event ===
+    'editEvent.addTag': 'Добавить метку...',
+    'editEvent.address': 'Адрес порта',
+    'editEvent.backToEvents': 'Назад к мероприятиям',
+    'editEvent.cancel': 'Отбой',
+    'editEvent.city': 'Порт',
+    'editEvent.country': 'Страна',
+    'editEvent.description': 'Описание',
+    'editEvent.format': 'Формат',
+    'editEvent.name': 'Название',
+    'editEvent.pageTitle': 'Редактирование · {title} · Трамплин',
+    'editEvent.save': 'Сохранить изменения',
+    'editEvent.tags': 'Метки',
+    'editEvent.title': 'Редактирование мероприятия',
+    'editEvent.updated': 'Мероприятие обновлено, капитан!',
+
+    // === Event ===
+    'event.deadline': 'Запись до',
+
+    // === Event responses ===
+    'eventResponses.noResponses': 'Нет откликов с таким фильтром',
+    'eventResponses.pageTitle': 'Отклики на мероприятие · Трамплин',
+    'eventResponses.resume': 'Резюме',
+    'eventResponses.searchPlaceholder': 'Поиск по имени, навыкам...',
+    'eventResponses.title': 'Отклики на мероприятие',
+
+    // === Job extras ===
+    'job.backToHome': 'На главную',
+    'job.browseJobs': 'Все вакансии',
+    'job.deadline': 'Действует до:',
+    'job.notFoundText': 'Возможно, она утонула или ещё не опубликована. Попробуйте поискать другие вакансии.',
+    'job.notFoundTitle': 'Вакансия не найдена',
+
+    // === Mentorship ===
+    'mentorship.addToFavorites': 'Добавлено в сундук',
+    'mentorship.applicationSent': 'Заявка отправлена, йо-хо-хо!',
+    'mentorship.applyHint': 'Расскажите, почему вы хотите присоединиться к команде',
+    'mentorship.applyTitle': 'Заявка на наставничество',
+    'mentorship.backToMentorships': 'Назад к наставничеству',
+    'mentorship.coverLetter': 'Мотивационное письмо',
+    'mentorship.coverLetterHintCount': '{count} / 5000 символов',
+    'mentorship.coverLetterMax': 'Письмо не должно превышать 5000 символов',
+    'mentorship.coverLetterMinLength': 'Письмо должно содержать минимум 50 символов',
+    'mentorship.coverLetterPlaceholder': 'Опишите вашу мотивацию и опыт (мин. 50 символов)...',
+    'mentorship.maxParticipants': 'Макс. матросов',
+    'mentorship.mentor': 'Наставник',
+    'mentorship.removeFromFavorites': 'Убрано из сундука',
+    'mentorship.similarMentorships': 'Похожие программы',
+    'mentorship.submitApplication': 'Отправить заявку',
+    'mentorships.apply': 'Записаться',
+    'mentorships.badge': 'Наставничество',
+    'mentorships.registered': 'Вы записались на «{title}»',
+
+    // === Roles ===
+    'roles.admin': 'Капитан',
+    'roles.employee': 'Владелец корабля',
+    'roles.worker': 'Матрос',
+
+    // === SEO mentorships ===
+    'seo.mentorshipsDesc': 'Найдите наставника и ускорьте свой путь',
+    'seo.mentorshipsTitle': 'Программы наставничества · Трамплин',
+
+    // === Settings password validation ===
+    'settings.currentPasswordRequired': 'Введите текущий пароль',
+    'settings.newPasswordRequired': 'Введите новый пароль',
+    'settings.passwordRequirements': 'Пароль должен содержать заглавную, строчную букву и цифру',
+    'settings.passwordSameAsCurrent': 'Новый пароль не должен совпадать с текущим',
+    'settings.unknownOS': 'Неизвестная ОС',
+    'settings.webBrowser': 'Веб-браузер',
+
+    // === Worker search ===
+    'workerSearch.course': 'курс',
+    'workerSearch.nav': 'Поиск матросов',
+    'workerSearch.noResults': 'Матросы не найдены',
+    'workerSearch.noResultsHint': 'Попробуйте изменить параметры поиска',
+    'workerSearch.pageTitle': 'Поиск матросов · Трамплин',
+    'workerSearch.privateProfile': 'Профиль скрыт',
+    'workerSearch.searchPlaceholder': 'Поиск по имени...',
+    'workerSearch.skillsPlaceholder': 'Навыки через запятую...',
+    'workerSearch.title': 'Поиск матросов',
+    'workerSearch.universityPlaceholder': 'Университет...',
+
+    // === Misc ===
+    'adminTags.total': 'всего',
+    'landing.tagJobs': '{count} вакансий'
 };

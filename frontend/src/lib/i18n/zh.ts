@@ -169,6 +169,7 @@ export const zh: Record<string, string> = {
     'landing.joinThousands': '加入跳板上成千上万的学生和公司',
     'landing.createAccount': '创建账户',
     'landing.viewJobs': '浏览职位',
+    'landing.tagJobs': '{count}个职位',
 
     // Landing reviews
     'landing.review0Name': '阿列克谢 K.',
@@ -800,6 +801,8 @@ export const zh: Record<string, string> = {
     'adminTags.tagExists': '标签已存在',
     'adminTags.addedMsg': '标签「{name}」已添加',
     'adminTags.deletedMsg': '标签「{name}」已删除',
+    'adminTags.events': '活动',
+    'adminTags.total': '总计',
 
     // === Admin curators ===
     'adminCurators.title': '管理员',
@@ -873,6 +876,12 @@ export const zh: Record<string, string> = {
     'settings.totpCodeLabel': '应用中的验证码',
     'settings.totpEnabled': '2FA已成功启用',
     'settings.totpDisabled': '2FA已停用',
+    'settings.currentPasswordRequired': '请输入当前密码',
+    'settings.newPasswordRequired': '请输入新密码',
+    'settings.passwordRequirements': '密码必须包含大写字母、小写字母和数字',
+    'settings.passwordSameAsCurrent': '新密码不能与当前密码相同',
+    'settings.unknownOS': '未知操作系统',
+    'settings.webBrowser': '网页浏览器',
 
     // === About ===
     'about.title': '关于「跳板」项目',
@@ -1260,6 +1269,7 @@ export const zh: Record<string, string> = {
     'notifications.verificationStatus': '验证状态已更新',
     'notifications.jobModeration': '职位审核结果',
     'notifications.eventModeration': '活动审核结果',
+    'notifications.mentorshipModeration': '导师计划审核结果',
     'notifications.generic': '新通知',
 
     // === Command Palette ===
@@ -1506,5 +1516,178 @@ export const zh: Record<string, string> = {
     'landing.reviewRating': '评分',
     'landing.reviewSubmit': '提交',
     'landing.reviewCreated': '谢谢！您的评价已送审',
-    'landing.reviewLoginHint': '登录后可写评价'
+    'landing.reviewLoginHint': '登录后可写评价',
+
+    // === Admin ===
+    'admin.reviews': '评价',
+    'adminReviews.approved': '已通过',
+    'adminReviews.approvedMsg': '评价已通过',
+    'adminReviews.deletedMsg': '评价已删除',
+    'adminReviews.noReviews': '暂无评价',
+    'adminReviews.noReviewsHint': '用户发表评价后将显示在这里',
+    'adminReviews.pageTitle': '评价 · 管理 · Trampline',
+    'adminReviews.pending': '待审核',
+    'adminReviews.title': '评价管理',
+    'adminVerif.autoVerified': '自动验证',
+
+    // === Auth ===
+    'auth.accountCreated': '账号创建成功！',
+
+    // === Company extras ===
+    'company.event': '活动',
+    'company.events': '活动',
+    'company.mentorship': '导师计划',
+    'company.mentorships': '导师计划',
+    'company.noEvents': '该公司暂无活动',
+    'company.noMentorships': '该公司暂无导师计划',
+    'company.upToParticipants': '最多{count}名参与者',
+
+    // === Create event ===
+    'createEvent.address': '地址',
+    'createEvent.addressPlaceholder': '列宁街42号',
+    'createEvent.backToEvents': '返回活动',
+    'createEvent.city': '城市 *',
+    'createEvent.cityPlaceholder': '莫斯科',
+    'createEvent.country': '国家',
+    'createEvent.countryPlaceholder': '俄罗斯',
+    'createEvent.descLabel': '描述 *',
+    'createEvent.descPlaceholder': '活动日程、参与条件、奖品...',
+    'createEvent.draftSaved': '已保存为草稿',
+    'createEvent.eventName': '活动名称',
+    'createEvent.format': '形式',
+    'createEvent.nameLabel': '活动名称 *',
+    'createEvent.namePlaceholder': '网页开发黑客松',
+    'createEvent.pageTitle': '创建活动 · Trampline',
+    'createEvent.preview': '预览',
+    'createEvent.publish': '发布',
+    'createEvent.published': '活动已发布！',
+    'createEvent.saveDraft': '草稿',
+    'createEvent.startDate': '活动日期',
+    'createEvent.tags': '标签',
+    'createEvent.tagsPlaceholder': '黑客松, Web, AI...',
+    'createEvent.title': '创建活动',
+    'createEvent.titleRequired': '请输入活动名称',
+
+    // === Dashboard applications ===
+    'dashApps.mentorshipApplications': '导师计划',
+
+    // === Dashboard contacts ===
+    'dashContacts.noRecommendations': '暂无推荐',
+    'dashContacts.noRecommendationsHint': '当有人向您推荐职位时将显示在这里',
+    'dashContacts.recommendations': '推荐',
+    'dashContacts.recommendedBy': '推荐人：',
+    'dashContacts.viewJob': '查看职位',
+
+    // === Dashboard events ===
+    'dashEvents.active': '活跃',
+    'dashEvents.closed': '已关闭',
+    'dashEvents.createEvent': '创建活动',
+    'dashEvents.createFirst': '创建第一个',
+    'dashEvents.drafts': '草稿',
+    'dashEvents.endsAt': '截至',
+    'dashEvents.eventDeleted': '活动已删除',
+    'dashEvents.noActive': '暂无活跃活动',
+    'dashEvents.noActiveHint': '创建第一个活动并开始接收报名',
+    'dashEvents.noClosed': '暂无已关闭活动',
+    'dashEvents.noClosedHint': '已关闭的活动将显示在这里',
+    'dashEvents.noDrafts': '暂无草稿',
+    'dashEvents.noDraftsHint': '未发布的活动草稿将显示在这里',
+    'dashEvents.pageTitle': '我的活动 · Trampline',
+    'dashEvents.responses': '个回复',
+    'dashEvents.searchPlaceholder': '搜索活动...',
+    'dashEvents.statusChanged': '活动状态已更改',
+    'dashEvents.title': '我的活动',
+
+    // === Dashboard mentorships ===
+    'dashMentorships.createFirst': '创建第一个计划',
+    'dashMentorships.createMentorship': '创建计划',
+    'dashMentorships.mentorshipDeleted': '计划已删除',
+    'dashMentorships.noActive': '暂无活跃导师计划',
+    'dashMentorships.noActiveHint': '创建第一个导师计划以寻找学员',
+    'dashMentorships.noClosed': '暂无已关闭计划',
+    'dashMentorships.noClosedHint': '已完成的导师计划将显示在这里',
+    'dashMentorships.noDrafts': '暂无草稿',
+    'dashMentorships.noDraftsHint': '保存的计划草稿将显示在这里',
+    'dashMentorships.searchPlaceholder': '搜索导师计划...',
+    'dashMentorships.statusChanged': '计划状态已更新',
+
+    // === Dashboard profile ===
+    'dashProfile.confirmChange': '确认更改',
+    'dashProfile.invalidRepoUrl': '链接必须以 http:// 或 https:// 开头',
+    'dashProfile.verificationWarningText': '修改数据后验证将被冻结，直到管理员重新审核。您的职位、活动和导师计划将从搜索中隐藏。',
+    'dashProfile.verificationWarningTitle': '注意',
+
+    // === Edit event ===
+    'editEvent.addTag': '添加标签...',
+    'editEvent.address': '地址',
+    'editEvent.backToEvents': '返回活动',
+    'editEvent.cancel': '取消',
+    'editEvent.city': '城市',
+    'editEvent.country': '国家',
+    'editEvent.description': '描述',
+    'editEvent.format': '形式',
+    'editEvent.name': '名称',
+    'editEvent.pageTitle': '编辑 · {title} · Trampline',
+    'editEvent.save': '保存更改',
+    'editEvent.tags': '标签',
+    'editEvent.title': '编辑活动',
+    'editEvent.updated': '活动已更新',
+
+    // === Event ===
+    'event.deadline': '报名截止',
+
+    // === Event responses ===
+    'eventResponses.noResponses': '没有符合条件的回复',
+    'eventResponses.pageTitle': '活动回复 · Trampline',
+    'eventResponses.resume': '简历',
+    'eventResponses.searchPlaceholder': '按姓名、技能搜索...',
+    'eventResponses.title': '活动回复',
+
+    // === Job extras ===
+    'job.backToHome': '返回首页',
+    'job.browseJobs': '所有职位',
+    'job.deadline': '有效期至：',
+    'job.notFoundText': '该职位可能已被删除或尚未发布。请尝试搜索其他职位。',
+    'job.notFoundTitle': '未找到职位',
+
+    // === Mentorship ===
+    'mentorship.addToFavorites': '已添加到收藏',
+    'mentorship.applicationSent': '申请已成功发送！',
+    'mentorship.applyHint': '告诉我们您为什么想参加该计划',
+    'mentorship.applyTitle': '导师计划申请',
+    'mentorship.backToMentorships': '返回导师计划',
+    'mentorship.coverLetter': '动机信',
+    'mentorship.coverLetterHintCount': '{count} / 5000 个字符',
+    'mentorship.coverLetterMax': '动机信不得超过5000个字符',
+    'mentorship.coverLetterMinLength': '动机信至少需要50个字符',
+    'mentorship.coverLetterPlaceholder': '描述您的动机和经验（至少50个字符）...',
+    'mentorship.maxParticipants': '最大参与人数',
+    'mentorship.mentor': '导师',
+    'mentorship.removeFromFavorites': '已从收藏中移除',
+    'mentorship.similarMentorships': '类似计划',
+    'mentorship.submitApplication': '提交申请',
+    'mentorships.apply': '报名',
+    'mentorships.badge': '导师计划',
+    'mentorships.registered': '您已报名「{title}」',
+
+    // === Roles ===
+    'roles.admin': '管理员',
+    'roles.employee': '雇主',
+    'roles.worker': '求职者',
+
+    // === SEO mentorships ===
+    'seo.mentorshipsDesc': '找到导师，加速您的职业发展',
+    'seo.mentorshipsTitle': '导师计划 · Trampline',
+
+    // === Worker search ===
+    'workerSearch.course': '年级',
+    'workerSearch.nav': '求职者搜索',
+    'workerSearch.noResults': '未找到求职者',
+    'workerSearch.noResultsHint': '请尝试调整搜索条件',
+    'workerSearch.pageTitle': '求职者搜索 · Trampline',
+    'workerSearch.privateProfile': '个人资料已隐藏',
+    'workerSearch.searchPlaceholder': '按姓名搜索...',
+    'workerSearch.skillsPlaceholder': '技能，用逗号分隔...',
+    'workerSearch.title': '求职者搜索',
+    'workerSearch.universityPlaceholder': '大学...',
 };
