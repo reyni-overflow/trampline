@@ -39,9 +39,9 @@ public class Job
 
     public DateTime EndedAt { get; private set; } = DateTime.UtcNow.AddDays(31);
 
-    public bool IsActive { get; set; } = true;
+    public bool IsActive { get; private set; } = true;
 
-    public bool IsPublished { get; set; } = true;
+    public bool IsPublished { get; private set; } = true;
 
     public int Views => UserViews.Count;
 
@@ -61,7 +61,7 @@ public class Job
 
     public List<string> CustomTags { get; private set; } = new();
 
-    public WorkFormat Format { get; set; } = WorkFormat.Hybrid;
+    public WorkFormat Format { get; private set; } = WorkFormat.Hybrid;
 
     public decimal? SalaryFrom { get; private set; }
 
@@ -167,6 +167,8 @@ public class Job
     public void SetActive(bool active) => IsActive = active;
 
     public void SetPublished(bool published) => IsPublished = published;
+
+    public void SetFormat(WorkFormat format) => Format = format;
 
     public void SetCustomTags(List<string> tags) => CustomTags = tags ?? new();
 

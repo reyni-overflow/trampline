@@ -6,7 +6,7 @@ namespace Trampline.Core.Models.Employee;
 public class Mentorship
 {
     [Key]
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
     public Guid EmployeeId { get; private set; }
 
@@ -44,9 +44,9 @@ public class Mentorship
 
     public string? Duration { get; private set; }
 
-    public bool IsActive { get; set; } = true;
+    public bool IsActive { get; private set; } = true;
 
-    public bool IsPublished { get; set; } = true;
+    public bool IsPublished { get; private set; } = true;
 
     public int Views => UserViews.Count;
 
@@ -54,7 +54,7 @@ public class Mentorship
 
     public IReadOnlyCollection<Guid> UserViews => _userViews;
 
-    public WorkFormat Format { get; set; } = WorkFormat.Hybrid;
+    public WorkFormat Format { get; private set; } = WorkFormat.Hybrid;
 
     public decimal? SalaryFrom { get; private set; }
 
@@ -178,6 +178,8 @@ public class Mentorship
     public void SetActive(bool active) => IsActive = active;
 
     public void SetPublished(bool published) => IsPublished = published;
+
+    public void SetFormat(WorkFormat format) => Format = format;
 
     public void SetCustomTags(List<string> tags) => CustomTags = tags ?? new();
 
