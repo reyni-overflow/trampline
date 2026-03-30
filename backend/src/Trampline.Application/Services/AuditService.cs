@@ -10,19 +10,7 @@ public class AuditService(
 {
     public async Task LogAsync(Guid? userId, string userName, string userRole, string action, string entityType, Guid? entityId, string? details = null, string? ipAddress = null, CancellationToken ct = default)
     {
-        var log = new AuditLog
-        {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            UserName = userName,
-            UserRole = userRole,
-            Action = action,
-            EntityType = entityType,
-            EntityId = entityId,
-            Details = details,
-            IpAddress = ipAddress,
-            CreatedAt = DateTime.UtcNow
-        };
+        var log = AuditLog.Create(userId, userName, userRole, action, entityType, entityId, details, ipAddress);
 
         await auditLogRepository.AddAsync(log, ct);
         logger.LogInformation("Audit: {Action} on {EntityType} by {UserName}", action, entityType, userName);

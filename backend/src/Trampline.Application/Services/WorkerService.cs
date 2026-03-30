@@ -28,7 +28,12 @@ public class WorkerService(
             return Result<IEnumerable<JobApplication>>.Failure(new ErrorDetail("token", "user not found", 404));
         }
 
-        return Result<IEnumerable<JobApplication>>.Success(result.WorkerProfile!.JobApplications);
+        if (result.WorkerProfile == null)
+        {
+            return Result<IEnumerable<JobApplication>>.Failure(new ErrorDetail("user", "Worker profile not found", 400));
+        }
+
+        return Result<IEnumerable<JobApplication>>.Success(result.WorkerProfile.JobApplications);
     }
 
     public async Task<Result<IEnumerable<EventApplication>>> GetEventApplicationsAsync(Guid userId, CancellationToken cancellationToken)

@@ -237,26 +237,9 @@ public class AuthService(
 
         if (user.Role == Role.Employee)
         {
-            var jobs = await jobRepository.GetAllByUserIdAsync(userId, 1, 10000, cancellationToken);
-            foreach (var job in jobs)
-            {
-                job.SoftDelete();
-                await jobRepository.UpdateAsync(job, cancellationToken);
-            }
-
-            var events = await eventRepository.GetAllByUserIdAsync(userId, 1, 10000, cancellationToken);
-            foreach (var evt in events)
-            {
-                evt.SoftDelete();
-                await eventRepository.UpdateAsync(evt, cancellationToken);
-            }
-
-            var mentorships = await mentorshipRepository.GetAllByUserIdAsync(userId, 1, 10000, cancellationToken);
-            foreach (var ms in mentorships)
-            {
-                ms.SoftDelete();
-                await mentorshipRepository.UpdateAsync(ms, cancellationToken);
-            }
+            await jobRepository.SoftDeleteByUserIdAsync(userId, cancellationToken);
+            await eventRepository.SoftDeleteByUserIdAsync(userId, cancellationToken);
+            await mentorshipRepository.SoftDeleteByUserIdAsync(userId, cancellationToken);
 
             logger.LogInformation("Deactivated all opportunities for deleted employer {UserId}", userId);
         }
