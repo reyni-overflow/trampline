@@ -21,4 +21,6 @@ public record UpdateJobRequest
     public TagRequest[] Tags { get; init; } = [];
 
     public DateTime? EndedAt { get; init; }
+
+    public string[]? CustomTags { get; init; }
 }

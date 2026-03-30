@@ -34,7 +34,8 @@ public static class EventExtensions
             GeoLat = evt.GeoLat,
             GeoLon = evt.GeoLon,
             Street = evt.Street,
-            CompanyName = evt.Profile?.Name ?? string.Empty
+            CompanyName = evt.Profile?.Name ?? string.Empty,
+            CustomTags = evt.CustomTags
         };
     }
 

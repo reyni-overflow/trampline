@@ -21,4 +21,6 @@ public record CreateJobRequest
     public WorkFormat Format { get; init; } = WorkFormat.Hybrid;
 
     public DateTime? EndedAt { get; init; }
+
+    public string[] CustomTags { get; init; } = [];
 }

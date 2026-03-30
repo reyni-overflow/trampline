@@ -59,6 +59,8 @@ public class Job
 
     public List<string> Videos { get; private set; } = new();
 
+    public List<string> CustomTags { get; private set; } = new();
+
     public WorkFormat Format { get; set; } = WorkFormat.Hybrid;
 
     public decimal? SalaryFrom { get; private set; }
@@ -165,6 +167,8 @@ public class Job
     public void SetActive(bool active) => IsActive = active;
 
     public void SetPublished(bool published) => IsPublished = published;
+
+    public void SetCustomTags(List<string> tags) => CustomTags = tags ?? new();
 
     public void Update(string title, string description, string address,
         string city, string country)

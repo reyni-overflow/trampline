@@ -36,7 +36,8 @@ public static class MentorshipExtensions
             GeoLat = mentorship.GeoLat,
             GeoLon = mentorship.GeoLon,
             Street = mentorship.Street,
-            CompanyName = mentorship.Profile?.Name ?? string.Empty
+            CompanyName = mentorship.Profile?.Name ?? string.Empty,
+            CustomTags = mentorship.CustomTags
         };
     }
 

@@ -23,4 +23,6 @@ public record UpdateEventRequest
     public DateTime? StartDate { get; init; }
 
     public DateTime? EndedAt { get; init; }
+
+    public string[]? CustomTags { get; init; }
 }

@@ -117,6 +117,9 @@ public class MentorshipService(
             newMentorship.UpdateTags(tags.ToArray());
         }
 
+        if (request.CustomTags.Length > 0)
+            newMentorship.SetCustomTags(request.CustomTags.ToList());
+
         if (!findEmployee.EmployeeProfile.IsTrusted)
             newMentorship.SetActive(false);
 
@@ -197,7 +200,7 @@ public class MentorshipService(
 
         findMentorship.Update(
             request.Title ?? findMentorship.Title,
-            request.Description ?? findMentorship.Description,
+            HtmlSanitization.Sanitize(request.Description) ?? findMentorship.Description,
             request.Address ?? findMentorship.Address,
             request.City ?? findMentorship.City,
             request.Country ?? findMentorship.Country);
@@ -226,6 +229,9 @@ public class MentorshipService(
             }), cancellationToken);
             findMentorship.UpdateTags(tags.ToArray());
         }
+
+        if (request.CustomTags != null)
+            findMentorship.SetCustomTags(request.CustomTags.ToList());
 
         await repository.UpdateAsync(findMentorship, cancellationToken);
         logger.LogInformation("Mentorship updated {MentorshipId}", id);

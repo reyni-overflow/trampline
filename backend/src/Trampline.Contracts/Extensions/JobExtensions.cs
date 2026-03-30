@@ -34,7 +34,8 @@ public static class JobExtensions
             Tags = job.Tags.Select(x => x.TagToResponse()).ToArray(),
             Photos = job.Photos,
             Videos = job.Videos,
-            CompanyName = job.Employee?.Name ?? string.Empty
+            CompanyName = job.Employee?.Name ?? string.Empty,
+            CustomTags = job.CustomTags
         };
     }
 

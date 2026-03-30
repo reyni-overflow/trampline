@@ -42,6 +42,7 @@ export interface JobResponse {
     views: number;
     isFavorited?: boolean;
     companyName?: string;
+    customTags?: string[];
 }
 
 export interface CreateJobRequest {
@@ -54,6 +55,7 @@ export interface CreateJobRequest {
     type?: 'Work' | 'Internship' | 'Mentorship' | 'Event';
     format?: 'Remote' | 'Hybrid' | 'Office';
     endedAt?: string;
+    customTags?: string[];
 }
 
 export interface UpdateJobRequest {
@@ -67,6 +69,7 @@ export interface UpdateJobRequest {
     salaryTo?: number;
     tags?: TagRequest[];
     endedAt?: string;
+    customTags?: string[];
 }
 
 export interface PaginatedResponse<T> {

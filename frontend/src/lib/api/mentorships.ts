@@ -25,6 +25,7 @@ export interface MentorshipResponse {
     isActive: boolean;
     isPublished: boolean;
     isFavorited?: boolean;
+    customTags?: string[];
     views: number;
     companyName?: string;
     createdAt: string;
@@ -45,6 +46,7 @@ export interface CreateMentorshipRequest {
     salaryTo?: number;
     tags?: TagRequest[];
     endedAt?: string;
+    customTags?: string[];
 }
 
 export interface UpdateMentorshipRequest {
@@ -61,6 +63,7 @@ export interface UpdateMentorshipRequest {
     salaryTo?: number;
     tags?: TagRequest[];
     endedAt?: string;
+    customTags?: string[];
 }
 
 export interface MentorshipApplicationResponse {
@@ -108,6 +111,10 @@ export const mentorshipsApi = {
 
     getById(id: string) {
         return api.get<MentorshipResponse>(`/mentorship/${id}`);
+    },
+
+    getByIds(ids: string[]) {
+        return api.post<MentorshipResponse[]>('/mentorship/batch', { ids });
     },
 
     create(data: CreateMentorshipRequest) {

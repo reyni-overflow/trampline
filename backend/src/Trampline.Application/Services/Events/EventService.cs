@@ -115,6 +115,9 @@ public class EventService(
             newEvent.UpdateTags(tags.ToArray());
         }
 
+        if (request.CustomTags.Length > 0)
+            newEvent.SetCustomTags(request.CustomTags.ToList());
+
         if (!findEmployee.EmployeeProfile.IsTrusted)
             newEvent.SetActive(false);
 
@@ -193,7 +196,7 @@ public class EventService(
             return Result<Event>.Failure(new ErrorDetail(nameof(userId), "Access denied", 403));
         }
 
-        findEvent.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+        findEvent.Update(request.Title, HtmlSanitization.Sanitize(request.Description), request.Address, request.City, request.Country);
 
         if (request.IsPublished.HasValue)
             findEvent.SetPublished(request.IsPublished.Value);
@@ -212,6 +215,9 @@ public class EventService(
             }), cancellationToken);
             findEvent.UpdateTags(tags.ToArray());
         }
+
+        if (request.CustomTags != null)
+            findEvent.SetCustomTags(request.CustomTags.ToList());
 
         await repository.UpdateAsync(findEvent, cancellationToken);
         logger.LogInformation("Event updated {EventId}", id);

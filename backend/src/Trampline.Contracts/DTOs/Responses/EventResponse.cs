@@ -57,4 +57,6 @@ public record EventResponse
     public int Views { get; set; } = 0;
 
     public string CompanyName { get; set; } = string.Empty;
+
+    public List<string> CustomTags { get; set; } = [];
 }

@@ -66,6 +66,8 @@ public class Event
 
     public List<string> Videos { get; private set; } = new();
 
+    public List<string> CustomTags { get; private set; } = new();
+
     private Event() { }
 
     public static Event Create(Guid employeeId, Guid userId, string title, string description, WorkFormat format)
@@ -168,6 +170,8 @@ public class Event
     public void SetActive(bool active) => IsActive = active;
 
     public void SetPublished(bool published) => IsPublished = published;
+
+    public void SetCustomTags(List<string> tags) => CustomTags = tags ?? new();
 
     public void Update(string title, string description, string address,
         string city, string country)

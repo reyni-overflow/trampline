@@ -25,4 +25,6 @@ public record CreateMentorshipRequest
     public DateTime? StartDate { get; init; }
 
     public DateTime? EndedAt { get; init; }
+
+    public string[] CustomTags { get; init; } = [];
 }

@@ -114,6 +114,9 @@ public class JobService(
             newJob.UpdateTags(tags.ToArray());
         }
 
+        if (request.CustomTags.Length > 0)
+            newJob.SetCustomTags(request.CustomTags.ToList());
+
         if (!findEmployee.EmployeeProfile.IsTrusted)
             newJob.SetActive(false);
 
@@ -193,7 +196,7 @@ public class JobService(
             return Result<Job>.Failure(new ErrorDetail(nameof(userId), "Access denied", 403));
         }
 
-        findJob.Update(request.Title, request.Description, request.Address, request.City, request.Country);
+        findJob.Update(request.Title, HtmlSanitization.Sanitize(request.Description), request.Address, request.City, request.Country);
 
         if (request.IsPublished.HasValue)
             findJob.SetPublished(request.IsPublished.Value);
@@ -212,6 +215,9 @@ public class JobService(
             }), cancellationToken);
             findJob.UpdateTags(tags.ToArray());
         }
+
+        if (request.CustomTags != null)
+            findJob.SetCustomTags(request.CustomTags.ToList());
 
         await repository.UpdateAsync(findJob, cancellationToken);
         logger.LogInformation("Job updated {JobId}", id);

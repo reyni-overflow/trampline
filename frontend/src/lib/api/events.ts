@@ -29,6 +29,7 @@ export interface EventResponse {
     startDate: string | null;
     isFavorited?: boolean;
     companyName?: string;
+    customTags?: string[];
 }
 
 export interface CreateEventRequest {
@@ -41,6 +42,7 @@ export interface CreateEventRequest {
     tags?: TagRequest[];
     startDate?: string;
     endedAt?: string;
+    customTags?: string[];
 }
 
 export interface UpdateEventRequest {
@@ -55,6 +57,7 @@ export interface UpdateEventRequest {
     tags?: TagRequest[];
     startDate?: string;
     endedAt?: string;
+    customTags?: string[];
 }
 
 export interface EventApplicationResponse {
