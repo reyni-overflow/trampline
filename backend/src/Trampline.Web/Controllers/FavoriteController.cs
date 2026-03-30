@@ -14,7 +14,13 @@ namespace Trampline.Web.Controllers;
 [ApiController]
 [Route("[controller]")]
 [EnableRateLimiting("api")]
-public class FavoriteController(ILogger<FavoriteController> logger, IFavoriteRepository favoriteRepository) : ControllerBase
+public class FavoriteController(
+    ILogger<FavoriteController> logger,
+    IFavoriteRepository favoriteRepository,
+    IJobRepository jobRepository,
+    IEventRepository eventRepository,
+    IMentorshipRepository mentorshipRepository,
+    IEmployeeRepository employeeRepository) : ControllerBase
 {
     private Guid? GetUserId()
     {
@@ -58,6 +64,18 @@ public class FavoriteController(ILogger<FavoriteController> logger, IFavoriteRep
             logger.LogDebug("Favorite toggled: {TargetId} type {Type} by {UserId}", request.TargetId, type, userId.Value);
             return Ok(new { added = false });
         }
+
+        var targetExists = type switch
+        {
+            FavoriteType.Job => await jobRepository.GetByIdAsync(request.TargetId, ct) != null,
+            FavoriteType.Event => await eventRepository.GetByIdAsync(request.TargetId, ct) != null,
+            FavoriteType.Mentorship => await mentorshipRepository.GetByIdAsync(request.TargetId, ct) != null,
+            FavoriteType.Company => await employeeRepository.GetByIdAsync(request.TargetId, ct) != null,
+            _ => false
+        };
+
+        if (!targetExists)
+            return NotFound(new ProblemDetails { Title = "Target entity not found", Status = 404 });
 
         var fav = Favorite.Create(userId.Value, request.TargetId, type);
         await favoriteRepository.AddAsync(fav, ct);
