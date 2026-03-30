@@ -16,6 +16,9 @@ public class DaDataService(ILogger<DaDataService> logger, IOptions<DaDataOption>
     public async Task<Result<FindResponse>> FindParty(string inn,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(inn) || !System.Text.RegularExpressions.Regex.IsMatch(inn, @"^\d{10}(\d{2})?$"))
+            return Result<FindResponse>.Failure(new ErrorDetail(nameof(inn), "Invalid INN format. Must be 10 or 12 digits.", 400));
+
         try
         {
             logger.LogInformation("Querying DaData FindParty for INN {Inn}", inn);
