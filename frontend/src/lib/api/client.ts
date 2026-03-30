@@ -29,6 +29,7 @@ class HttpClient {
     private base: string;
     private refreshFailed = false;
     private refreshCooldown: ReturnType<typeof setTimeout> | null = null;
+    private refreshPromise: Promise<boolean> | null = null;
     private activeControllers = new Set<AbortController>();
 
     constructor(base: string) {
@@ -77,7 +78,12 @@ class HttpClient {
                 !path.includes('/auth/refresh') &&
                 !this.refreshFailed
             ) {
-                const refreshed = await this.refreshToken();
+                if (!this.refreshPromise) {
+                    this.refreshPromise = this.refreshToken().finally(() => {
+                        this.refreshPromise = null;
+                    });
+                }
+                const refreshed = await this.refreshPromise;
                 if (refreshed) {
                     this.refreshFailed = false;
                     response = await fetch(`${this.base}${path}`, config);

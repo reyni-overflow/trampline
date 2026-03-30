@@ -4,6 +4,7 @@ import { favoritesApi } from '$lib/api/favorites';
 import { user } from '$lib/stores/auth';
 
 const STORAGE_KEY = 'trampline-favorites';
+const TOGGLE_DEBOUNCE_MS = 400;
 
 interface FavoritesState {
     jobs: string[];
@@ -54,6 +55,33 @@ function persist(fn: (state: FavoritesState) => FavoritesState) {
     });
 }
 
+const pendingToggles = new Map<string, ReturnType<typeof setTimeout>>();
+
+function debouncedApiToggle(id: string, type: 'Job' | 'Company' | 'Event' | 'Mentorship') {
+    if (!isLoggedIn()) return;
+
+    const key = `${type}:${id}`;
+    const existing = pendingToggles.get(key);
+    if (existing) clearTimeout(existing);
+
+    pendingToggles.set(
+        key,
+        setTimeout(() => {
+            pendingToggles.delete(key);
+            favoritesApi.toggle(id, type).catch(() => {
+                persist((s) => {
+                    const field = (type.toLowerCase() + 's') as keyof FavoritesState;
+                    const list = s[field] as string[];
+                    return {
+                        ...s,
+                        [field]: list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
+                    };
+                });
+            });
+        }, TOGGLE_DEBOUNCE_MS)
+    );
+}
+
 export const favorites = {
     subscribe: store.subscribe,
 
@@ -62,14 +90,7 @@ export const favorites = {
             ...s,
             jobs: s.jobs.includes(id) ? s.jobs.filter((j) => j !== id) : [...s.jobs, id]
         }));
-        if (isLoggedIn()) {
-            favoritesApi.toggle(id, 'Job').catch(() => {
-                persist((s) => ({
-                    ...s,
-                    jobs: s.jobs.includes(id) ? s.jobs.filter((j) => j !== id) : [...s.jobs, id]
-                }));
-            });
-        }
+        debouncedApiToggle(id, 'Job');
     },
 
     toggleCompany(id: string) {
@@ -79,16 +100,7 @@ export const favorites = {
                 ? s.companies.filter((c) => c !== id)
                 : [...s.companies, id]
         }));
-        if (isLoggedIn()) {
-            favoritesApi.toggle(id, 'Company').catch(() => {
-                persist((s) => ({
-                    ...s,
-                    companies: s.companies.includes(id)
-                        ? s.companies.filter((c) => c !== id)
-                        : [...s.companies, id]
-                }));
-            });
-        }
+        debouncedApiToggle(id, 'Company');
     },
 
     toggleEvent(id: string) {
@@ -96,16 +108,7 @@ export const favorites = {
             ...s,
             events: s.events.includes(id) ? s.events.filter((e) => e !== id) : [...s.events, id]
         }));
-        if (isLoggedIn()) {
-            favoritesApi.toggle(id, 'Event').catch(() => {
-                persist((s) => ({
-                    ...s,
-                    events: s.events.includes(id)
-                        ? s.events.filter((e) => e !== id)
-                        : [...s.events, id]
-                }));
-            });
-        }
+        debouncedApiToggle(id, 'Event');
     },
 
     toggleMentorship(id: string) {
@@ -115,16 +118,7 @@ export const favorites = {
                 ? s.mentorships.filter((m) => m !== id)
                 : [...s.mentorships, id]
         }));
-        if (isLoggedIn()) {
-            favoritesApi.toggle(id, 'Mentorship').catch(() => {
-                persist((s) => ({
-                    ...s,
-                    mentorships: s.mentorships.includes(id)
-                        ? s.mentorships.filter((m) => m !== id)
-                        : [...s.mentorships, id]
-                }));
-            });
-        }
+        debouncedApiToggle(id, 'Mentorship');
     },
 
     isJobFavorite(id: string): boolean {
@@ -144,6 +138,8 @@ export const favorites = {
     },
 
     clear() {
+        for (const t of pendingToggles.values()) clearTimeout(t);
+        pendingToggles.clear();
         const empty: FavoritesState = { jobs: [], companies: [], events: [], mentorships: [] };
         store.set(empty);
         saveToStorage(empty);
@@ -175,27 +171,11 @@ export async function syncWithServer() {
         const localOnlyEvents = local.events.filter((id) => !serverEvents.has(id));
         const localOnlyMentorships = local.mentorships.filter((id) => !serverMentorships.has(id));
 
-        await Promise.all([
-            ...localOnlyJobs.map((id) =>
-                favoritesApi.toggle(id, 'Job').catch(() => {
-                    /* best-effort sync */
-                })
-            ),
-            ...localOnlyCompanies.map((id) =>
-                favoritesApi.toggle(id, 'Company').catch(() => {
-                    /* best-effort sync */
-                })
-            ),
-            ...localOnlyEvents.map((id) =>
-                favoritesApi.toggle(id, 'Event').catch(() => {
-                    /* best-effort sync */
-                })
-            ),
-            ...localOnlyMentorships.map((id) =>
-                favoritesApi.toggle(id, 'Mentorship').catch(() => {
-                    /* best-effort sync */
-                })
-            )
+        await Promise.allSettled([
+            ...localOnlyJobs.map((id) => favoritesApi.toggle(id, 'Job')),
+            ...localOnlyCompanies.map((id) => favoritesApi.toggle(id, 'Company')),
+            ...localOnlyEvents.map((id) => favoritesApi.toggle(id, 'Event')),
+            ...localOnlyMentorships.map((id) => favoritesApi.toggle(id, 'Mentorship'))
         ]);
 
         const merged: FavoritesState = {
