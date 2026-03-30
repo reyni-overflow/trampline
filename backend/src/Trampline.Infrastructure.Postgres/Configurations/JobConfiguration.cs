@@ -15,7 +15,8 @@ public class JobConfiguration : IEntityTypeConfiguration<Job>
             .HasConversion<string>();
 
         builder.HasMany(x => x.Tags)
-            .WithMany(x => x.Jobs);
+            .WithMany(x => x.Jobs)
+            .UsingEntity(j => j.ToTable("jobTags"));
 
         builder.HasIndex(x => x.UserId);
         builder.HasIndex(x => x.IsActive);

@@ -12,7 +12,8 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
             .HasConversion<string>();
 
         builder.HasMany(x => x.Tags)
-            .WithMany(x => x.Events);
+            .WithMany(x => x.Events)
+            .UsingEntity(j => j.ToTable("eventTags"));
 
         builder.HasIndex(x => x.UserId);
         builder.HasIndex(x => x.IsActive);

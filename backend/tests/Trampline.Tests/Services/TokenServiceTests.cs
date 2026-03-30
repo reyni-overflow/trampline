@@ -261,7 +261,7 @@ public class TokenServiceTests
         result.UserId.Should().Be(user.Id);
         result.Agent.Should().Be("Mozilla/5.0");
         result.Location.Should().Be("Moscow, Russia");
-        result.ExpiresAt.Should().BeCloseTo(DateTime.UtcNow.AddDays(10), TimeSpan.FromSeconds(10));
+        result.ExpiresAt.Should().BeCloseTo(DateTime.UtcNow.AddDays(7), TimeSpan.FromSeconds(10));
 
         _refreshRepoMock.Verify(x => x.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()), Times.Once);
         _sessionRepoMock.Verify(x => x.AddAsync(It.IsAny<UserSession>(), It.IsAny<CancellationToken>()), Times.Once);

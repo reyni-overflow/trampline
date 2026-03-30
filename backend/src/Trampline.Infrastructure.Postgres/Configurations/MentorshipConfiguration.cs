@@ -12,7 +12,8 @@ public class MentorshipConfiguration : IEntityTypeConfiguration<Mentorship>
             .HasConversion<string>();
 
         builder.HasMany(x => x.Tags)
-            .WithMany(x => x.Mentorships);
+            .WithMany(x => x.Mentorships)
+            .UsingEntity(j => j.ToTable("mentorshipTags"));
 
         builder.HasIndex(x => x.UserId);
         builder.HasIndex(x => x.IsActive);
