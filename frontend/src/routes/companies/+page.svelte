@@ -84,8 +84,8 @@
     }
 
     $effect(() => {
-        search;
-        activityFilter;
+        void search;
+        void activityFilter;
         onFilterChange();
     });
 
