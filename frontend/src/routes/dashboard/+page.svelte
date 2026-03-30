@@ -59,7 +59,8 @@
         Invited: 'accepted',
         InProgress: 'accepted',
         Hired: 'accepted',
-        Withdrawn: 'rejected'
+        Withdrawn: 'rejected',
+        Reserved: 'reserve'
     };
 
     onMount(async () => {

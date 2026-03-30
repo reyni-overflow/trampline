@@ -5,6 +5,7 @@
     import { jobsApi, type JobResponse, type TagStatsResponse } from '$lib/api/jobs';
     import { eventsApi, type EventResponse } from '$lib/api/events';
     import { onMount, onDestroy } from 'svelte';
+    import { t, getLocaleDateString } from '$lib/i18n';
     let userId = $state('');
     let loading = $state(true);
 
@@ -68,22 +69,22 @@
 
     let stats = $derived([
         {
-            label: 'Просмотры',
+            label: $t('dashStats.views'),
             value: totalViews,
             icon: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
         },
         {
-            label: 'Всего откликов',
+            label: $t('dashStats.totalResponses'),
             value: totalResponses,
             icon: '<path d="m22 2-7 20-4-9-9-4Z"/>'
         },
         {
-            label: 'Ожидают ответа',
+            label: $t('dashStats.pendingResponses'),
             value: pendingResponses,
             icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'
         },
         {
-            label: 'Активных вакансий',
+            label: $t('dashStats.activeJobs'),
             value: activeJobsCount,
             icon: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>'
         }
@@ -91,11 +92,11 @@
 </script>
 
 <svelte:head>
-    <title>Статистика</title>
+    <title>{$t('dashStats.pageTitle')}</title>
 </svelte:head>
 
 <div class="analytics">
-    <h1 class="page-heading">Статистика</h1>
+    <h1 class="page-heading">{$t('dashStats.title')}</h1>
 
     {#if loading}
         <div class="stats-row">
@@ -146,7 +147,7 @@
 
         {#if jobs.length > 0}
             <section class="section-card content-fade-in">
-                <h2 class="section-title">Отклики по вакансиям</h2>
+                <h2 class="section-title">{$t('dashStats.responsesByJob')}</h2>
                 <div class="chart">
                     {#each jobs as job (job.id)}
                         {@const count = jobResponses[job.id] || 0}
@@ -169,17 +170,21 @@
 
         {#if tagStats.length > 0}
             <section class="section-card content-fade-in">
-                <h2 class="section-title">Популярные теги</h2>
+                <h2 class="section-title">{$t('dashStats.popularTags')}</h2>
                 <div class="tags-grid">
                     {#each tagStats as tag (tag.id)}
                         <div class="tag-stat">
                             <span class="tag-name">{tag.name}</span>
                             <div class="tag-counts">
                                 {#if tag.jobCount > 0}
-                                    <Badge variant="accent">{tag.jobCount} вакансий</Badge>
+                                    <Badge variant="accent"
+                                        >{tag.jobCount} {$t('dashStats.jobsLabel')}</Badge
+                                    >
                                 {/if}
                                 {#if tag.eventCount > 0}
-                                    <Badge variant="info">{tag.eventCount} событий</Badge>
+                                    <Badge variant="info"
+                                        >{tag.eventCount} {$t('dashStats.eventsLabel')}</Badge
+                                    >
                                 {/if}
                             </div>
                         </div>
@@ -190,16 +195,16 @@
 
         {#if jobs.length > 0}
             <section class="section-card content-fade-in">
-                <h2 class="section-title">Вакансии — просмотры и отклики</h2>
+                <h2 class="section-title">{$t('dashStats.jobsViewsResponses')}</h2>
                 <div class="table-wrap">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Вакансия</th>
-                                <th>Статус</th>
-                                <th>Просмотры</th>
-                                <th>Отклики</th>
-                                <th>Создана</th>
+                                <th>{$t('dashStats.colJob')}</th>
+                                <th>{$t('dashStats.colStatus')}</th>
+                                <th>{$t('dashStats.colViews')}</th>
+                                <th>{$t('dashStats.colResponses')}</th>
+                                <th>{$t('dashStats.colCreated')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,19 +213,25 @@
                                     <td class="cell-title">{job.title}</td>
                                     <td>
                                         {#if job.isActive}
-                                            <Badge variant="success">Активна</Badge>
+                                            <Badge variant="success">{$t('dashStats.active')}</Badge
+                                            >
                                         {:else}
-                                            <Badge variant="warning">Неактивна</Badge>
+                                            <Badge variant="warning"
+                                                >{$t('dashStats.inactive')}</Badge
+                                            >
                                         {/if}
                                     </td>
                                     <td>{job.views || 0}</td>
                                     <td>{jobResponses[job.id] || 0}</td>
                                     <td class="cell-date">
-                                        {new Date(job.createdAt).toLocaleDateString('ru-RU', {
-                                            day: 'numeric',
-                                            month: 'short',
-                                            year: 'numeric'
-                                        })}
+                                        {new Date(job.createdAt).toLocaleDateString(
+                                            getLocaleDateString(),
+                                            {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            }
+                                        )}
                                     </td>
                                 </tr>
                             {/each}
@@ -245,7 +256,7 @@
                     <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                     <rect width="20" height="14" x="2" y="6" rx="2" />
                 </svg>
-                <p>Нет данных для отображения. Создайте вакансию или мероприятие.</p>
+                <p>{$t('dashStats.emptyState')}</p>
             </div>
         {/if}
     {/if}

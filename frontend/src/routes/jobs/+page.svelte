@@ -117,8 +117,6 @@
         salaryMax = 1500000;
     }
 
-    let debounceTimer: ReturnType<typeof setTimeout>;
-
     $effect(() => {
         void search;
         void typeWork;
@@ -133,10 +131,10 @@
         void salaryMax;
         void sortBy;
 
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
+        const timer = setTimeout(() => {
             loadJobs();
         }, 300);
+        return () => clearTimeout(timer);
     });
 
     let displayJobs = $derived.by(() => {

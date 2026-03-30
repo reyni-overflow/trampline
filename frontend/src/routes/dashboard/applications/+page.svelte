@@ -6,7 +6,11 @@
     import Pagination from '$lib/components/ui/Pagination.svelte';
     import Skeleton from '$lib/components/ui/Skeleton.svelte';
     import { workersApi } from '$lib/api/workers';
+    import { jobsApi } from '$lib/api/jobs';
+    import { eventsApi } from '$lib/api/events';
+    import { mentorshipsApi } from '$lib/api/mentorships';
     import { handleApiError } from '$lib/api/client';
+    import { toast } from '$lib/stores/toast';
     import { notifications } from '$lib/stores/notifications';
     import { onMount } from 'svelte';
     import { t, getLocaleDateString } from '$lib/i18n';
@@ -32,8 +36,11 @@
         jobId: string;
         date: string;
         status: string;
+        backendStatus: string;
         kind: 'job' | 'event' | 'mentorship';
     }
+
+    const WITHDRAWABLE = new Set(['Pending', 'Viewed', 'Reserved']);
 
     let applications = $state<AppItem[]>([]);
     let eventApplications = $state<AppItem[]>([]);
@@ -46,7 +53,8 @@
         Invited: 'accepted',
         InProgress: 'accepted',
         Hired: 'accepted',
-        Withdrawn: 'rejected'
+        Withdrawn: 'rejected',
+        Reserved: 'reserve'
     };
 
     function checkStatusChanges(apps: AppItem[]) {
@@ -93,6 +101,7 @@
                 jobId: a.jobId,
                 date: a.createdAt?.split('T')[0] ?? '',
                 status: STATUS_MAP[a.status] ?? 'pending',
+                backendStatus: a.status,
                 kind: 'job' as const
             }));
             eventApplications = eventData.map((a) => ({
@@ -103,6 +112,7 @@
                 jobId: a.eventId,
                 date: a.createdAt?.split('T')[0] ?? '',
                 status: STATUS_MAP[a.status] ?? 'pending',
+                backendStatus: a.status,
                 kind: 'event' as const
             }));
             mentorshipApplications = mentorshipData.map((a) => ({
@@ -113,6 +123,7 @@
                 jobId: a.mentorshipId,
                 date: a.createdAt?.split('T')[0] ?? '',
                 status: STATUS_MAP[a.status] ?? 'pending',
+                backendStatus: a.status,
                 kind: 'mentorship' as const
             }));
             checkStatusChanges([...applications, ...eventApplications, ...mentorshipApplications]);
@@ -153,6 +164,31 @@
     let filtered = $derived(
         statusFilter ? currentList.filter((a) => a.status === statusFilter) : currentList
     );
+
+    async function withdraw(app: AppItem) {
+        if (!confirm($t('dashApps.confirmWithdraw'))) return;
+        try {
+            if (app.kind === 'event') {
+                await eventsApi.withdrawApplication(app.id);
+                eventApplications = eventApplications.map((a) =>
+                    a.id === app.id ? { ...a, status: 'rejected', backendStatus: 'Withdrawn' } : a
+                );
+            } else if (app.kind === 'mentorship') {
+                await mentorshipsApi.withdrawApplication(app.id);
+                mentorshipApplications = mentorshipApplications.map((a) =>
+                    a.id === app.id ? { ...a, status: 'rejected', backendStatus: 'Withdrawn' } : a
+                );
+            } else {
+                await jobsApi.withdrawApplication(app.id);
+                applications = applications.map((a) =>
+                    a.id === app.id ? { ...a, status: 'rejected', backendStatus: 'Withdrawn' } : a
+                );
+            }
+            toast.success($t('dashApps.withdrawn'));
+        } catch (err) {
+            handleApiError(err);
+        }
+    }
 </script>
 
 <svelte:head>
@@ -245,6 +281,7 @@
                 >
                 <span class="col-date">{$t('dashApps.date')}</span>
                 <span class="col-status">{$t('dashApps.status')}</span>
+                <span class="col-actions">{$t('common.actions')}</span>
             </div>
             {#each filtered as app (app.id)}
                 <div class="table-row">
@@ -268,6 +305,13 @@
                             >{statusMap[app.status].label}</Badge
                         ></span
                     >
+                    <span class="col-actions">
+                        {#if WITHDRAWABLE.has(app.backendStatus)}
+                            <Button size="sm" variant="ghost" onclick={() => withdraw(app)}
+                                >{$t('dashApps.withdraw')}</Button
+                            >
+                        {/if}
+                    </span>
                 </div>
             {/each}
         </div>
@@ -317,7 +361,7 @@
     .table-header,
     .table-row {
         display: grid;
-        grid-template-columns: 2fr 1.5fr 6rem 8rem;
+        grid-template-columns: 2fr 1.5fr 6rem 8rem 6rem;
         align-items: center;
         padding: var(--space-3) var(--space-4);
         gap: var(--space-3);
@@ -375,6 +419,11 @@
     }
     .empty p {
         max-width: 20rem;
+    }
+
+    .col-actions {
+        display: flex;
+        justify-content: flex-end;
     }
 
     .pagination-row {

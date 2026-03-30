@@ -14,13 +14,12 @@
 
     let statusFilter = $state('');
     let search = $state('');
-    let _loading = $state(true);
 
     const STATUS_TO_BACKEND: Record<string, string> = {
         pending: 'Pending',
         accepted: 'Invited',
         rejected: 'Rejected',
-        reserve: 'Viewed'
+        reserve: 'Reserved'
     };
     const BACKEND_TO_STATUS: Record<string, string> = {
         Pending: 'pending',
@@ -29,7 +28,8 @@
         Invited: 'accepted',
         InProgress: 'accepted',
         Hired: 'accepted',
-        Withdrawn: 'rejected'
+        Withdrawn: 'rejected',
+        Reserved: 'reserve'
     };
 
     let statusOptions = $derived([
@@ -78,8 +78,6 @@
         } catch (err) {
             handleApiError(err);
             responses = [];
-        } finally {
-            _loading = false;
         }
     });
 

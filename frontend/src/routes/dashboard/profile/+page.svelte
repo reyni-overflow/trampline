@@ -26,8 +26,8 @@
 
     let role = $state('Worker');
     let saving = $state(false);
-    let _loaded = $state(false);
     let userEmail = $state('');
+    let phone = $state('');
 
     let errors = $state<Record<string, string>>({});
 
@@ -69,6 +69,7 @@
             role = v.role;
             avatar = v.avatar || null;
             userEmail = v.email || '';
+            phone = v.phone || '';
             if (v.workerProfile) {
                 const wp = v.workerProfile;
                 name = wp.name || '';
@@ -116,7 +117,6 @@
                 companyVideos = ep.videos || [];
                 companyPhotos = ep.photos || [];
             }
-            _loaded = true;
         });
     });
     onDestroy(() => unsubUser?.());
@@ -280,13 +280,16 @@
         showVerificationWarning = false;
         saving = true;
         try {
-            await employeesApi.updateProfile({
-                name: companyName,
-                description: companyDesc,
-                activity: companyActivity,
-                link: companyLink || undefined,
-                info: { address: companyAddress, inn: companyInn, email: companyEmail }
-            });
+            await Promise.all([
+                employeesApi.updateProfile({
+                    name: companyName,
+                    description: companyDesc,
+                    activity: companyActivity,
+                    link: companyLink || undefined,
+                    info: { address: companyAddress, inn: companyInn, email: companyEmail }
+                }),
+                savePhone()
+            ]);
             if (showVerificationWarning) {
                 isVerified = false;
                 verificationLevel = 0;
@@ -361,6 +364,14 @@
         }
     }
 
+    async function savePhone() {
+        try {
+            await authApi.updatePhone(phone);
+        } catch (err) {
+            handleApiError(err);
+        }
+    }
+
     async function save() {
         if (!validateWorkerAll()) {
             scrollToFirstError();
@@ -368,20 +379,23 @@
         }
         saving = true;
         try {
-            await workersApi.updateProfile({
-                name,
-                lastName,
-                patronymic,
-                about: about || undefined,
-                skills: skills.length > 0 ? skills : undefined,
-                repos: repos.length > 0 ? repos : undefined,
-                info: university
-                    ? {
-                          university,
-                          course: course ? parseInt(course) : 0
-                      }
-                    : undefined
-            });
+            await Promise.all([
+                workersApi.updateProfile({
+                    name,
+                    lastName,
+                    patronymic,
+                    about: about || undefined,
+                    skills: skills.length > 0 ? skills : undefined,
+                    repos: repos.length > 0 ? repos : undefined,
+                    info: university
+                        ? {
+                              university,
+                              course: course ? parseInt(course) : 0
+                          }
+                        : undefined
+                }),
+                savePhone()
+            ]);
             await userStore.fetchUser();
             toast.success($t('dashProfile.profileSaved'));
         } catch (err) {
@@ -541,6 +555,12 @@
                 <Input label={$t('dashProfile.middleName')} bind:value={patronymic} />
                 <Input label={$t('dashProfile.university')} bind:value={university} />
                 <Input label={$t('dashProfile.courseYear')} bind:value={course} />
+                <Input
+                    label={$t('dashProfile.phone')}
+                    bind:value={phone}
+                    placeholder={$t('dashProfile.phonePlaceholder')}
+                    type="tel"
+                />
             </div>
         </section>
 
@@ -656,6 +676,12 @@
                 error={errors.companyLink}
                 onblur={validateCompanyLink}
                 oninput={() => clearError('companyLink')}
+            />
+            <Input
+                label={$t('dashProfile.phone')}
+                bind:value={phone}
+                placeholder={$t('dashProfile.phonePlaceholder')}
+                type="tel"
             />
         </section>
 
